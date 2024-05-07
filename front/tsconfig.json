@@ -21,9 +21,9 @@
     "noFallthroughCasesInSwitch": true,
 
     //absolute import
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "./jest.setup.ts"],
