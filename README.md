@@ -6,6 +6,16 @@ A platform that connects foreign families living in France (often English, Germa
 <br/>
 The foreign family welcomes for a minimum of one week (in batches of weeks) a member or more of a French family who will live the immersion necessary to learn a foreign language without leaving France.
 
+## Getting Started 🚀
+
+To get started with the project, follow these steps in your terminal:
+
+1. **Clone the Repository**  
+   `git clone https://github.com/Caro-L-dev/lingi-club.git`
+
+2. **Navigate to the Project Directory**  
+   `cd lingi-club`
+
 ## Contributing 🤝
 
 If you'd like to contribute, please follow these steps:
