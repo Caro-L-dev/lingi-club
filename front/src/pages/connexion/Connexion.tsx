@@ -1,69 +1,49 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import ConnexionForm from "./ConnexionForm";
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const formSchema = z.object({
+    username: z.string().min(4, {
+        message: "Username must be at least 4 characters.",
+    }),
+    email: z.string().email({ message: "email invalide" }),
+});
 
 type User = {
-    login: string,
-    userId: string
-}
+    login: string;
+    userId: string;
+};
 
 const Connexion = () => {
+    // 1. Define fake user
+    const userFake: User = {
+        login: "José",
+        userId: "lilianne",
+    };
 
-    const userDemo: User = {
-        login: 'José',
-        userId: 'lilianne'
+    // 2. Define form.
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            username: "",
+            email: "",
+        },
+    });
+
+    // 3. Define submit handler.
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values);
     }
 
-    !userDemo && (<h2>User not connected</h2>)
+    !userFake && <h2>User not connected</h2>;
 
     return (
-        <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
-            <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-                <div className="space-y-2 text-center">
-                    <h2 className="text-3xl font-bold">Bienvenu !</h2>
-                    <p className="text-gray-500 dark:text-gray-400">
-                        Entrez votre email et mot de passe
-                    </p>
-                </div>
-                <form className="space-y-4">
-                    <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            placeholder="nom@example.com"
-                            required
-                            type="email"
-                        />
-                    </div>
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="password">Mot de passe</Label>
-                            <Link
-                                className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-                                to="#"
-                            >
-                                Mot de passe oublié ?
-                            </Link>
-                        </div>
-                        <Input id="password" required type="password" />
-                    </div>
-                    <Button className="w-full" type="submit">
-                        Connexion
-                    </Button>
-                </form>
-                <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-                   Pas encore de compte? 
-                    <Link
-                        className="font-medium text-gray-900 hover:underline dark:text-gray-200 pl-2"
-                        to="#"
-                    >
-                        Inscrivez-vous
-                    </Link>
-                </div>
-            </div>
-        </div>
+        <ConnexionForm onSubmit={onSubmit} form={form} />
+
     );
 };
 
