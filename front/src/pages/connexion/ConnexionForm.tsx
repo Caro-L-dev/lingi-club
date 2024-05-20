@@ -18,7 +18,7 @@ type Props = {
     onSubmit(values: z.infer<typeof formSchema>): void;
     form: UseFormReturn<
         {
-            username: string;
+            password: string;
             email: string;
         },
         any,
@@ -44,13 +44,13 @@ const ConnexionForm = ({onSubmit, form}: Props) => {
                     >
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Login</FormLabel>
+                                    <FormLabel>E-mail</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Entrez votre login"
+                                            placeholder="Entrez un e-mail valide"
                                             {...field}
                                         />
                                     </FormControl>
@@ -60,13 +60,14 @@ const ConnexionForm = ({onSubmit, form}: Props) => {
                         />
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>E-mail</FormLabel>
+                                    <FormLabel>Mot de passe</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Entrez un e-mail valide"
+                                            type={"password"}
+                                            placeholder="Entrez votre mot de passe"
                                             {...field}
                                         />
                                     </FormControl>

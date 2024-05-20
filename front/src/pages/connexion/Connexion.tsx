@@ -5,10 +5,10 @@ import ConnexionForm from "./ConnexionForm";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
-    username: z.string().min(4, {
-        message: "Username must be at least 4 characters.",
-    }),
     email: z.string().email({ message: "email invalide" }),
+    password: z.string().min(7, {
+        message: "Le mot de passe contient au moins 7 caractères.",
+    }),
 });
 
 type User = {
@@ -27,15 +27,14 @@ const Connexion = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            password: "",
             email: "",
         },
     });
 
     // 3. Define submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        // A VOIR AVEC BACK
         console.log(values);
     }
 
