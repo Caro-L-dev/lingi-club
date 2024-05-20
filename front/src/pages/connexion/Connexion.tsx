@@ -11,17 +11,12 @@ export const formSchema = z.object({
     }),
 });
 
-type User = {
+export type User = {
     login: string;
     userId: string;
 };
 
-const Connexion = () => {
-    // 1. Define fake user
-    const userFake: User = {
-        login: "José",
-        userId: "lilianne",
-    };
+const Connexion = ({ userId }: User) => {
 
     // 2. Define form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -38,11 +33,14 @@ const Connexion = () => {
         console.log(values);
     }
 
-    !userFake && <h2>User not connected</h2>;
-
     return (
-        <ConnexionForm onSubmit={onSubmit} form={form} />
-
+        <>
+            {userId === "myid" ? (
+                <h2>User connected</h2>
+            ) : (
+                <ConnexionForm onSubmit={onSubmit} form={form} />
+            )}
+        </>
     );
 };
 
