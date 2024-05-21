@@ -1,5 +1,6 @@
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { Wrapper } from "./components/common/wrapper/Wrapper";
 import Navbar from "./components/navbar/Navbar";
 
 import Home from "./pages/home/Home";
@@ -9,12 +10,16 @@ import Login from "./pages/login/Login";
 function App() {
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <BrowserRouter>
+        <Navbar />
+        <Wrapper className="flex flex-col items-center justify-center h-screen">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Wrapper>
+      </BrowserRouter>
     </>
   );
 }

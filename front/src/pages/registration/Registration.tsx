@@ -1,5 +1,11 @@
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { Title } from "@/components/common/title/Title";
+import { TypographyP } from "@/components/common/typographyP/TypographyP";
 
 export default function Registration() {
-  return <Wrapper>Page d'inscription</Wrapper>;
+  return (
+    <>
+      <Title>Page d'inscription</Title>
+      <TypographyP>A modifier avec le code correspondant</TypographyP>
+    </>
+  );
 }

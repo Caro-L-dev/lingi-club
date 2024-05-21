@@ -1,5 +1,11 @@
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { Title } from "@/components/common/title/Title";
+import { TypographyP } from "@/components/common/typographyP/TypographyP";
 
 export default function Login() {
-  return <Wrapper>Page de connexion</Wrapper>;
+  return (
+    <>
+      <Title>Page de connexion</Title>
+      <TypographyP>A modifier avec le code correspondant</TypographyP>
+    </>
+  );
 }
