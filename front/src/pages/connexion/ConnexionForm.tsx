@@ -25,7 +25,7 @@ type Props = {
 const ConnexionForm = ({ onSubmit, form }: Props) => {
     return (
         <div
-            className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900"
+            className="flex h-screen items-center justify-center dark:bg-gray-900"
             role="main"
         >
             <div

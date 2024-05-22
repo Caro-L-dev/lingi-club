@@ -12,8 +12,8 @@ export const formSchema = z.object({
 });
 
 export type User = {
-    login: string;
-    userId: string;
+    login?: string;
+    userId?: string;
 };
 
 const Connexion = ({ userId }: User) => {
