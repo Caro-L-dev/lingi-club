@@ -1,11 +1,26 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Wrapper } from "./components/common/wrapper/Wrapper";
+
+import Navbar from "./components/navbar/Navbar";
+
 import Home from "./pages/home/Home";
+import Registration from "./pages/registration/Registration";
+import Login from "./pages/login/Login";
 
 function App() {
   return (
-    <Wrapper className="flex flex-col items-center justify-center h-screen">
-      <Home />
-    </Wrapper>
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Wrapper className="flex flex-col items-center justify-center h-screen">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Wrapper>
+      </BrowserRouter>
+    </>
   );
 }
 
