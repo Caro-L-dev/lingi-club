@@ -16,21 +16,22 @@ import { UseFormReturn } from "react-hook-form";
 
 type Props = {
     onSubmit(values: z.infer<typeof formSchema>): void;
-    form: UseFormReturn<
-        {
-            password: string;
-            email: string;
-        },
-        any,
-        undefined
-    >;
+    form: UseFormReturn<{
+        password: string;
+        email: string;
+    }>;
 };
 
-const ConnexionForm = ({onSubmit, form}: Props) => {
-    
+const ConnexionForm = ({ onSubmit, form }: Props) => {
     return (
-        <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
-            <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+        <div
+            className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900"
+            role="main"
+        >
+            <div
+                className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800"
+                aria-labelledby="form-title"
+            >
                 <div className="space-y-2 text-center">
                     <h2 className="text-3xl font-bold">Bienvenu !</h2>
                     <p className="text-gray-500 dark:text-gray-400">
@@ -41,6 +42,7 @@ const ConnexionForm = ({onSubmit, form}: Props) => {
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
+                        aria-describedby="form-description"
                     >
                         <FormField
                             control={form.control}
@@ -52,6 +54,7 @@ const ConnexionForm = ({onSubmit, form}: Props) => {
                                         <Input
                                             placeholder="Entrez un e-mail valide"
                                             {...field}
+                                            aria-required="true"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -66,9 +69,10 @@ const ConnexionForm = ({onSubmit, form}: Props) => {
                                     <FormLabel>Mot de passe</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"password"}
+                                            type="password"
                                             placeholder="Entrez votre mot de passe"
                                             {...field}
+                                            aria-required="true"
                                         />
                                     </FormControl>
                                     <FormMessage />

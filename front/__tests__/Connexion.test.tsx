@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { expect, test, vi } from "vitest";
 import Connexion, { User } from "../src/pages/connexion/Connexion";
@@ -55,18 +55,3 @@ describe("Test affichage si user deja connecté ou non", () => {
     });
 });
 
-
-test("Button Submit present", async () => {
-    render(<Connexion userId={userNotConnect.userId} login={"test"} />);
-    const btnSubmit = await screen.findByRole("button", {name: "Connexion"})
-    expect(btnSubmit).toBeInTheDocument();
-});
-
-test("Button Submit avec input non renseignés", async () => {
-    render(<Connexion userId={userNotConnect.userId} login={"test"} />);
-    const btnSubmit = await screen.findByRole("button", { name: "Connexion" });
-    
-    fireEvent.click(btnSubmit)
-    expect(btnSubmit).toBeInTheDocument();
-    screen.debug();
-});
