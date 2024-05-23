@@ -12,7 +12,7 @@ function App() {
     <>
       <BrowserRouter>
         <Navbar />
-        <Wrapper className="flex flex-col items-center justify-center h-screen">
+        <Wrapper className="flex flex-col py-6 md:w-1/2">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/registration" element={<Registration />} />
