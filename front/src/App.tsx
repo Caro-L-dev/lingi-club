@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Wrapper } from "./components/common/wrapper/Wrapper";
+import Wrapper from "./components/Wrapper";
 import Register from "./page/Register";
 import Accueil from "./page/famille-accueil/Accueil";
 import Apprenant from "./page/famille-accueil/Apprenant";
