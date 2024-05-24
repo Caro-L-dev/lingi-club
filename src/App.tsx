@@ -8,6 +8,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Registration from "./pages/registration/Register";
 import Student from "./pages/student/Student";
+
 function App() {
   return (
     <>
