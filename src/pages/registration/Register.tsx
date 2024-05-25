@@ -13,7 +13,6 @@ export default function LoginForm() {
   const handleRegistrationClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!role) {
-      alert("Please select a role"); // Remove extra character
       return;
     }
     navigate(`/${role}`);
