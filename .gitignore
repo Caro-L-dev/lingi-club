@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -26,4 +27,6 @@ dist-ssr
 *.sln
 *.sw?
 node_modules
+=======
+>>>>>>> develop
 node_modules

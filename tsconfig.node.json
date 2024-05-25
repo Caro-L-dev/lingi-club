@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
       "composite": true,
       "skipLibCheck": true,
       "module": "ESNext",
@@ -7,6 +8,14 @@
       "allowSyntheticDefaultImports": true,
       "strict": true,
       "types": ["@testing-library/jest-dom"]
+=======
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true
+>>>>>>> develop
   },
   "include": ["vite.config.ts"]
 }
