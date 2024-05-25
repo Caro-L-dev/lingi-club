@@ -1,25 +1,32 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card"; // Remove extra curly braces
-import { Input } from "@/components/ui/input"; // Add missing import statement
-import { Label } from "@/components/ui/label"; // Add missing import statement
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // Importe react-toastify
 
 export default function LoginForm() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
+  const { register } = useForm();
 
   const handleRegistrationClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!role) {
       return;
     }
-    navigate(`/${role}`);
+    // Affiche une notification avant de rediriger
+    toast.success("Registration successful!");
+
+    // Retarde la redirection de 3 secondes
+    setTimeout(() => {
+      navigate(`/${role}`);
+    }, 3000);
   };
-  const { register } = useForm();
+
   return (
-    // Add missing closing tag
     <Card>
       <CardHeader>Registration</CardHeader>
       <CardContent>
