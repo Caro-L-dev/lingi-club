@@ -1,18 +1,18 @@
-import { Button } from "../../@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../../@/components/ui/card";
-import { Input } from "../../@/components/ui/input";
-import { Label } from "../../@/components/ui/label";
+} from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 
-const Student = () => {
+const Family = () => {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-xl">Student</CardTitle>
+        <CardTitle className="text-xl">Host Family</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
@@ -28,6 +28,14 @@ const Student = () => {
             <Label htmlFor="region">Region</Label>
             <Input id="region" type="text" />
           </div>
+          <div className="grid gap-2">
+            <Label htmlFor="tarif">Rate per day</Label>
+            <Input id="tarif" type="text" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="description">Description</Label>
+            <Input id="description" type="text" />
+          </div>
           <Button type="submit" className="w-full">
             Validate
           </Button>
@@ -37,4 +45,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Family;

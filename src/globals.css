@@ -1,6 +1,6 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -13,7 +13,7 @@
     --card: 0 0% 99%;
     --card-foreground: 224 69% 2%;
     --border: 224 11% 95%;
-    --input: 224 15% 75%;
+    --input: 224 11% 95%;
     --primary: 224 92% 65%;
     --primary-foreground: 0 0% 100%;
     --secondary: 344 92% 65%;
@@ -46,5 +46,14 @@
     --destructive: 0 82% 60%;
     --destructive-foreground: 0 0% 100%;
     --ring: 224.27 92.13% 65.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
