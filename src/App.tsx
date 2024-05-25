@@ -1,8 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Wrapper } from "./components/common/wrapper/Wrapper";
-import Navbar from "./components/navbar/Navbar";
-
 import Home from "./pages/home/Home";
 import Registration from "./pages/registration/Registration";
 import Family from "./pages/registration/RegistrationFamily";
@@ -12,16 +9,12 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
-        <Wrapper className="flex flex-col items-center justify-center h-screen">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/registration" element={<Registration />} />
-            <Route path="/family" element={<Family />} />
-            <Route path="/student" element={<Student />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </Wrapper>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/family" element={<Family />} />
+          <Route path="/student" element={<Student />} />
+        </Routes>
       </BrowserRouter>
     </>
   );
