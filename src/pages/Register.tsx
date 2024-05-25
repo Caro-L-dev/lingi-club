@@ -9,10 +9,10 @@ export default function LoginForm() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const handleInscriptionClick = (event: { preventDefault: () => void }) => {
+  const handleRegistrationClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!role) {
-      alert("Veuillez sélectionner un rôle avant de vous inscrire");
+      alert("¨Please select a role");
       return;
     }
     navigate(`/${role}`);
@@ -31,21 +31,21 @@ export default function LoginForm() {
             <div>
               <input
                 type="radio"
-                id="accueil"
+                id="family"
                 name="role"
-                value="accueil"
-                onChange={() => setRole("accueil")}
+                value="family"
+                onChange={() => setRole("family")}
               />
-              <label htmlFor="accueil">Accueil</label>
+              <label htmlFor="family">Family</label>
 
               <input
                 type="radio"
-                id="apprenant"
+                id="student"
                 name="role"
-                value="apprenant"
-                onChange={() => setRole("apprenant")}
+                value="student"
+                onChange={() => setRole("student")}
               />
-              <label htmlFor="apprenant">Apprenant</label>
+              <label htmlFor="student">Student</label>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
@@ -57,10 +57,10 @@ export default function LoginForm() {
             </div>
             <Button
               type="submit"
-              onClick={handleInscriptionClick}
+              onClick={handleRegistrationClick}
               className="w-full"
             >
-              Inscription
+              Registration
             </Button>
           </div>
         </div>
