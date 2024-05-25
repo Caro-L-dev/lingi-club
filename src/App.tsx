@@ -3,11 +3,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Wrapper } from "./components/common/wrapper/Wrapper";
 import Navbar from "./components/navbar/Navbar";
 
-import Family from "./pages/family/Family";
 import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
-import Registration from "./pages/registration/Register";
-import Student from "./pages/student/Student";
+import Registration from "./pages/registration/Registration";
+import Family from "./pages/registration/RegistrationFamily";
+import Student from "./pages/registration/RegistrationStudent";
+
 function App() {
   return (
     <>
@@ -17,8 +17,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/registration" element={<Registration />} />
-            <Route path="/student" element={<Student />} />
             <Route path="/family" element={<Family />} />
+            <Route path="/student" element={<Student />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </Wrapper>
