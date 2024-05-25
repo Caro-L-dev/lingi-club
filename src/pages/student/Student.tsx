@@ -1,32 +1,45 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import { UseFormRegister, useForm } from "react-hook-form";
+
+interface FormValues {
+  nom: string;
+  ville: string;
+  region: string;
+  tarif: string;
+}
+
+interface FormFieldProps {
+  id: keyof FormValues;
+  label: string;
+  register: UseFormRegister<FormValues>;
+}
+
+const FormField: React.FC<FormFieldProps> = ({ id, label, register }) => (
+  <div>
+    <Label htmlFor={id}>{label}</Label>
+    <Input id={id} type="text" {...register(id)} />
+  </div>
+);
+
 const Student = () => {
+  const { register } = useForm<FormValues>();
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Student</CardTitle>
-      </CardHeader>
+    <Card>
+      <CardHeader>Student</CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="nom">Name</Label>
-            <Input id="nom" type="text" />
+        <form className="mx-auto max-w-sm">
+          <FormField id="nom" label="Name" register={register} />
+          {/* Add more form fields as needed */}
+          <FormField id="ville" label="City" register={register} />
+          <FormField id="region" label="Region" register={register} />
+          <FormField id="tarif" label="Rate per day" register={register} />
+          <div>
+            <Button type="submit">Validate</Button>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="ville">City</Label>
-            <Input id="ville" type="text" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="region">Region</Label>
-            <Input id="region" type="text" />
-          </div>
-          <Button type="submit" className="w-full">
-            Validate
-          </Button>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

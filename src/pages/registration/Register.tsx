@@ -1,14 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card"; // Remove extra curly braces
+import { Input } from "@/components/ui/input"; // Add missing import statement
+import { Label } from "@/components/ui/label"; // Add missing import statement
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
 
 export default function LoginForm() {
   const [role, setRole] = useState("");
@@ -17,58 +13,52 @@ export default function LoginForm() {
   const handleRegistrationClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!role) {
-      alert("¨Please select a role");
+      alert("Please select a role"); // Remove extra character
       return;
     }
     navigate(`/${role}`);
   };
+  const { register } = useForm();
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
-      </CardHeader>
-
+    // Add missing closing tag
+    <Card>
+      <CardHeader>Registration</CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="role">Role</Label>
-
+        <form className="mx-auto max-w-sm">
+          <div>
             <div>
-              <input
+              <Input
                 type="radio"
                 id="family"
                 name="role"
                 value="family"
                 onChange={() => setRole("family")}
               />
-              <label htmlFor="family">Family</label>
-
-              <input
+              <Label htmlFor="family">Family</Label>
+              <Input
                 type="radio"
                 id="student"
                 name="role"
                 value="student"
                 onChange={() => setRole("student")}
               />
-              <label htmlFor="student">Student</label>
+              <Label htmlFor="student">Student</Label>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" />
-            </div>
-            <Button
-              type="submit"
-              onClick={handleRegistrationClick}
-              className="w-full"
-            >
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" {...register("email")} />
+          </div>
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" {...register("password")} />
+          </div>
+          <div>
+            <Button type="submit" onClick={handleRegistrationClick}>
               Registration
             </Button>
           </div>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

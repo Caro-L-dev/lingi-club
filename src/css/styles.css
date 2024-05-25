@@ -1,0 +1,44 @@
+/* Enhanced Radio Button Style */
+
+/* Hide the default radio button */
+input[type="radio"] {
+  display: none;
+}
+
+/* Create a custom radio button */
+input[type="radio"] + label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+/* Style the radio button indicator */
+input[type="radio"] + label::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #000;
+}
+
+/* Style the radio button indicator when selected */
+input[type="radio"]:checked + label::before {
+  background-color: #000;
+}
+
+/* Add a label text */
+input[type="radio"] + label::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#root > div > div > div.p-6.pt-0 > form > div:nth-child(4) > button {
+  margin-top: 1rem;
+}
