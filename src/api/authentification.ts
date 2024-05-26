@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { auth } from "../firebase/firebase-config";
+import { auth } from "../../firebase/firebase-config";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, AuthError } from "firebase/auth";
 
 export const useRegister = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const register = (email : string, password : string) => {
+  const register = (email: string, password: string) => {
     setLoading(true)
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential: UserCredential) => {
@@ -18,31 +18,32 @@ export const useRegister = () => {
         setLoading(false)
         setError(error.message)
         console.log("Error =>", error.message
-        )        
+        )
       });
-    }
+  }
 
-    return { register, loading, error };
+  return { register, loading, error };
 }
 
 export const useLogIn = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [userAuth, setUserAuth] = useState(false)
 
   const logIn = (email: string, password: string) => {
     setLoading(true)
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential: UserCredential) => {
+      .then(() => {
         setLoading(false);
         setError(null)
-        console.log("LoggedIn User =>", userCredential.user)
+        setUserAuth(true)
       })
-      .catch((error: AuthError) => {        
+      .catch((error: AuthError) => {
         setLoading(false);
         setError(error.message);
         console.log("Error =>", error.message)
       });
   };
 
-  return { logIn, loading, error };
+  return { logIn, loading, error, userAuth };
 };

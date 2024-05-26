@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import { formSchema } from "./Connexion";
 import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
+import Spinner from "@/components/ui/Spinner";
+import clsx from "clsx";
 
 type Props = {
     onSubmit(values: z.infer<typeof formSchema>): void;
@@ -20,9 +22,11 @@ type Props = {
         password: string;
         email: string;
     }>;
+    loading: boolean;
+    error: string | null;
 };
 
-const ConnexionForm = ({ onSubmit, form }: Props) => {
+const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
     return (
         <div
             className="flex h-screen items-center justify-center dark:bg-gray-900"
@@ -34,9 +38,18 @@ const ConnexionForm = ({ onSubmit, form }: Props) => {
             >
                 <div className="space-y-2 text-center">
                     <h2 className="text-3xl font-bold">Bienvenu !</h2>
+                    {
+                        error ? (
+                            <p className="text-red-600 dark:text-gray-400">
+                        Une erreur de connexion est survenue
+                    </p>
+                        ) : (
                     <p className="text-gray-500 dark:text-gray-400">
                         Entrez votre email et mot de passe
                     </p>
+
+                        )
+                    }
                 </div>
                 <Form {...form}>
                     <form
@@ -79,16 +92,29 @@ const ConnexionForm = ({ onSubmit, form }: Props) => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
-                            Connexion
-                        </Button>
+                        {loading ? (
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled
+                            >
+                                <Spinner />
+                            </Button>
+                        ) : (
+                            <Button
+                                type="submit"
+                                className="w-full"
+                            >
+                                Connexion
+                            </Button>
+                        )}
                     </form>
                 </Form>
-                <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+                <div className={clsx(error && "text-red-600", "text-center text-sm text-gray-500 dark:text-gray-400")}>
                     Pas encore de compte?
                     <Link
                         className="font-medium text-gray-900 hover:underline dark:text-gray-200 pl-2"
-                        to="#"
+                        to="/registration"
                     >
                         Inscrivez-vous
                     </Link>

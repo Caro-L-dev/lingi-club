@@ -2,6 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ConnexionForm from "./ConnexionForm";
+import { useLogIn } from "@/api/authentification";
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
@@ -11,14 +13,10 @@ export const formSchema = z.object({
     }),
 });
 
-export type User = {
-    login?: string;
-    userId?: string;
-};
+const Connexion = () => {
+    const { userAuth, logIn, loading, error } = useLogIn();
+    const navigate = useNavigate();
 
-const Connexion = ({ userId }: User) => {
-
-    // 2. Define form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -27,21 +25,13 @@ const Connexion = ({ userId }: User) => {
         },
     });
 
-    // 3. Define submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // A VOIR AVEC BACK
-        console.log(values);
+        logIn(values.email, values.password);
     }
 
-    return (
-        <>
-            {userId === "myid" ? (
-                <h2>User connected</h2>
-            ) : (
-                <ConnexionForm onSubmit={onSubmit} form={form} />
-            )}
-        </>
-    );
+    userAuth && navigate("/");
+
+    return <ConnexionForm onSubmit={onSubmit} form={form} loading={loading} error={error} />;
 };
 
 export default Connexion;
