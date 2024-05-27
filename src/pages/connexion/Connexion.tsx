@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
     email: z.string().email({ message: "email invalide" }),
-    password: z.string().min(7, {
+    password: z.string().min(6, {
         message: "Le mot de passe contient au moins 7 caractères.",
     }),
 });
