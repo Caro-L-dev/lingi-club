@@ -20,10 +20,10 @@ export const useAuth = () => {
       };
     } catch (error) {
       const firebaseError = error as FirebaseError
-      setError(firebaseError.code);
-      toast.error(`Problème lors de l'inscription : ${firebaseError.code}`)
+      setError(firebaseError.message);
+      toast.error(`Problème lors de l'inscription : ${firebaseError.message}`)
       return {
-        error: firebaseError.code
+        error: firebaseError.message
       };
     } finally {
       setLoading(false)
@@ -41,8 +41,8 @@ export const useAuth = () => {
       };
     } catch (error) {
       const firebaseError = error as FirebaseError
-      setError(firebaseError.code);
-      toast.error(`Problème lors de la connexion : ${firebaseError.code}`);
+      setError(firebaseError.message);
+      toast.error(`Problème lors de la connexion : ${firebaseError.message}`);
       return {
         error: firebaseError.message
       };
