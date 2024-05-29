@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  // Set true or false to see navbar button
+  const [isConnected] = useState(true);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -32,20 +34,26 @@ const Navbar: React.FC = () => {
           {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
-      <div
-        data-testid="menu"
-        id="navbar-menu"
-        className={`flex-col md:flex-row mt-6 md:mt-0 items-center gap-y-3 md:gap-2 ${
-          isOpen ? "flex" : "hidden"
-        } md:flex`}
-      >
-        <Button variant="secondary">
-          <Link to="/registration">Inscription</Link>
+      {isConnected ? (
+        <Button>
+          <Link to="/">Déconnexion</Link>
         </Button>
-        <Button variant="outline">
-          <Link to="/login">Connexion</Link>
-        </Button>
-      </div>
+      ) : (
+        <div
+          data-testid="menu"
+          id="navbar-menu"
+          className={`flex-col md:flex-row mt-6 md:mt-0 items-center gap-y-3 md:gap-2 ${
+            isOpen ? "flex" : "hidden"
+          } md:flex`}
+        >
+          <Button variant="secondary">
+            <Link to="/registration">Inscription</Link>
+          </Button>
+          <Button variant="outline">
+            <Link to="/login">Connexion</Link>
+          </Button>
+        </div>
+      )}
     </nav>
   );
 };
