@@ -46,6 +46,7 @@ export const useAuth = () => {
         // On ajoute le user dans la BDD
         await addNewUserToFirebase('users', user.uid, userInfoToKeep)
         setIsUserConnected(true)
+        toast.success(`Inscription réussie (${userCredential.user.email})`);
       }
       return {
         data: user
