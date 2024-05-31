@@ -2,23 +2,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ConnexionForm from "./ConnexionForm";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import ConnexionNavigate from "./ConnexionNavigate";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
     email: z.string().email({ message: "email invalide" }),
-    password: z.string().min(7, {
-        message: "Le mot de passe contient au moins 7 caractères.",
+    password: z.string().min(6, {
+        message: "Le mot de passe contient au moins 6 caractères.",
     }),
 });
 
-export type User = {
-    login?: string;
-    userId?: string;
-};
+const Connexion = () => {
+    const { isUserConnected, firebaseLogIn, loading } = useAuth();
+    const navigate = useNavigate();
 
-const Connexion = ({ userId }: User) => {
-
-    // 2. Define form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -27,18 +26,21 @@ const Connexion = ({ userId }: User) => {
         },
     });
 
-    // 3. Define submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // A VOIR AVEC BACK
-        console.log(values);
+        firebaseLogIn(values);
+        navigate("/");
     }
 
     return (
         <>
-            {userId === "myid" ? (
-                <h2>User connected</h2>
+            {isUserConnected ? (
+                <ConnexionNavigate />
             ) : (
-                <ConnexionForm onSubmit={onSubmit} form={form} />
+                <ConnexionForm
+                    onSubmit={onSubmit}
+                    form={form}
+                    loading={loading}
+                />
             )}
         </>
     );
