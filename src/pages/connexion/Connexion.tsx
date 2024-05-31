@@ -4,6 +4,7 @@ import { z } from "zod";
 import ConnexionForm from "./ConnexionForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import ConnexionNavigate from "./ConnexionNavigate";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
@@ -14,7 +15,7 @@ export const formSchema = z.object({
 });
 
 const Connexion = () => {
-    const { isUserConnected, logIn, loading, error } = useAuth();
+    const { isUserConnected, firebaseLogIn, loading } = useAuth();
     const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -26,12 +27,23 @@ const Connexion = () => {
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        logIn(values);
+        firebaseLogIn(values);
+        navigate("/");
     }
 
-    isUserConnected && navigate("/");
-
-    return <ConnexionForm onSubmit={onSubmit} form={form} loading={loading} error={error} />;
+    return (
+        <>
+            {isUserConnected ? (
+                <ConnexionNavigate />
+            ) : (
+                <ConnexionForm
+                    onSubmit={onSubmit}
+                    form={form}
+                    loading={loading}
+                />
+            )}
+        </>
+    );
 };
 
 export default Connexion;

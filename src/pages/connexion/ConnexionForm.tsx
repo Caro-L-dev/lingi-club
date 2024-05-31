@@ -23,7 +23,7 @@ type Props = {
         email: string;
     }>;
     loading: boolean;
-    error: string | null;
+    error?: string | null;
 };
 
 const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
