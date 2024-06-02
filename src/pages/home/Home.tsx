@@ -1,6 +1,3 @@
-import { Title } from "@/components/common/title/Title";
-import { TypographyP } from "@/components/common/typographyP/TypographyP";
-
 export default function Home() {
   return (
     <>

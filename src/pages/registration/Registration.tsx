@@ -1,96 +1,97 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Registration = () => {
-  const [role, setRole] = useState("");
-  const navigate = useNavigate();
-  const { register } = useForm();
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
 
-  const handleRegistrationClick = (event) => {
-    event.preventDefault();
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const Registration = () => {
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const [role, setRole] = useState("");
+
+  const roleOptions = [
+    {
+      id: "registrationFamily",
+      label: "famille d'accueil",
+      value: "family",
+    },
+    { id: "registrationStudent", label: "apprenant", value: "student" },
+  ];
+
+  const onSubmit = (data) => {
     if (!role) {
+      toast.error("Veuillez sélectionner votre rôle.");
       return;
     }
-    toast.success("Registration successful!");
 
+    toast.success("Formulaire 1/2 validé.");
     setTimeout(() => {
       navigate(`/${role}`);
     }, 3000);
   };
 
   return (
-    <Card className="max-w-2xl mx-auto mt-10 p-6 shadow-lg">
-      <CardHeader className="text-center text-2xl font-bold mb-4">
-        Inscription
+    <Card>
+      <CardHeader>
+        <TitleCard>Inscription</TitleCard>
       </CardHeader>
       <CardContent>
-        <form className="space-y-6" onSubmit={handleRegistrationClick}>
-          <div className="flex items-center space-x-4">
-            <Input
-              type="radio"
-              id="registrationFamily"
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <fieldset>
+            <legend className="text-center mb-2 text-sm text-muted-foreground">
+              Je souhaite m'inscrire en tant que :
+            </legend>
+            <RadioButtonGroup
+              options={roleOptions}
               name="role"
-              value="family"
-              onChange={() => setRole("family")}
-              className="h-4 w-4"
+              defaultValue={role}
+              onValueChange={(value) => setRole(value)}
             />
-            <Label htmlFor="registrationFamily" className="text-lg">
-              Famille
-            </Label>
-            <Input
-              type="radio"
-              id="registrationStudent"
-              name="role"
-              value="student"
-              onChange={() => setRole("student")}
-              className="h-4 w-4"
-            />
-            <Label htmlFor="registrationStudent" className="text-lg">
-              Etudiant
-            </Label>
-          </div>
-          <div>
-            <Label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-              {...register("email")}
-            />
-          </div>
-          <div>
-            <Label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Mot de passe
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-              {...register("password")}
-            />
-          </div>
-          <div className="text-center">
-            <Button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md"
-            >
-              Registration
-            </Button>
-          </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="text-center mb-2 text-sm text-muted-foreground">
+              Je crée mon compte :
+            </legend>
+            <div>
+              <Label htmlFor="email" aria-label="Votre adresse e-mail">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                {...register("email", {
+                  required: true,
+                  pattern: /^\S+@\S+$/i,
+                })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password" aria-label="Votre mot de passe">
+                Mot de passe
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                {...register("password", { required: true })}
+              />
+            </div>
+          </fieldset>
+
+          <Button
+            type="submit"
+            aria-label="Soumettre le formulaire"
+            className="w-full uppercase"
+          >
+            Poursuivre mon inscription
+          </Button>
         </form>
       </CardContent>
     </Card>
