@@ -1,14 +1,19 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Home, Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isUserConnected } = useAuth();
-
+  const { isUserConnected, logOut } = useAuth();
+  const navigate = useNavigate()
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const handleDisconnect = () => {
+    logOut()
+    navigate('/connexion')
+  }
 
   return (
     <nav
@@ -43,8 +48,8 @@ const Navbar: React.FC = () => {
         } md:flex`}
       >
         {isUserConnected ? (
-          <Button>
-            <Link to="/">Déconnexion</Link>
+          <Button onClick={handleDisconnect}>
+            Deconnection
           </Button>
         ) : (
           <>

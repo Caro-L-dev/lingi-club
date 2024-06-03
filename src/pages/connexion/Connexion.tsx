@@ -5,6 +5,7 @@ import ConnexionForm from "./ConnexionForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import ConnexionNavigate from "./ConnexionNavigate";
+import { useEffect } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formSchema = z.object({
@@ -15,7 +16,7 @@ export const formSchema = z.object({
 });
 
 const Connexion = () => {
-    const { isUserConnected, firebaseLogIn, loading } = useAuth();
+    const { isUserConnected, firebaseLogIn, loading, error } = useAuth();
     const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -26,9 +27,14 @@ const Connexion = () => {
         },
     });
 
+    useEffect(() => {
+        if (isUserConnected) {
+            navigate("/");
+        }
+    }, [isUserConnected, navigate]);
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         firebaseLogIn(values);
-        navigate("/");
     }
 
     return (
@@ -40,6 +46,7 @@ const Connexion = () => {
                     onSubmit={onSubmit}
                     form={form}
                     loading={loading}
+                    error={error}
                 />
             )}
         </>
