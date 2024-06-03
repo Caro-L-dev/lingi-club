@@ -2,8 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 const RegistrationFamily = () => {
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleValidationClick = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    setSuccessMessage("Registration successful!");
+  };
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -11,6 +19,9 @@ const RegistrationFamily = () => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
+          {successMessage && (
+            <div className="text-green-500">{successMessage}</div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="nom">Nom</Label>
             <Input id="nom" type="text" />
@@ -31,7 +42,11 @@ const RegistrationFamily = () => {
             <Label htmlFor="description">Description</Label>
             <Input id="description" type="text" />
           </div>
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            onClick={handleValidationClick}
+            className="w-full"
+          >
             Valider
           </Button>
         </div>

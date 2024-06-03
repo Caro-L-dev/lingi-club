@@ -7,16 +7,21 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const [role, setRole] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleInscriptionClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!role) {
-      alert("Veuillez sélectionner un rôle avant de vous inscrire");
       return;
     }
-    navigate(`/${role}`);
+    setSuccessMessage("Registration successful!");
+    setTimeout(() => {
+      setSuccessMessage("");
+      navigate(`/${role}`);
+    }, 2000);
   };
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -25,25 +30,27 @@ export default function LoginForm() {
 
       <CardContent>
         <div className="grid gap-4">
+          {successMessage && (
+            <div className="text-green-500">{successMessage}</div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="role">Role</Label>
-
             <div>
               <input
                 type="radio"
-                id="accueil"
+                id="family"
                 name="role"
-                value="accueil"
-                onChange={() => setRole("accueil")}
+                value="family"
+                onChange={() => setRole("family")}
               />
               <label htmlFor="accueil">Accueil</label>
 
               <input
                 type="radio"
-                id="apprenant"
+                id="student"
                 name="role"
-                value="apprenant"
-                onChange={() => setRole("apprenant")}
+                value="student"
+                onChange={() => setRole("student")}
               />
               <label htmlFor="apprenant">Apprenant</label>
             </div>
