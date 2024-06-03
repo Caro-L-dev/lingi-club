@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isUserConnected } = useAuth();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -33,7 +32,6 @@ const Navbar: React.FC = () => {
           {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
-
       <div
         data-testid="menu"
         id="navbar-menu"
@@ -41,20 +39,12 @@ const Navbar: React.FC = () => {
           isOpen ? "flex" : "hidden"
         } md:flex`}
       >
-        {isUserConnected ? (
-          <Button>
-            <Link to="/">Déconnexion</Link>
-          </Button>
-        ) : (
-          <>
-            <Button variant="secondary">
-              <Link to="/registration">Inscription</Link>
-            </Button>
-            <Button variant="outline">
-              <Link to="/connexion">Connexion</Link>
-            </Button>
-          </>
-        )}
+        <Button variant="secondary">
+          <Link to="/registration">Inscription</Link>
+        </Button>
+        <Button variant="outline">
+          <Link to="/login">Connexion</Link>
+        </Button>
       </div>
     </nav>
   );
