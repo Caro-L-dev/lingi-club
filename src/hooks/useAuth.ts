@@ -11,7 +11,8 @@ import { FirebaseError } from "firebase/app"
 import { toast } from 'react-toastify';
 
 export const useAuth = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);  
+  const [error, setError] = useState<string | null>(null);
   const [isUserConnected, setIsUserConnected] = useState<boolean>(false);
 
   // Pour rester connecté lors du rechargement de la page
@@ -44,7 +45,8 @@ export const useAuth = () => {
           creationDate: new Date()
         }
         // On ajoute le user dans la BDD
-        await addNewUserToFirebase('users', user.uid, userInfoToKeep)
+        await addNewUserToFirebase('users', user.uid, userInfoToKeep)      
+        setError(null)
         setIsUserConnected(true)
         toast.success(`Inscription réussie (${userCredential.user.email})`);
       }
@@ -53,6 +55,7 @@ export const useAuth = () => {
       }
     } catch (error) {
       const firebaseError = error as FirebaseError
+      setError(firebaseError.message);
       toast.error(`Problème lors de l'inscription : ${firebaseError.message}`)
       return {
         error: firebaseError.message
@@ -67,10 +70,12 @@ export const useAuth = () => {
 
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
+      setError(null);
       setIsUserConnected(true)
       toast.success(`Connexion réussie (${userCredential.user.email})`);
     } catch (error) {
       const firebaseError = error as FirebaseError
+      setError(firebaseError.message);
       toast.error(`Problème lors de la connexion : ${firebaseError.message}`);
       return {
         error: firebaseError.message
@@ -96,5 +101,5 @@ export const useAuth = () => {
     }
   }
 
-  return { firebaseRegister, firebaseLogIn, loading, isUserConnected, logOut };
+  return { firebaseRegister, firebaseLogIn, loading, error, isUserConnected, logOut };
 }
