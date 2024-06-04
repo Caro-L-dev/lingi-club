@@ -1,57 +1,59 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import CommonForm from "@/components/common/CommonForm";
 import { useState } from "react";
 
 const RegistrationFamily = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleValidationClick = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
+  const onSubmit = (data) => {
     setSuccessMessage("Registration successful!");
+    console.log(data);
   };
 
+  const fields = [
+    {
+      name: "nom",
+      label: "Nom",
+      type: "text",
+      required: true,
+      errorMessage: "Nom is required",
+    },
+    {
+      name: "ville",
+      label: "Ville",
+      type: "text",
+      required: true,
+      errorMessage: "Ville is required",
+    },
+    {
+      name: "region",
+      label: "Region",
+      type: "text",
+      required: true,
+      errorMessage: "Region is required",
+    },
+    {
+      name: "tarif",
+      label: "Tarif/jour",
+      type: "text",
+      required: true,
+      errorMessage: "Tarif is required",
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "text",
+      required: true,
+      errorMessage: "Description is required",
+    },
+  ];
+
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Famille Accueil</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          {successMessage && (
-            <div className="text-green-500">{successMessage}</div>
-          )}
-          <div className="grid gap-2">
-            <Label htmlFor="nom">Nom</Label>
-            <Input id="nom" type="text" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="ville">Ville</Label>
-            <Input id="ville" type="text" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="region">Region</Label>
-            <Input id="region" type="text" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="tarif">Tarif/jour</Label>
-            <Input id="tarif" type="text" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Input id="description" type="text" />
-          </div>
-          <Button
-            type="submit"
-            onClick={handleValidationClick}
-            className="w-full"
-          >
-            Valider
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div>
+      {successMessage && (
+        <div className="text-green-500 text-center">{successMessage}</div>
+      )}
+      <CommonForm title="Famille Accueil" fields={fields} onSubmit={onSubmit} />
+    </div>
   );
 };
 
