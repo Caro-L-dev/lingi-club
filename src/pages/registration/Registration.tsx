@@ -8,13 +8,13 @@ export default function LoginForm() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const handleInscriptionClick = (data) => {
+  const handleInscriptionClick = (data: any) => {
     if (!role) {
       return;
     }
     setTimeout(() => {
       navigate(`/${role}`);
-    }, 2000);
+    }, 3000); // Augmenter le délai à 3 secondes
   };
 
   const fields = [
@@ -35,16 +35,16 @@ export default function LoginForm() {
   ];
 
   return (
-    <Card className="mx-auto max-w-sm p-6 shadow-lg rounded-lg">
+    <Card className="mx-auto max-w-md p-8 shadow-lg rounded-lg border border-gray-200">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">
+        <CardTitle className="text-3xl font-bold text-center text-blue-600">
           INSCRIPTION
         </CardTitle>
       </CardHeader>
 
       <CardContent>
         <div className="grid gap-6">
-          <Label className="text-center">
+          <Label className="text-center text-lg font-medium text-gray-700">
             Je souhaite m'inscrire en tant que :
           </Label>
           <div className="flex justify-around">
@@ -57,7 +57,7 @@ export default function LoginForm() {
                 onChange={() => setRole("family")}
                 className="mr-2"
               />
-              <label htmlFor="family" className="cursor-pointer">
+              <label htmlFor="family" className="cursor-pointer text-gray-600">
                 FAMILLE D'ACCUEIL
               </label>
             </div>
@@ -70,12 +70,14 @@ export default function LoginForm() {
                 onChange={() => setRole("student")}
                 className="mr-2"
               />
-              <label htmlFor="student" className="cursor-pointer">
+              <label htmlFor="student" className="cursor-pointer text-gray-600">
                 APPRENANT
               </label>
             </div>
           </div>
-          <Label className="text-center mt-4">Je crée mon compte :</Label>
+          <Label className="text-center mt-4 text-lg font-medium text-gray-700">
+            Je crée mon compte :
+          </Label>
           <CommonForm
             title=""
             fields={fields}

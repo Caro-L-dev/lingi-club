@@ -52,7 +52,11 @@ const RegistrationFamily = () => {
       {successMessage && (
         <div className="text-green-500 text-center">{successMessage}</div>
       )}
-      <CommonForm title="Famille Accueil" fields={fields} onSubmit={onSubmit} />
+      <CommonForm
+        title="Famille d'accueil"
+        fields={fields}
+        onSubmit={onSubmit}
+      />
     </div>
   );
 };
