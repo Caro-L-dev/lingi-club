@@ -1,90 +1,99 @@
-import CommonForm from "@/components/common/CommonForm"; // Import the CommonForm component
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function LoginForm() {
-  const [role, setRole] = useState("");
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
+
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const Registration = () => {
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const [role, setRole] = useState("");
 
-  const handleInscriptionClick = (data: any) => {
-    if (!role) {
-      return;
-    }
-    setTimeout(() => {
-      navigate(`/${role}`);
-    }, 3000); // Augmenter le délai à 3 secondes
-  };
-
-  const fields = [
+  const roleOptions = [
     {
-      name: "email",
-      label: "Email",
-      type: "email",
-      required: true,
-      errorMessage: "Email is required",
+      id: "registrationFamily",
+      label: "famille d'accueil",
+      value: "family",
     },
-    {
-      name: "password",
-      label: "Mot de passe",
-      type: "password",
-      required: true,
-      errorMessage: "Password is required",
-    },
+    { id: "registrationStudent", label: "apprenant", value: "student" },
   ];
 
-  return (
-    <Card className="mx-auto max-w-md p-8 shadow-lg rounded-lg border border-gray-200">
-      <CardHeader>
-        <CardTitle className="text-3xl font-bold text-center text-blue-600">
-          INSCRIPTION
-        </CardTitle>
-      </CardHeader>
+  const onSubmit = (data) => {
+    if (!role) {
+      toast.error("Veuillez sélectionner votre rôle.");
+      return;
+    }
 
+    toast.success("Formulaire 1/2 validé.");
+    setTimeout(() => {
+      navigate(`/${role}`);
+    }, 3000);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <TitleCard>Inscription</TitleCard>
+      </CardHeader>
       <CardContent>
-        <div className="grid gap-6">
-          <Label className="text-center text-lg font-medium text-gray-700">
-            Je souhaite m'inscrire en tant que :
-          </Label>
-          <div className="flex justify-around">
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="family"
-                name="role"
-                value="family"
-                onChange={() => setRole("family")}
-                className="mr-2"
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <fieldset>
+            <legend className="text-center mb-2 text-sm text-muted-foreground">
+              Je souhaite m'inscrire en tant que :
+            </legend>
+            <RadioButtonGroup
+              options={roleOptions}
+              name="role"
+              defaultValue={role}
+              onValueChange={(value) => setRole(value)}
+            />
+          </fieldset>
+
+          <fieldset>
+            <legend className="text-center mb-2 text-sm text-muted-foreground">
+              Je crée mon compte :
+            </legend>
+            <div>
+              <Label htmlFor="email" aria-label="Votre adresse e-mail">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                {...register("email", {
+                  required: true,
+                  pattern: /^\S+@\S+$/i,
+                })}
               />
-              <label htmlFor="family" className="cursor-pointer text-gray-600">
-                FAMILLE D'ACCUEIL
-              </label>
             </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="student"
-                name="role"
-                value="student"
-                onChange={() => setRole("student")}
-                className="mr-2"
+            <div>
+              <Label htmlFor="password" aria-label="Votre mot de passe">
+                Mot de passe
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                {...register("password", { required: true })}
               />
-              <label htmlFor="student" className="cursor-pointer text-gray-600">
-                APPRENANT
-              </label>
             </div>
-          </div>
-          <Label className="text-center mt-4 text-lg font-medium text-gray-700">
-            Je crée mon compte :
-          </Label>
-          <CommonForm
-            title=""
-            fields={fields}
-            onSubmit={handleInscriptionClick}
-          />
-        </div>
+          </fieldset>
+          <Button
+            type="submit"
+            aria-label="Soumettre le formulaire"
+            className="w-full uppercase"
+          >
+            Poursuivre mon inscription
+          </Button>
+        </form>
       </CardContent>
     </Card>
   );
-}
+};
+export default Registration;

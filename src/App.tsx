@@ -14,7 +14,7 @@ function App() {
     <>
       <BrowserRouter>
         <Navbar />
-        <Wrapper className="flex flex-col items-center justify-center h-screen">
+        <Wrapper className="flex flex-col items-center mt-0 md:mt-20 md:justify-center">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/registration" element={<Registration />} />

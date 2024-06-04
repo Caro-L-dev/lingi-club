@@ -1,63 +1,49 @@
-import CommonForm from "@/components/common/CommonForm";
-import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import FormField from "@/components/common/formField/FormField";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const RegistrationFamily = () => {
-  const [successMessage, setSuccessMessage] = useState("");
+  const methods = useForm({
+    mode: "context",
+  });
 
   const onSubmit = (data) => {
-    setSuccessMessage("Registration successful!");
-    console.log(data);
+    toast.success("Votre famille a été enregistrée avec succès !");
   };
 
-  const fields = [
-    {
-      name: "nom",
-      label: "Nom",
-      type: "text",
-      required: true,
-      errorMessage: "Nom is required",
-    },
-    {
-      name: "ville",
-      label: "Ville",
-      type: "text",
-      required: true,
-      errorMessage: "Ville is required",
-    },
-    {
-      name: "region",
-      label: "Region",
-      type: "text",
-      required: true,
-      errorMessage: "Region is required",
-    },
-    {
-      name: "tarif",
-      label: "Tarif/jour",
-      type: "text",
-      required: true,
-      errorMessage: "Tarif is required",
-    },
-    {
-      name: "description",
-      label: "Description",
-      type: "text",
-      required: true,
-      errorMessage: "Description is required",
-    },
-  ];
-
   return (
-    <div>
-      {successMessage && (
-        <div className="text-green-500 text-center">{successMessage}</div>
-      )}
-      <CommonForm
-        title="Famille d'accueil"
-        fields={fields}
-        onSubmit={onSubmit}
-      />
-    </div>
+    <FormProvider {...methods}>
+      <Card>
+        <CardHeader>
+          <TitleCard>Famille d'accueil</TitleCard>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <fieldset>
+              <FormField id="name" label="Nom" />
+            </fieldset>
+            <fieldset>
+              <FormField id="region" label="Région" />
+              <FormField id="city" label="Ville" />
+            </fieldset>
+            <fieldset>
+              <FormField id="rate" label="Tarif/jour" />
+            </fieldset>
+            <fieldset>
+              <FormField id="description" label="Description" />
+            </fieldset>
+            <Button type="submit" className="w-full mt-5 uppercase">
+              Valider l'inscription de ma famille
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </FormProvider>
   );
 };
 
