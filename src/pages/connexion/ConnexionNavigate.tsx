@@ -1,29 +1,27 @@
-import { buttonVariants } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import { TypographyP } from "@/components/common/typographyP/TypographyP";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const ConnexionNavigate = () => {
-    return (
-        <div
-            className="flex h-screen items-center justify-center dark:bg-gray-900"
-            role="main"
-        >
-            <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-                <div className="space-y-2 text-center">
-                    <h2 className="text-3xl font-bold">Oups !</h2>
-                    <p className="text-gray-500 dark:text-gray-400 pt-4 pb-8">
-                        Il semble que vous soyez déja connecté
-                    </p>
-                    <Link
-                        to="/"
-                        className={buttonVariants({ variant: "secondary" })}
-                    >
-                        Click here
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <Card>
+      <CardHeader>
+        <TitleCard>Oups !</TitleCard>
+      </CardHeader>
+      <CardContent>
+        <TypographyP>Il semble que vous soyez déjà connecté.</TypographyP>
+        <Link to="/">
+          <Button variant={"secondary"} className="w-full mt-6">
+            Retourner à l'accueil
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default ConnexionNavigate;
