@@ -23,7 +23,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     )
 }
 
-// To be used in a child components of AuthContextProvider that needs the AuthContext
+// To be used in child components of AuthContextProvider that needs the AuthContext
 export const useAuthContext = () => {
     const context = useContext(AuthContext)
     if (!context) { 
