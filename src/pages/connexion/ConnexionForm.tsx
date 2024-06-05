@@ -87,6 +87,7 @@ const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
                   <FormControl>
                     <Input
                       type="password"
+                      autoComplete="on"
                       placeholder="Entrez votre mot de passe."
                       {...field}
                       aria-required="true"

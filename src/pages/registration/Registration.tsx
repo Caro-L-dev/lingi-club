@@ -80,6 +80,7 @@ const Registration = () => {
               <Input
                 id="password"
                 type="password"
+                autoComplete="on"
                 {...register("password", { required: true })}
               />
             </div>
