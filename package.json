@@ -1,5 +1,5 @@
 {
-  "name": "front",
+  "name": "lingi-club",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,19 +11,24 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.4.0",
+
+    "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "firebase": "^10.12.1",
     "lucide-react": "^0.378.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.51.4",
+    "react-hook-form": "^7.51.5",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.5",
