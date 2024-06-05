@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react';
-
-import { auth } from "@/firebase/firebase-config";
+// Firebase
+import { auth, db } from "@/firebase/firebase-config";
 import { addNewUserToFirebase } from '@/firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, onAuthStateChanged, signOut, User } from "firebase/auth";
+import { FirebaseError } from "firebase/app"
+import { doc, getDoc } from "firebase/firestore";
+// Types
 import { RegisterFormType, LogInFormType } from '@/types/Forms';
 import { UserType } from '@/types/User';
-
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, onAuthStateChanged, signOut } from "firebase/auth";
-import { FirebaseError } from "firebase/app"
-
+// Librairie
 import { toast } from 'react-toastify';
 
 export const useAuth = () => {
-  const [loading, setLoading] = useState<boolean>(false);  
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isUserConnected, setIsUserConnected] = useState<boolean>(false);
 
-  // Pour rester connecté lors du rechargement de la page
+  // To stay connected when the page is reloaded
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -25,15 +26,15 @@ export const useAuth = () => {
       }
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
   const firebaseRegister = async ({ email, password }: RegisterFormType) => {
     setLoading(true)
+
     try {
       const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user      
+      const user = userCredential.user
 
       if (user) {
         const userInfoToKeep: UserType = {
@@ -44,8 +45,8 @@ export const useAuth = () => {
           photoUrl: null,
           creationDate: new Date()
         }
-        // On ajoute le user dans la BDD
-        await addNewUserToFirebase('users', user.uid, userInfoToKeep)      
+        // We add the user to the database 
+        await addNewUserToFirebase('users', user.uid, userInfoToKeep)
         setError(null)
         setIsUserConnected(true)
         toast.success(`Inscription réussie (${userCredential.user.email})`);
@@ -87,6 +88,7 @@ export const useAuth = () => {
 
   const logOut = async () => {
     setLoading(true);
+
     try {
       await signOut(auth);
       setIsUserConnected(false);
@@ -97,9 +99,52 @@ export const useAuth = () => {
       return { error: firebaseError.message }
     } finally {
       setLoading(false);
+    }
+  }
+  return { firebaseRegister, firebaseLogIn, loading, error, isUserConnected, logOut };
+}
 
+export const useUserAuth = () => {
+  const [authUserInfo, setAuthUserInfo] = useState<UserType | User | null>(null);
+  const [authUserIsLoading, setAuthUserIsLoading] = useState<boolean>(true);
+
+  const getUserInfoFromFirestore = async (user: UserType | User) => {
+    if (auth.currentUser) {
+      // We fetch the connected user's info from the database using their ID
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+      let userInfo = user
+  
+      if (docSnap.exists()) {        
+        // If the document exists (the user in the database), we fetch the desired data
+        userInfo = docSnap.data() as UserType
+      }
+      // Otherwise, we use the info from Firebase authentication
+      setAuthUserInfo(userInfo)
+      setAuthUserIsLoading(false)
     }
   }
 
-  return { firebaseRegister, firebaseLogIn, loading, error, isUserConnected, logOut };
+  const authStateChanged = async (currentUser: UserType | User | null) => {
+    if (!currentUser) {
+      setAuthUserInfo(null)
+      setAuthUserIsLoading(false)
+      return
+    }
+    setAuthUserIsLoading(true)
+    await getUserInfoFromFirestore(currentUser)
+  }
+
+  // Setting up a listener for changes in authentication state. 
+  useEffect(() => {
+    // When the authentication state changes, the callback function provided to 'onAuthStateChanged' (authStateChanged) is called with the current user's as a parameter. If no user is logged in, Firebase calls it with `null`.
+    const unsubscribe = onAuthStateChanged(auth, authStateChanged);
+    // Unsubscribe function returned by useEffect is called when the component is unmounted, which helps to avoid memory leaks.
+    return () => unsubscribe();
+  }, []);
+
+  return {
+    authUserInfo,
+    authUserIsLoading,
+  }
 }
