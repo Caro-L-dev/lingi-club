@@ -1,5 +1,5 @@
 {
-  "name": "front",
+  "name": "lingi-club",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.0",
+
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
@@ -20,7 +21,7 @@
     "lucide-react": "^0.378.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.51.4",
+    "react-hook-form": "^7.51.5",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",

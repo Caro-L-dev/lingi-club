@@ -7,13 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isUserConnected, logOut } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleDisconnect = () => {
-    logOut()
-    navigate('/connexion')
-  }
+    logOut();
+    navigate("/connexion");
+  };
 
   return (
     <nav
@@ -48,9 +48,7 @@ const Navbar: React.FC = () => {
         } md:flex`}
       >
         {isUserConnected ? (
-          <Button onClick={handleDisconnect}>
-            Deconnection
-          </Button>
+          <Button onClick={handleDisconnect}>Déconnexion</Button>
         ) : (
           <>
             <Button variant="secondary">
