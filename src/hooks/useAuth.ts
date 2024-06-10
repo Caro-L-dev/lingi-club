@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-// Firebase
+import { useState, useEffect, useCallback } from 'react';
+
 import { auth, db } from "@/firebase/firebase-config";
 import { addNewUserToFirebase } from '@/firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app"
 import { doc, getDoc } from "firebase/firestore";
-// Types
+
 import { RegisterFormType, LogInFormType } from '@/types/Forms';
 import { UserType } from '@/types/User';
-// Librairie
+
 import { toast } from 'react-toastify';
 
 export const useAuth = () => {
@@ -114,8 +114,8 @@ export const useUserAuth = () => {
       const docRef = doc(db, "users", auth.currentUser.uid);
       const docSnap = await getDoc(docRef);
       let userInfo = user
-  
-      if (docSnap.exists()) {        
+
+      if (docSnap.exists()) {
         // If the document exists (the user in the database), we fetch the desired data
         userInfo = docSnap.data() as UserType
       }
@@ -125,7 +125,8 @@ export const useUserAuth = () => {
     }
   }
 
-  const authStateChanged = async (currentUser: UserType | User | null) => {
+// We use a useCallback to avoid recreating the function at each render (memorization of authStateChanged) and create an infinite loop in the useEffect
+const authStateChanged = useCallback(async (currentUser: UserType | User | null) => {
     if (!currentUser) {
       setAuthUserInfo(null)
       setAuthUserIsLoading(false)
@@ -133,7 +134,8 @@ export const useUserAuth = () => {
     }
     setAuthUserIsLoading(true)
     await getUserInfoFromFirestore(currentUser)
-  }
+  }, [])
+
 
   // Setting up a listener for changes in authentication state. 
   useEffect(() => {
@@ -141,7 +143,7 @@ export const useUserAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, authStateChanged);
     // Unsubscribe function returned by useEffect is called when the component is unmounted, which helps to avoid memory leaks.
     return () => unsubscribe();
-  }, []);
+  }, [authStateChanged]);
 
   return {
     authUserInfo,

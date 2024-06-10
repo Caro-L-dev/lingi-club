@@ -3,20 +3,16 @@ import ReactDOM from "react-dom/client";
 
 import App from "./App.tsx";
 import "./globals.css";
-import { AuthContextProvider } from "./context/AuthUserContext .tsx";
+import { AuthContextProvider } from "@/contexts/AuthUserContext"
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-        
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthContextProvider>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-      />
-    <App />
+      <ToastContainer position="top-center" autoClose={2000} />
+      <App />
     </AuthContextProvider>
   </React.StrictMode>
 );

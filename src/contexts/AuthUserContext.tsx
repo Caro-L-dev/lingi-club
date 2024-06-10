@@ -1,9 +1,9 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 import { User } from "firebase/auth";
 import { useUserAuth } from "@/hooks/useAuth.ts";
 import { UserType } from "@/types/User.ts";
 
-const AuthContext = createContext<{
+export const AuthContext = createContext<{
     authUserInfo: UserType | User | null,
     authUserIsLoading: boolean
 }>({
@@ -21,13 +21,4 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
             {children}
         </AuthContext.Provider>
     )
-}
-
-// To be used in child components of AuthContextProvider that needs the AuthContext
-export const useAuthContext = () => {
-    const context = useContext(AuthContext)
-    if (!context) { 
-        throw new Error('useAuthContext doit être utilisé avec AuthContextProvider')
-    }    
-    return context
 }
