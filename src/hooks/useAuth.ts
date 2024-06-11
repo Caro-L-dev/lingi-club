@@ -1,0 +1,134 @@
+import { auth } from "@/firebase/firebase-config";
+import { addNewUserToFirebase } from "@/firebase/firestore";
+import { LogInFormType, RegisterFormType } from "@/types/Forms";
+import { UserType } from "@/types/User";
+import { useEffect, useState } from "react";
+
+import { FirebaseError } from "firebase/app";
+import {
+  UserCredential,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+
+import { toast } from "react-toastify";
+
+export const useAuth = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isUserConnected, setIsUserConnected] = useState<boolean>(false);
+  const [emailRegister, setEmailRegister] = useState<string>("");
+  const [passwordRegister, setPasswordRegister] = useState<string>("");
+
+  // Pour rester connecté lors du rechargement de la page
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsUserConnected(!!user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const firebaseRegister = async ({ email, password }: RegisterFormType) => {
+    setLoading(true);
+    try {
+      const userCredential: UserCredential =
+        await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user) {
+        const userInfoToKeep: UserType = {
+          uid: user.uid,
+          email: email,
+          displayName: "",
+          emailVerified: false,
+          photoUrl: null,
+          creationDate: new Date(),
+        };
+        // On ajoute le user dans la BDD
+        await addNewUserToFirebase("users", user.uid, userInfoToKeep);
+        setError(null);
+        setIsUserConnected(true);
+        toast.success(`Inscription réussie (${userCredential.user.email})`);
+      }
+      return {
+        data: user,
+      };
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      setError(firebaseError.message);
+      toast.error(`Problème lors de l'inscription : ${firebaseError.message}`);
+      return {
+        error: firebaseError.message,
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const firebaseLogIn = async ({ email, password }: LogInFormType) => {
+    setLoading(true);
+    try {
+      const userCredential: UserCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setError(null);
+      setIsUserConnected(true);
+      toast.success(`Connexion réussie (${userCredential.user.email})`);
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      setError(firebaseError.message);
+      toast.error(`Problème lors de la connexion : ${firebaseError.message}`);
+      return {
+        error: firebaseError.message,
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logOut = async () => {
+    setLoading(true);
+    try {
+      await signOut(auth);
+      setIsUserConnected(false);
+      toast.success("Déconnexion réussie");
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      toast.error(`Problème lors de la déconnexion : ${firebaseError.message}`);
+      return { error: firebaseError.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitRegister = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const result = await firebaseRegister({
+      email: emailRegister,
+      password: passwordRegister,
+    });
+    if (result.error) {
+      console.error(result.error);
+    }
+  };
+
+  return {
+    firebaseRegister,
+    firebaseLogIn,
+    loading,
+    error,
+    isUserConnected,
+    logOut,
+    handleSubmitRegister,
+    setEmailRegister,
+    setPasswordRegister,
+  };
+};
