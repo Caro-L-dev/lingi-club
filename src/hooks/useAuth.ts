@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import { auth } from "@/firebase/firebase-config";
 import { addNewUserToFirebase } from '@/firebase/firestore';
 import { RegisterFormType, LogInFormType } from '@/types/Forms';
@@ -97,7 +95,6 @@ export const useAuth = () => {
       return { error: firebaseError.message }
     } finally {
       setLoading(false);
-
     }
   }
 

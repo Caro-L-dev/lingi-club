@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -55,7 +54,6 @@ const Registration = () => {
               onValueChange={(value) => setRole(value)}
             />
           </fieldset>
-
           <fieldset>
             <legend className="text-center mb-2 text-sm text-muted-foreground">
               Je crée mon compte :
