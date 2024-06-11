@@ -32,19 +32,19 @@ export default function HostFamilyCard({
   const defaultImage = "/public/images/family.jpg";
 
   return (
-    <Card className="flex flex-col md:flex-row">
-      <CardHeader>
+    <Card className="relative flex flex-col md:flex-row overflow-hidden">
+      <CardHeader className="relative w-full md:w-1/2">
         <img
-          className="h-full w-screen object-cover"
+          className="md:absolute md:inset-0 w-full h-full md:object-cover md:object-center"
           src={image || defaultImage}
           alt={title}
         />
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="relative flex-grow md:w-1/2 p-4 md:pl-8">
         <CardContent>
-          <div className="flex flex-col md:flex-row md:justify-between items-center pt-4">
-            <div className="flex gap-4 pb-4 md:pb-0">
+          <div className="flex flex-col md:flex-row md:justify-between items-center">
+            <div className="flex gap-2 mb-4 md:mb-0 md:flex-col">
               <ItemInfo children={nativeLanguage} icon={<Flag />} />
               <ItemInfo children={region} icon={<MapPin />} />
               <ItemInfo children={`${price}€/sem`} icon={<Euro />} />
