@@ -20,12 +20,15 @@ export const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isUserConnected, setIsUserConnected] = useState<boolean>(false);
-  const [emailRegister, setEmailRegister] = useState<string>("");
-  const [passwordRegister, setPasswordRegister] = useState<string>("");
 
+  // Pour rester connecté lors du rechargement de la page
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserConnected(!!user);
+      if (user) {
+        setIsUserConnected(true);
+      } else {
+        setIsUserConnected(false);
+      }
       setLoading(false);
     });
 
@@ -48,17 +51,22 @@ export const useAuth = () => {
           photoUrl: null,
           creationDate: new Date(),
         };
+        // On ajoute le user dans la BDD
         await addNewUserToFirebase("users", user.uid, userInfoToKeep);
         setError(null);
         setIsUserConnected(true);
         toast.success(`Inscription réussie (${userCredential.user.email})`);
       }
-      return { data: user };
+      return {
+        data: user,
+      };
     } catch (error) {
       const firebaseError = error as FirebaseError;
       setError(firebaseError.message);
       toast.error(`Problème lors de l'inscription : ${firebaseError.message}`);
-      return { error: firebaseError.message };
+      return {
+        error: firebaseError.message,
+      };
     } finally {
       setLoading(false);
     }
@@ -66,6 +74,7 @@ export const useAuth = () => {
 
   const firebaseLogIn = async ({ email, password }: LogInFormType) => {
     setLoading(true);
+
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(
         auth,
@@ -79,7 +88,9 @@ export const useAuth = () => {
       const firebaseError = error as FirebaseError;
       setError(firebaseError.message);
       toast.error(`Problème lors de la connexion : ${firebaseError.message}`);
-      return { error: firebaseError.message };
+      return {
+        error: firebaseError.message,
+      };
     } finally {
       setLoading(false);
     }
@@ -100,19 +111,6 @@ export const useAuth = () => {
     }
   };
 
-  const handleSubmitRegister = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-    const result = await firebaseRegister({
-      email: emailRegister,
-      password: passwordRegister,
-    });
-    if (result.error) {
-      console.error(result.error);
-    }
-  };
-
   return {
     firebaseRegister,
     firebaseLogIn,
@@ -120,8 +118,5 @@ export const useAuth = () => {
     error,
     isUserConnected,
     logOut,
-    handleSubmitRegister,
-    setEmailRegister,
-    setPasswordRegister,
   };
 };

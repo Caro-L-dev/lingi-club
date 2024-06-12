@@ -11,19 +11,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useAuth } from "@/hooks/useAuth"; // Assurez-vous que le chemin est correct
+import { useAuth } from "@/hooks/useAuth";
 
 const Registration = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [role, setRole] = useState("");
-  const {
-    firebaseRegister,
-    loading,
-    error,
-    setEmailRegister,
-    setPasswordRegister,
-  } = useAuth();
+  const { firebaseRegister, loading, error } = useAuth();
 
   const roleOptions = [
     {
@@ -39,10 +33,6 @@ const Registration = () => {
       toast.error("Veuillez sélectionner votre rôle.");
       return;
     }
-
-    // Mettre à jour les états email et password pour firebaseRegister
-    setEmailRegister(data.email);
-    setPasswordRegister(data.password);
 
     const result = await firebaseRegister({
       email: data.email,
