@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useAuth } from "@/hooks/useAuth"; // Assurez-vous que le chemin est correct
+import { useAuth } from "@/hooks/useAuth";
 
 const Registration = () => {
   const navigate = useNavigate();
