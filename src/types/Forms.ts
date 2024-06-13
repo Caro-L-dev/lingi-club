@@ -4,4 +4,8 @@ export type FormType = {
 }
 
 export type RegisterFormType = FormType;
-export type LogInFormType = FormType
+export type LogInFormType = FormType;
+
+export type RegisterWithRoleFormType = FormType & {
+    role: string;
+}
