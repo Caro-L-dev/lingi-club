@@ -28,7 +28,7 @@ const Registration = () => {
     { id: "registrationStudent", label: "apprenant", value: "student" },
   ];
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     if (!role) {
       toast.error("Veuillez sélectionner votre rôle.");
       return;
