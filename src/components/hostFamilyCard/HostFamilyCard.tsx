@@ -1,7 +1,10 @@
 import { Euro, Flag, MapPin } from "lucide-react";
 
-import { Button } from "../ui/button";
+import { HostFamilyCardProps } from "@/types/HostFamily";
 
+import ItemInfo from "./ItemInfo";
+
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -9,16 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-interface HostFamilyCardProps {
-  title: string;
-  image: string;
-  description: string;
-  price: number;
-  region: string;
-  nativeLanguage: string;
-  accept?: string[];
-}
 
 export default function HostFamilyCard({
   title,
@@ -32,24 +25,26 @@ export default function HostFamilyCard({
   const defaultImage = "/public/images/family.jpg";
 
   return (
-    <Card className="relative flex flex-col md:flex-row overflow-hidden">
-      <CardHeader className="relative w-full md:w-1/2">
+    <Card className="relative flex flex-col lg:flex-row overflow-hidden">
+      <CardHeader className="relative w-full lg:w-1/2">
         <img
-          className="md:absolute md:inset-0 w-full h-full md:object-cover md:object-center"
+          className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
           src={image || defaultImage}
           alt={title}
         />
       </CardHeader>
 
-      <CardContent className="relative flex-grow md:w-1/2 p-4 md:pl-8">
+      <CardContent className="relative flex-grow lg:w-1/2 p-4 lg:pl-8">
         <CardContent>
-          <div className="flex flex-col md:flex-row md:justify-between items-center">
-            <div className="flex gap-2 mb-4 md:mb-0 md:flex-col">
-              <ItemInfo children={nativeLanguage} icon={<Flag />} />
-              <ItemInfo children={region} icon={<MapPin />} />
-              <ItemInfo children={`${price}€/sem`} icon={<Euro />} />
+          <div className="flex flex-col lg:flex-row lg:justify-between items-center">
+            <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
+              <ItemInfo nativeLanguage={nativeLanguage} icon={<Flag />} />
+              <ItemInfo region={region} icon={<MapPin />} />
+              <ItemInfo price={price} icon={<Euro />}>
+                / semaine
+              </ItemInfo>
             </div>
-            <Button className="w-full md:w-fit">Réserver</Button>
+            <Button className="w-full lg:w-fit">Réserver</Button>
           </div>
         </CardContent>
         <CardContent className="border-t border-t-secondary pt-4">
@@ -71,17 +66,3 @@ export default function HostFamilyCard({
     </Card>
   );
 }
-
-interface ItemInfoProps {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}
-
-const ItemInfo = ({ icon, children }: ItemInfoProps) => {
-  return (
-    <div className="flex items-center gap-x-2">
-      <span className="text-secondary">{icon}</span>
-      <p>{children}</p>
-    </div>
-  );
-};
