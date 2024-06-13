@@ -39,14 +39,7 @@ const Registration = () => {
       password: data.password,
     });
 
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Inscription réussie. Redirection...");
-      setTimeout(() => {
-        navigate(`/${role}`);
-      }, 3000);
-    }
+    result.data && navigate(`/${role}`);
   };
 
   return (
