@@ -3,18 +3,21 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import { useAuth } from "@/hooks/useAuth";
 
 const Registration = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [role, setRole] = useState("");
+  const { firebaseRegister, loading, error } = useAuth();
 
   const roleOptions = [
     {
@@ -25,16 +28,25 @@ const Registration = () => {
     { id: "registrationStudent", label: "apprenant", value: "student" },
   ];
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data: any) => {
     if (!role) {
       toast.error("Veuillez sélectionner votre rôle.");
       return;
     }
 
-    toast.success("Formulaire 1/2 validé.");
-    setTimeout(() => {
-      navigate(`/${role}`);
-    }, 3000);
+    const result = await firebaseRegister({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Inscription réussie. Redirection...");
+      setTimeout(() => {
+        navigate(`/${role}`);
+      }, 3000);
+    }
   };
 
   return (
@@ -55,7 +67,6 @@ const Registration = () => {
               onValueChange={(value) => setRole(value)}
             />
           </fieldset>
-
           <fieldset>
             <legend className="text-center mb-2 text-sm text-muted-foreground">
               Je crée mon compte :
@@ -89,12 +100,15 @@ const Registration = () => {
             type="submit"
             aria-label="Soumettre le formulaire"
             className="w-full uppercase"
+            disabled={loading}
           >
-            Poursuivre mon inscription
+            {loading ? "Chargement..." : "Poursuivre mon inscription"}
           </Button>
+          {error && <p className="text-destructive">{error}</p>}{" "}
         </form>
       </CardContent>
     </Card>
   );
 };
+
 export default Registration;
