@@ -17,13 +17,7 @@ const Registration = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [role, setRole] = useState("");
-  const {
-    firebaseRegister,
-    loading,
-    error,
-    setEmailRegister,
-    setPasswordRegister,
-  } = useAuth();
+  const { firebaseRegister, loading, error } = useAuth();
 
   const roleOptions = [
     {
@@ -34,15 +28,11 @@ const Registration = () => {
     { id: "registrationStudent", label: "apprenant", value: "student" },
   ];
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     if (!role) {
       toast.error("Veuillez sélectionner votre rôle.");
       return;
     }
-
-    // Mettre à jour les états email et password pour firebaseRegister
-    setEmailRegister(data.email);
-    setPasswordRegister(data.password);
 
     const result = await firebaseRegister({
       email: data.email,
