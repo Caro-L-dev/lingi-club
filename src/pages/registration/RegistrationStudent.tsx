@@ -9,10 +9,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const RegistrationStudent = () => {
   const methods = useForm({
-    mode: "context",
+    mode: "onChange",
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (
+    //data
+    ) => {
     toast.success("Votre inscription a été enregistrée avec succès !");
   };
 

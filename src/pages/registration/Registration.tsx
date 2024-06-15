@@ -13,9 +13,12 @@ import { Label } from "@/components/ui/label";
 
 import { useAuth } from "@/hooks/useAuth";
 
+import { RegisterWithRoleFormType } from "@/types/Forms";
+
 const Registration = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  //const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<RegisterWithRoleFormType>();
   const [role, setRole] = useState("");
   const { firebaseRegister, loading, error } = useAuth();
 
@@ -28,7 +31,7 @@ const Registration = () => {
     { id: "registrationStudent", label: "apprenant", value: "student" },
   ];
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: RegisterWithRoleFormType) => {
     if (!role) {
       toast.error("Veuillez sélectionner votre rôle.");
       return;
