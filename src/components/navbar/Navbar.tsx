@@ -4,6 +4,10 @@ import { Home, Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
+///////////////////////////////////////////////////////////////////////////
+import { useAuthContext } from "@/hooks/useAuthContext";
+///////////////////////////////////////////////////////////////////////////
+
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isUserConnected, logOut } = useAuth();
@@ -15,11 +19,21 @@ const Navbar: React.FC = () => {
     navigate("/connexion");
   };
 
+///////////////////////////////////////////////////////////////////////////
+const {authUserInfo: authUserInfoFromContext, authUserIsLoading: authUserIsLoadingFromContext } = useAuthContext();
+///////////////////////////////////////////////////////////////////////////
+
   return (
     <nav
       className="flex flex-col sticky top-0 md:flex-row bg-background items-center justify-around p-6 shadow-md"
       aria-label="Main navigation"
     >
+      
+      {/* /////////////////////////////////////////////////////////////////////////// */}
+      <p>authUserInfoFromContext = <span className="text-red-500">{authUserInfoFromContext?.email}</span></p>
+      <p>authUserIsLoadingFromContext = <span className="text-blue-500">{authUserIsLoadingFromContext && "LOADING"}</span></p>
+      { }
+
       <div className="flex justify-between w-full md:w-auto items-baseline">
         <Link
           to="/"

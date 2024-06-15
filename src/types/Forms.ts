@@ -3,5 +3,7 @@ export type FormType = {
     password: string;
 }
 
-export type RegisterFormType = FormType;
+export type RegisterFormType = FormType & {
+    isFamily: boolean;
+}
 export type LogInFormType = FormType
