@@ -1,4 +1,4 @@
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, setDoc, getDoc } from "firebase/firestore"; 
 import { FirebaseError } from "firebase/app"
 import { db } from "@/firebase/firebase-config"
 
@@ -21,6 +21,32 @@ export const addOrUpdateDataToFirebase = async (
 
         return {
           error: firebaseError.message
+        };
+    }
+}
+
+export const getDataFromFirebase = async (
+    collectionName: string,
+    documentId: string,
+) => {
+    try {
+        const docRef = doc(db, collectionName, documentId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return {
+                data: docSnap.data()
+            }
+        } else {
+            return {
+                error: "No such document!"
+            }
+        }
+    } catch (error) {
+        const firebaseError = error as FirebaseError
+
+        return {
+            error: firebaseError.message
         };
     }
 }

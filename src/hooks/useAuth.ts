@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { auth, db } from "@/firebase/firebase-config";
 import { addOrUpdateDataToFirebase } from '@/firebase/firestore';
+
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app"
 import { doc, getDoc } from "firebase/firestore";
@@ -10,6 +11,23 @@ import { RegisterFormType, LogInFormType } from '@/types/Forms';
 import { UserType } from '@/types/User';
 
 import { toast } from 'react-toastify';
+
+const emptyUser: UserType = {
+  uid: "",
+  isFamily: false,
+  email: "",
+  displayName: "",
+  city: "",
+  region: "",
+  description: "",
+  emailVerified: false,
+  photoUrl: null,
+  creationDate: null,
+  studentAge: "",
+  familyDalyRate: null,
+  familyLangages: null,
+  familyAvailabilities: null,
+}
 
 export const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,6 +45,9 @@ export const useAuth = () => {
   }, []);
 
   const firebaseRegister = async ({ email, password, isFamily }: RegisterFormType) => {
+
+    console.log(email, password, isFamily)
+
     setLoading(true)
 
     try {
@@ -35,12 +56,10 @@ export const useAuth = () => {
 
       if (user) {
         const userInfoToKeep: UserType = {
+          ...emptyUser,
           uid: user.uid,
           isFamily: isFamily,
-          email: email,
-          displayName: "",
-          emailVerified: false,
-          photoUrl: null,
+          email: user.email,
           creationDate: new Date()
         }
         // We add the user to the database 

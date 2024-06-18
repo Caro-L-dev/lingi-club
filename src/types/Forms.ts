@@ -6,4 +6,5 @@ export type FormType = {
 export type RegisterFormType = FormType & {
     isFamily: boolean;
 }
+
 export type LogInFormType = FormType
