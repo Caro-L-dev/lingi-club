@@ -4,6 +4,5 @@ export type UserType = {
     displayName: string | null;
     emailVerified: boolean;
     photoUrl: string | null;
-    creationDate: Date;
-
+    creationDate: Date | null;
 }
