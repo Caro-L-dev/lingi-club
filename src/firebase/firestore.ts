@@ -1,6 +1,6 @@
 import { doc, setDoc } from "firebase/firestore"; 
-import { db } from "./firebase-config"
 import { FirebaseError } from "firebase/app"
+import { db } from "@/firebase/firebase-config"
 
 export const addNewUserToFirebase = async (
     collectionName: string,
