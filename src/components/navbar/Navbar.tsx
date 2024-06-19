@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className="flex flex-col sticky top-0 md:flex-row bg-background items-center justify-around p-6 shadow-md"
+      className="flex flex-col sticky z-10 top-0 md:flex-row bg-background items-center justify-around p-6 shadow-md"
       aria-label="Main navigation"
     >
       <div className="flex justify-between w-full md:w-auto items-baseline">
