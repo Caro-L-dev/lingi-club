@@ -9,3 +9,9 @@ export type LogInFormType = FormType;
 export type RegisterWithRoleFormType = FormType & {
     role: string;
 }
+
+export type FormValuesType = {
+    language: string;
+    region: string;
+};
+
