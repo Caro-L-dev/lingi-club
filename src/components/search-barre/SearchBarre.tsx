@@ -51,7 +51,6 @@ const SearchBarre = () => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="english">Anglais</SelectItem>
-                            <SelectItem value="spanish">Espagnol</SelectItem>
                         </SelectContent>
                     </Select>
                     {errors.language && <span>Choisissez une langue</span>}
