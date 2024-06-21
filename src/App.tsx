@@ -21,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/family" element={<RegistrationFamily />} />
+            {/* CHANGER L'URL DE LA PAGE ET LE NOM DU COMPOSANT */}
             <Route path="/family-infos" element={<Familly />} />
             <Route path="/student" element={<RegistrationStudent />} />
             <Route path="/connexion" element={<Connexion />} />

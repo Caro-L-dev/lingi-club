@@ -23,6 +23,7 @@ const SearchBarre = () => {
     } = useForm<FormValuesType>();
 
     const onSubmit: SubmitHandler<FormValuesType> = (data) => {
+        // CHANGER L'URL DE LA PAGE
         navigate("/family-infos", { state: { key: data } });
         reset();
     };
