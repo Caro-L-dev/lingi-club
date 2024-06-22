@@ -1,9 +1,8 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import FormField from "@/components/common/formField/FormField";
-
+import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -12,9 +11,7 @@ const RegistrationFamily = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (
-    //data
-    ) => {
+  const onSubmit = () => {
     toast.success("Votre famille a été enregistrée avec succès !");
   };
 
