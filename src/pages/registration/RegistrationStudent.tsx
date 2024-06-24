@@ -1,25 +1,43 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { z } from "zod";
 
 import FormField from "@/components/common/formField/FormField";
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-const RegistrationFamily = () => {
-  const methods = useForm({
+// Définition du schéma de validation
+const studentFormSchema = z.object({
+  name: z.string().nonempty("Le nom est requis"),
+  region: z.string().nonempty("La région est requise"),
+  city: z.string().nonempty("La ville est requise"),
+});
+
+// Type dérivé du schéma
+type StudentFormData = z.infer<typeof studentFormSchema>;
+
+const RegistrationStudent = () => {
+  const navigate = useNavigate();
+  const methods = useForm<StudentFormData>({
+    resolver: zodResolver(studentFormSchema),
     mode: "onChange",
   });
 
-  const onSubmit = () => {
-    toast.success("Votre famille a été enregistrée avec succès !");
+  const onSubmit = (data: StudentFormData) => {
+    console.log(data); // Pour le débogage
+    // Ici, vous enverriez normalement les données à votre backend
+    toast.success("Votre inscription a été enregistrée avec succès !");
+    navigate("/student-availability"); // Redirection vers la page suivante
   };
 
   return (
     <FormProvider {...methods}>
       <Card>
         <CardHeader>
-          <TitleCard>Famille d'accueil</TitleCard>
+          <TitleCard>Apprenant</TitleCard>
         </CardHeader>
         <CardContent>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -30,14 +48,16 @@ const RegistrationFamily = () => {
               <FormField id="region" label="Région" />
               <FormField id="city" label="Ville" />
             </fieldset>
-            <fieldset>
-              <FormField id="rate" label="Tarif/jour" />
-            </fieldset>
-            <fieldset>
-              <FormField id="description" label="Description" />
-            </fieldset>
-            <Button type="submit" className="w-full mt-5 uppercase">
-              Poursuivre mon inscription
+            <Button
+              type="submit"
+              className="w-full mt-5 uppercase"
+              disabled={
+                !methods.formState.isValid || methods.formState.isSubmitting
+              }
+            >
+              {methods.formState.isSubmitting
+                ? "Chargement..."
+                : "Valider mon inscription"}
             </Button>
           </form>
         </CardContent>
@@ -46,4 +66,4 @@ const RegistrationFamily = () => {
   );
 };
 
-export default RegistrationFamily;
+export default RegistrationStudent;
