@@ -12,7 +12,7 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   onValueChange,
 }) => {
   return (
-    <div className="flex items-center justify-around space-x-4">
+    <div className="flex items-center justify-around space-x-4 flex-col md:flex-row">
       {options.map((option) => (
         <div key={option.id} className="flex items-center gap-2">
           <input

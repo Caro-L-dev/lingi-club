@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import FormField from "@/components/common/formField/FormField";
+import { Wrapper } from "@/components/common/wrapper/Wrapper";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -12,40 +13,42 @@ const RegistrationFamily = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (
+  const onSubmit = () =>
     //data
-    ) => {
-    toast.success("Votre famille a été enregistrée avec succès !");
-  };
+    {
+      toast.success("Votre famille a été enregistrée avec succès !");
+    };
 
   return (
-    <FormProvider {...methods}>
-      <Card>
-        <CardHeader>
-          <TitleCard>Famille d'accueil</TitleCard>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <fieldset>
-              <FormField id="name" label="Nom" />
-            </fieldset>
-            <fieldset>
-              <FormField id="region" label="Région" />
-              <FormField id="city" label="Ville" />
-            </fieldset>
-            <fieldset>
-              <FormField id="rate" label="Tarif/jour" />
-            </fieldset>
-            <fieldset>
-              <FormField id="description" label="Description" />
-            </fieldset>
-            <Button type="submit" className="w-full mt-5 uppercase">
-              Valider l'inscription de ma famille
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </FormProvider>
+    <Wrapper className="lg:mt-20">
+      <FormProvider {...methods}>
+        <Card>
+          <CardHeader>
+            <TitleCard>Famille d'accueil</TitleCard>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <fieldset>
+                <FormField id="name" label="Nom" />
+              </fieldset>
+              <fieldset>
+                <FormField id="region" label="Région" />
+                <FormField id="city" label="Ville" />
+              </fieldset>
+              <fieldset>
+                <FormField id="rate" label="Tarif/jour" />
+              </fieldset>
+              <fieldset>
+                <FormField id="description" label="Description" />
+              </fieldset>
+              <Button type="submit" className="w-full mt-5 uppercase">
+                Valider l'inscription de ma famille
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </FormProvider>
+    </Wrapper>
   );
 };
 
