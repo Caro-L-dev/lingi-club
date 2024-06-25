@@ -18,7 +18,7 @@ const emptyUser: UserType = {
   email: "",
   displayName: "",
   city: "",
-  region: "",
+  region: null,
   description: "",
   emailVerified: false,
   photoUrl: null,
@@ -45,9 +45,6 @@ export const useAuth = () => {
   }, []);
 
   const firebaseRegister = async ({ email, password, isFamily }: RegisterFormType) => {
-
-    console.log(email, password, isFamily)
-
     setLoading(true)
 
     try {

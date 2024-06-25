@@ -36,8 +36,6 @@ const Registration = () => {
       return;
     }
 
-    console.log(data)
-
     const result = await firebaseRegister({
       email: data.email,
       password: data.password,
