@@ -1,43 +1,93 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import moment from "moment";
+import { useContext, useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { z } from "zod";
 
 import FormField from "@/components/common/formField/FormField";
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-// Définition du schéma de validation
-const familyFormSchema = z.object({
-  name: z.string().nonempty("Le nom est requis"),
-  region: z.string().nonempty("La région est requise"),
-  city: z.string().nonempty("La ville est requise"),
-  rate: z
-    .string()
-    .nonempty("Le tarif est requis")
-    .transform(Number)
-    .refine((n) => n > 0, "Le tarif doit être supérieur à 0"),
-  description: z.string().optional(),
-});
+import { AuthContext } from "@/contexts/AuthUserContext";
+import {
+  addOrUpdateDataToFirebase,
+  getDataFromFirebase,
+} from "@/firebase/firestore";
 
-// Type dérivé du schéma
-type FamilyFormData = z.infer<typeof familyFormSchema>;
+const localizer = momentLocalizer(moment);
+
+type Availability = {
+  start: Date;
+  end: Date;
+  title: string;
+};
 
 const RegistrationFamily = () => {
-  const navigate = useNavigate();
-  const methods = useForm<FamilyFormData>({
-    resolver: zodResolver(familyFormSchema),
+  const methods = useForm({
     mode: "onChange",
   });
 
-  const onSubmit = (data: FamilyFormData) => {
-    console.log(data); // Pour le débogage
-    // Ici, vous enverriez normalement les données à votre backend
-    toast.success("Votre famille a été enregistrée avec succès !");
-    navigate("/family-availability"); // Redirection vers la page suivante
+  const [events, setEvents] = useState<Availability[]>([]);
+  const { authUserInfo, authUserIsLoading } = useContext(AuthContext);
+
+  const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
+    const title = window.prompt("Entrez un titre pour votre disponibilité");
+    if (title) {
+      setEvents([...events, { start, end, title }]);
+    }
   };
+
+  const onSubmit = async (data: {
+    displayName: string;
+    region: string;
+    city: string;
+    dailyRate: number;
+    description: string;
+  }) => {
+    if (authUserIsLoading) {
+      toast.info(
+        "Veuillez patienter pendant que nous vérifions votre connexion..."
+      );
+      return;
+    }
+
+    if (!authUserInfo || !authUserInfo.uid) {
+      toast.error("Vous devez être connecté pour enregistrer une famille.");
+      return;
+    }
+
+    try {
+      const { displayName, region, city, dailyRate, description } = data;
+      await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
+        displayName,
+        region,
+        city,
+        dailyRate,
+        description,
+        familyAvailabilities: events,
+      });
+
+      toast.success("Votre famille a été enregistrée avec succès !");
+
+      // Vérification des données enregistrées
+      const userData = await getDataFromFirebase("users", authUserInfo.uid);
+      console.log("Données enregistrées :", userData);
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de l'enregistrement.");
+      console.error("Error writing document: ", error);
+    }
+  };
+
+  if (authUserIsLoading) {
+    return <div>Chargement...</div>;
+  }
+
+  if (!authUserInfo) {
+    return <div>Vous devez être connecté pour accéder à cette page.</div>;
+  }
 
   return (
     <FormProvider {...methods}>
@@ -46,30 +96,45 @@ const RegistrationFamily = () => {
           <TitleCard>Famille d'accueil</TitleCard>
         </CardHeader>
         <CardContent>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
             <fieldset>
-              <FormField id="name" label="Nom" />
+              <FormField id="displayName" label="Nom" />
             </fieldset>
-            <fieldset>
+            <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField id="region" label="Région" />
               <FormField id="city" label="Ville" />
             </fieldset>
             <fieldset>
-              <FormField id="rate" label="Tarif/jour" type="number" />
+              <FormField
+                id="dailyRate"
+                label="Tarif journalier"
+                type="number"
+              />
             </fieldset>
             <fieldset>
-              <FormField id="description" label="Description" />
+              <FormField
+                id="description"
+                label="Description"
+                as="textarea"
+                rows={4}
+              />
             </fieldset>
-            <Button
-              type="submit"
-              className="w-full mt-5 uppercase"
-              disabled={
-                !methods.formState.isValid || methods.formState.isSubmitting
-              }
-            >
-              {methods.formState.isSubmitting
-                ? "Chargement..."
-                : "Poursuivre mon inscription"}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Sélectionnez vos disponibilités
+              </h3>
+              <Calendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                selectable
+                onSelectSlot={handleSelect}
+                className="h-[500px]"
+              />
+            </div>
+            <Button type="submit" className="w-full uppercase">
+              Valider l'inscription de ma famille
             </Button>
           </form>
         </CardContent>

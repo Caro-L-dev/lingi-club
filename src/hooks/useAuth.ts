@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import { auth, db } from "@/firebase/firebase-config";
-import { addNewUserToFirebase } from '@/firebase/firestore';
+import { addOrUpdateDataToFirebase } from '@/firebase/firestore';
+
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app"
 import { doc, getDoc } from "firebase/firestore";
@@ -11,6 +12,23 @@ import { UserType } from '@/types/User';
 
 import { toast } from 'react-toastify';
 
+const emptyUser: UserType = {
+  uid: "",
+  isFamily: false,
+  email: "",
+  displayName: "",
+  city: "",
+  region: null,
+  description: "",
+  emailVerified: false,
+  photoUrl: null,
+  creationDate: null,
+  studentAge: "",
+  familyDalyRate: null,
+  familyLangages: null,
+  familyAvailabilities: null,
+}
+
 export const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,17 +37,14 @@ export const useAuth = () => {
   // To stay connected when the page is reloaded
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsUserConnected(true);
-      } else {
-        setIsUserConnected(false);
-      }
+      // !!user converts user to a boolean. If user is truthy (= it exists and is not null/undefined/false/0/NaN/an empty string), !!user == true. If user is falsy !!user == false.
+      setIsUserConnected(!!user);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const firebaseRegister = async ({ email, password }: RegisterFormType) => {
+  const firebaseRegister = async ({ email, password, isFamily }: RegisterFormType) => {
     setLoading(true)
 
     try {
@@ -38,15 +53,14 @@ export const useAuth = () => {
 
       if (user) {
         const userInfoToKeep: UserType = {
+          ...emptyUser,
           uid: user.uid,
-          email: email,
-          displayName: "",
-          emailVerified: false,
-          photoUrl: null,
+          isFamily: isFamily,
+          email: user.email,
           creationDate: new Date()
         }
         // We add the user to the database 
-        await addNewUserToFirebase('users', user.uid, userInfoToKeep)
+        await addOrUpdateDataToFirebase('users', user.uid, userInfoToKeep)
         setError(null)
         setIsUserConnected(true)
         toast.success(`Inscription réussie (${userCredential.user.email})`);
@@ -125,8 +139,8 @@ export const useUserAuth = () => {
     }
   }
 
-// We use a useCallback to avoid recreating the function at each render (memorization of authStateChanged) and create an infinite loop in the useEffect
-const authStateChanged = useCallback(async (currentUser: UserType | User | null) => {
+  // We use a useCallback to avoid recreating the function at each render (memorization of authStateChanged) and create an infinite loop in the useEffect
+  const authStateChanged = useCallback(async (currentUser: UserType | User | null) => {
     if (!currentUser) {
       setAuthUserInfo(null)
       setAuthUserIsLoading(false)
