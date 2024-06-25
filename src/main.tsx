@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthContextProvider>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <ToastContainer position="top-center" autoClose={1000} />
       <App />
     </AuthContextProvider>
   </React.StrictMode>
