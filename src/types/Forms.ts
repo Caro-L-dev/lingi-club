@@ -3,11 +3,8 @@ export type FormType = {
     password: string;
 }
 
-export type RegisterFormType = FormType;
-export type LogInFormType = FormType;
-
-export type RegisterWithRoleFormType = FormType & {
-    role: string;
+export type RegisterFormType = FormType & {
+    isFamily: boolean;
 }
 
 export type FormValuesType = {
@@ -15,3 +12,4 @@ export type FormValuesType = {
     region: string;
 };
 
+export type LogInFormType = FormType
