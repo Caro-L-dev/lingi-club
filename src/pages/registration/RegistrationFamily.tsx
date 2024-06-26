@@ -2,7 +2,12 @@ import moment from "moment";
 import { useContext, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { FormProvider, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "react-toastify";
 
 import FormField from "@/components/common/formField/FormField";
@@ -30,23 +35,17 @@ const RegistrationFamily = () => {
     mode: "onChange",
   });
 
-  const [events, setEvents] = useState<Availability[]>([]);
+  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const { authUserInfo, authUserIsLoading } = useContext(AuthContext);
 
-  const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
+  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
     const title = window.prompt("Entrez un titre pour votre disponibilité");
     if (title) {
-      setEvents([...events, { start, end, title }]);
+      setAvailabilities([...availabilities, { start, end, title }]);
     }
   };
 
-  const onSubmit = async (data: {
-    displayName: string;
-    region: string;
-    city: string;
-    dailyRate: number;
-    description: string;
-  }) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (authUserIsLoading) {
       toast.info(
         "Veuillez patienter pendant que nous vérifions votre connexion..."
@@ -60,19 +59,17 @@ const RegistrationFamily = () => {
     }
 
     try {
-      const { displayName, region, city, dailyRate, description } = data;
+      const { displayName, region, city, dailyRate } = data;
       await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
         displayName,
         region,
         city,
-        dailyRate,
-        description,
-        familyAvailabilities: events,
+        dailyRate: Number(dailyRate),
+        familyAvailabilities: availabilities,
       });
 
       toast.success("Votre famille a été enregistrée avec succès !");
 
-      // Vérification des données enregistrées
       const userData = await getDataFromFirebase("users", authUserInfo.uid);
       console.log("Données enregistrées :", userData);
     } catch (error) {
@@ -108,15 +105,7 @@ const RegistrationFamily = () => {
               <FormField
                 id="dailyRate"
                 label="Tarif journalier"
-                type="number"
-              />
-            </fieldset>
-            <fieldset>
-              <FormField
-                id="description"
-                label="Description"
-                as="textarea"
-                rows={4}
+                inputProps={{ type: "number" }}
               />
             </fieldset>
             <div>
@@ -125,11 +114,11 @@ const RegistrationFamily = () => {
               </h3>
               <Calendar
                 localizer={localizer}
-                events={events}
+                events={availabilities}
                 startAccessor="start"
                 endAccessor="end"
                 selectable
-                onSelectSlot={handleSelect}
+                onSelectSlot={handleSelectSlot}
                 className="h-[500px]"
               />
             </div>
