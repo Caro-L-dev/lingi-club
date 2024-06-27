@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import { Wrapper } from "@/components/common/wrapper/Wrapper";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -46,64 +47,66 @@ const Registration = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <TitleCard>Inscription</TitleCard>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <fieldset>
-            <legend className="text-center mb-2 text-sm text-muted-foreground">
-              Je souhaite m'inscrire en tant que :
-            </legend>
-            <RadioButtonGroup
-              options={roleOptions}
-              name="role"
-              defaultValue={role}
-              onValueChange={(value) => setRole(value)}
-            />
-          </fieldset>
-          <fieldset>
-            <legend className="text-center mb-2 text-sm text-muted-foreground">
-              Je crée mon compte :
-            </legend>
-            <div>
-              <Label htmlFor="email" aria-label="Votre adresse e-mail">
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                {...register("email", {
-                  required: true,
-                  pattern: /^\S+@\S+$/i,
-                })}
+    <Wrapper className="lg:mt-20">
+      <Card>
+        <CardHeader>
+          <TitleCard>Inscription</TitleCard>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <fieldset>
+              <legend className="text-center mb-2 text-sm text-muted-foreground">
+                Je souhaite m'inscrire en tant que :
+              </legend>
+              <RadioButtonGroup
+                options={roleOptions}
+                name="role"
+                defaultValue={role}
+                onValueChange={(value) => setRole(value)}
               />
-            </div>
-            <div>
-              <Label htmlFor="password" aria-label="Votre mot de passe">
-                Mot de passe
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="on"
-                {...register("password", { required: true })}
-              />
-            </div>
-          </fieldset>
-          <Button
-            type="submit"
-            aria-label="Soumettre le formulaire"
-            className="w-full uppercase"
-            disabled={loading}
-          >
-            {loading ? "Chargement..." : "Poursuivre mon inscription"}
-          </Button>
-          {error && <p className="text-destructive">{error}</p>}{" "}
-        </form>
-      </CardContent>
-    </Card>
+            </fieldset>
+            <fieldset>
+              <legend className="text-center mb-2 text-sm text-muted-foreground">
+                Je crée mon compte :
+              </legend>
+              <div>
+                <Label htmlFor="email" aria-label="Votre adresse e-mail">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email", {
+                    required: true,
+                    pattern: /^\S+@\S+$/i,
+                  })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="password" aria-label="Votre mot de passe">
+                  Mot de passe
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="on"
+                  {...register("password", { required: true })}
+                />
+              </div>
+            </fieldset>
+            <Button
+              type="submit"
+              aria-label="Soumettre le formulaire"
+              className="w-full uppercase text-xs md:text-md"
+              disabled={loading}
+            >
+              {loading ? "Chargement..." : "Poursuivre mon inscription"}
+            </Button>
+            {error && <p className="text-destructive">{error}</p>}{" "}
+          </form>
+        </CardContent>
+      </Card>
+    </Wrapper>
   );
 };
 

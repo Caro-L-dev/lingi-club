@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { TypographyP } from "@/components/common/typographyP/TypographyP";
+import { Wrapper } from "@/components/common/wrapper/Wrapper";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -40,90 +41,92 @@ type Props = {
 
 const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
   return (
-    <Card>
-      <CardHeader>
-        <TitleCard>Bienvenue !</TitleCard>
-      </CardHeader>
-      <CardContent>
-        {error ? (
-          <TypographyP className="text-destructive">
-            Une erreur de connexion est survenue.
-          </TypographyP>
-        ) : (
-          <legend className="text-muted-foreground text-center text-sm mb-4">
-            Entrez votre email et mot de passe.
-          </legend>
-        )}
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8"
-            aria-describedby="form-description"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Entrez un e-mail valide."
-                      {...field}
-                      aria-required="true"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mot de passe</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      autoComplete="on"
-                      placeholder="Entrez votre mot de passe."
-                      {...field}
-                      aria-required="true"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {loading ? (
-              <Button type="submit" className="w-full" disabled>
-                <Spinner />
-              </Button>
-            ) : (
-              <Button type="submit" className="w-full">
-                Connexion
-              </Button>
-            )}
-          </form>
-        </Form>
-        <CardFooter
-          className={clsx(
-            error && "text-destructive",
-            "text-center text-sm text-muted-foreground mt-6 gap-x-2"
+    <Wrapper className="lg:mt-20">
+      <Card>
+        <CardHeader>
+          <TitleCard>Bienvenue !</TitleCard>
+        </CardHeader>
+        <CardContent>
+          {error ? (
+            <TypographyP className="text-destructive">
+              Une erreur de connexion est survenue.
+            </TypographyP>
+          ) : (
+            <legend className="text-muted-foreground text-center text-sm mb-4">
+              Entrez votre email et mot de passe.
+            </legend>
           )}
-        >
-          Pas encore de compte ?
-          <Link
-            className="font-medium text-foreground hover:underline"
-            to="/registration"
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8"
+              aria-describedby="form-description"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>E-mail</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Entrez un e-mail valide."
+                        {...field}
+                        aria-required="true"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mot de passe</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        autoComplete="on"
+                        placeholder="Entrez votre mot de passe."
+                        {...field}
+                        aria-required="true"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {loading ? (
+                <Button type="submit" className="w-full" disabled>
+                  <Spinner />
+                </Button>
+              ) : (
+                <Button type="submit" className="w-full">
+                  Connexion
+                </Button>
+              )}
+            </form>
+          </Form>
+          <CardFooter
+            className={clsx(
+              error && "text-destructive",
+              "text-center text-sm text-muted-foreground mt-6 gap-x-2"
+            )}
           >
-            Inscrivez-vous.
-          </Link>
-        </CardFooter>
-      </CardContent>
-    </Card>
+            Pas encore de compte ?
+            <Link
+              className="font-medium text-foreground hover:underline"
+              to="/registration"
+            >
+              Inscrivez-vous.
+            </Link>
+          </CardFooter>
+        </CardContent>
+      </Card>
+    </Wrapper>
   );
 };
 
