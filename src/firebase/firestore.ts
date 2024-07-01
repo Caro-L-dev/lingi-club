@@ -1,6 +1,8 @@
+import { db, storage } from "@/firebase/firebase-config"
 import { doc, setDoc, getDoc } from "firebase/firestore"; 
 import { FirebaseError } from "firebase/app"
-import { db } from "@/firebase/firebase-config"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { v4 } from "uuid"
 
 export const addOrUpdateDataToFirebase = async (
     collectionName: string,
@@ -50,3 +52,20 @@ export const getDataFromFirebase = async (
         };
     }
 }
+
+export const uploadImageOnFirebase = async (imageUpload: File | null) => {
+    if (imageUpload) {
+      // We create a random name for the image so that none of them have the same name
+      const imageRef = ref(storage, `familiesPhoto/${imageUpload.name + v4()}`);
+      try {
+        await uploadBytes(imageRef, imageUpload);
+        // Getting the URL of the uploaded image
+        const url = await getDownloadURL(imageRef);
+
+        return url
+
+      } catch (error) {
+        console.error("Erreur lors du téléchargement de l'image : ", error);
+      }
+    }
+  };
