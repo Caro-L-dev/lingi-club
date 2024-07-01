@@ -57,3 +57,59 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Styles spécifiques pour react-big-calendar */
+@layer components {
+  .rbc-calendar {
+    @apply font-sans;
+  }
+
+  .rbc-header {
+    @apply bg-primary text-primary-foreground font-semibold py-2;
+  }
+
+  .rbc-event {
+    @apply bg-secondary text-secondary-foreground rounded-md;
+  }
+
+  .rbc-today {
+    @apply bg-accent bg-opacity-20;
+  }
+
+  .rbc-off-range-bg {
+    @apply bg-muted;
+  }
+
+  .rbc-toolbar button {
+    @apply bg-primary text-primary-foreground rounded-md px-3 py-1 text-sm font-medium hover:bg-primary-foreground hover:text-primary transition-colors;
+  }
+
+  .rbc-btn-group {
+    @apply space-x-2;
+  }
+
+  .rbc-time-view,
+  .rbc-month-view {
+    @apply border border-border rounded-md overflow-hidden;
+  }
+
+  .rbc-timeslot-group {
+    @apply border-b border-border;
+  }
+
+  .rbc-time-header-content {
+    @apply border-l border-border;
+  }
+
+  .rbc-day-bg + .rbc-day-bg {
+    @apply border-l border-border;
+  }
+
+  .rbc-month-row + .rbc-month-row {
+    @apply border-t border-border;
+  }
+
+  .rbc-date-cell {
+    @apply text-right p-1;
+  }
+}

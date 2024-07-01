@@ -1,14 +1,18 @@
-import { useFormContext } from "react-hook-form";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useFormContext } from "react-hook-form";
 
 interface FormFieldProps {
   id: string;
   label: string;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ id, label }) => {
+const FormField: React.FC<FormFieldProps> = ({
+  id,
+  label,
+  inputProps = {},
+}) => {
   const { register } = useFormContext();
 
   return (
@@ -16,7 +20,12 @@ const FormField: React.FC<FormFieldProps> = ({ id, label }) => {
       <Label htmlFor={id} aria-label={label}>
         {label}
       </Label>
-      <Input id={id} type="text" {...register(id)} />
+      <Input
+        id={id}
+        {...register(id)}
+        {...inputProps}
+        className="form-control"
+      />
     </div>
   );
 };
