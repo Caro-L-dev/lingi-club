@@ -22,8 +22,13 @@
     "date-fns": "^3.6.0",
     "firebase": "^10.12.1",
     "lucide-react": "^0.378.0",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
+<<<<<<< HEAD
     "react-day-picker": "^8.10.1",
+=======
+    "react-big-calendar": "^1.13.0",
+>>>>>>> e44add2d2f356d791fdef58f23e47d9dc8ea4231
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.0",
     "react-query": "^3.39.3",
@@ -42,6 +47,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.10",
     "@types/react": "^18.2.66",
+    "@types/react-big-calendar": "^1.8.9",
     "@types/react-dom": "^18.2.22",
     "@types/testing-library__jest-dom": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
