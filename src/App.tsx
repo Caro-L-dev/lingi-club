@@ -1,10 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Wrapper } from "./components/common/wrapper/Wrapper";
+
 import Navbar from "./components/navbar/Navbar";
 
 import FamilyAvailabilityForm from "./components/common/calendar/FamilyAvailabilityForm";
 import StudentAvailabilityForm from "./components/common/calendar/StudentAvailabilityForm";
 import Connexion from "./pages/connexion/Connexion";
+import Familly from "./pages/familly/Familly";
 import Home from "./pages/home/Home";
 import Registration from "./pages/registration/Registration";
 import RegistrationFamily from "./pages/registration/RegistrationFamily";
@@ -20,6 +22,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/family" element={<RegistrationFamily />} />
+            {/* CHANGER L'URL DE LA PAGE ET LE NOM DU COMPOSANT */}
+            <Route path="/family-infos" element={<Familly />} />
             <Route path="/student" element={<RegistrationStudent />} />
             <Route path="/connexion" element={<Connexion />} />
             <Route

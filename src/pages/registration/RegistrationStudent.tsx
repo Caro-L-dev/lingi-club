@@ -1,6 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -20,15 +18,13 @@ const studentFormSchema = z.object({
 type StudentFormData = z.infer<typeof studentFormSchema>;
 
 const RegistrationStudent = () => {
-  const navigate = useNavigate();
-  const methods = useForm<StudentFormData>({
-    resolver: zodResolver(studentFormSchema),
+  const methods = useForm({
     mode: "onChange",
   });
 
-  const onSubmit = (data: StudentFormData) => {
-    console.log(data); // Pour le débogage
-    // Ici, vous enverriez normalement les données à votre backend
+  const onSubmit = (
+    //data
+    ) => {
     toast.success("Votre inscription a été enregistrée avec succès !");
     navigate("/student-availability"); // Redirection vers la page suivante
   };

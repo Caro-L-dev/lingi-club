@@ -1,14 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  FormProvider,
-  SubmitHandler,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { z } from "zod";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
@@ -16,50 +9,37 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import { RegisterWithRoleFormType } from "@/types/Forms";
 
-// Updated validation schema to include the 'role' field
-const FormSchema = z.object({
-  email: z.string().email({ message: "Adresse email invalide" }),
-  password: z.string().min(6, { message: "Mot de passe trop court" }),
-  role: z.string().nonempty({ message: "Veuillez sélectionner votre rôle." }),
-});
+import { RegisterFormType } from "@/types/Forms";
 
 const Registration = () => {
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<RegisterFormType>();
+  const [role, setRole] = useState("");
   const { firebaseRegister, loading, error } = useAuth();
 
-  const methods = useForm({
-    resolver: zodResolver(FormSchema),
-    mode: "onChange", // Real-time validation
-  });
+  const roleOptions = [
+    {
+      id: "registrationFamily",
+      label: "famille d'accueil",
+      value: "family",
+    },
+    { id: "registrationStudent", label: "apprenant", value: "student" },
+  ];
 
-  // Use useWatch to monitor the 'role' field
-  const watchedRole = useWatch({ control: methods.control, name: "role" });
-  console.log("Current role:", watchedRole); // For debugging
-
-  const onSubmit: SubmitHandler<RegisterWithRoleFormType> = async (data) => {
-    try {
-      const result = await firebaseRegister({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (result.data) {
-        toast.success("Inscription réussie !");
-        // Redirect to the intermediate form based on the role
-        if (data.role === "family") {
-          navigate("/family");
-        } else if (data.role === "student") {
-          navigate("/student");
-        }
-      } else {
-        toast.error(`Échec de l'inscription : ${result.error}`);
-      }
-    } catch (err) {
-      console.error("Error during registration:", err);
-      toast.error("Une erreur est survenue lors de l'inscription.");
+  const onSubmit = async (data: RegisterFormType) => {
+    if (!role) {
+      toast.error("Veuillez sélectionner votre rôle.");
+      return;
     }
+
+    const result = await firebaseRegister({
+      email: data.email,
+      password: data.password,
+      isFamily: role === "family",
+    });
+
+    result.data && navigate(`/${role}`);
   };
 
   return (
