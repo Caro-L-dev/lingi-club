@@ -3,7 +3,7 @@ type Availability = {
   end: Date;
 }
 
-type RegionType = "Auvergne-Rhône-Alpes" | "Bourgogne-Franche-Comté" | "Bretagne" | "Centre-Val de Loire" | "Corse" | "Grand Est" | "Hauts-de-France" | "Île-de-France" | "Normandie" | "Nouvelle-Aquitaine" | "Occitanie" | "Pays de la Loire" | "Provence-Alpes-Côte d'Azur" | null
+export type RegionType = "Auvergne-Rhône-Alpes" | "Bourgogne-Franche-Comté" | "Bretagne" | "Centre-Val de Loire" | "Corse" | "Grand Est" | "Hauts-de-France" | "Île-de-France" | "Normandie" | "Nouvelle-Aquitaine" | "Occitanie" | "Pays de la Loire" | "Provence-Alpes-Côte d'Azur" | null
 
 export type UserType = {
     uid: string;
@@ -11,7 +11,7 @@ export type UserType = {
     email: string | null;
     displayName: string | null;
     city: string | null;
-    region: RegionType;
+    region: RegionType | null;
     description: string | null;
     emailVerified: boolean;
     photoUrl: string | null;

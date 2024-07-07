@@ -1,9 +1,12 @@
+import { RegionType } from "./User";
+
 export type HostFamilyCardProps = {
+  id?: number;
   title: string;
   image: string;
   description: string;
   price: number;
-  region: string;
+  region: RegionType;
   nativeLanguage: string;
   accept?: string[];
 };
