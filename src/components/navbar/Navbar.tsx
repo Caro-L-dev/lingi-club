@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className="flex flex-col sticky z-10 top-0 md:flex-row bg-background items-center justify-around p-6 shadow-md"
+      className="flex flex-col sticky z-10 top-0 md:flex-row bg-background items-center justify-around p-4 shadow-md"
       aria-label="Main navigation"
     >
       <div className="flex justify-between w-full md:w-auto items-baseline">
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
           className="text-secondary font-extrabold uppercase flex items-center"
           aria-label="Home"
         >
-          <Home className="mx-2" />
+          <img src="/logo.png" className="h-10 w-10 mr-2" />
           Lingi Club
         </Link>
         <button
