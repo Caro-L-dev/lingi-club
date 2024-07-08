@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
-type WrapperProps = {
+type WrapperFormProps = {
   children: ReactNode;
   className?: string;
 };
 
-export function Wrapper({ children, className }: WrapperProps) {
+export function WrapperForm({ children, className }: WrapperFormProps) {
   return (
     <div className={`mx-auto overflow-hidden ${className}`}>{children}</div>
   );

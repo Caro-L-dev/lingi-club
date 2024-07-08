@@ -26,15 +26,15 @@ export default function HostFamilyCard({
 
   return (
     <Card className="relative flex flex-col lg:flex-row overflow-hidden">
-      <CardHeader className="relative w-full lg:w-1/2">
+      <CardHeader className="relative w-full xl:w-1/2">
         <img
-          className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
+          className="lg:absolute lg:inset-0 size-full lg:object-cover :object-center"
           src={image || defaultImage}
           alt={title}
         />
       </CardHeader>
 
-      <CardContent className="relative flex-grow lg:w-1/2 p-4 lg:pl-8">
+      <CardContent className="relative flex-grow xl:w-1/2 p-4 lg:pl-8">
         <CardContent>
           <div className="flex flex-col lg:flex-row lg:justify-between items-center">
             <div className="flex gap-2 mb-4 lg:mb-0 flex-col">

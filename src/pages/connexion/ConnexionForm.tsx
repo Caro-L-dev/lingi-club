@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { TypographyP } from "@/components/common/typographyP/TypographyP";
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { WrapperForm } from "@/components/common/wrapper/WrapperForm";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +41,7 @@ type Props = {
 
 const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
   return (
-    <Wrapper className="lg:mt-20">
+    <WrapperForm className="lg:mt-20">
       <Card>
         <CardHeader>
           <TitleCard>Bienvenue !</TitleCard>
@@ -126,7 +126,7 @@ const ConnexionForm = ({ onSubmit, form, loading, error }: Props) => {
           </CardFooter>
         </CardContent>
       </Card>
-    </Wrapper>
+    </WrapperForm>
   );
 };
 

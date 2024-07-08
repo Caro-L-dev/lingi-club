@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import RadioButtonGroup from "@/components/common/radioBtnGroup/RadioBtnGroup";
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { WrapperForm } from "@/components/common/wrapper/WrapperForm";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -15,13 +15,14 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 
 import { RegisterWithRoleFormType } from "@/types/Forms";
+import Spinner from "@/components/ui/Spinner";
 
 const Registration = () => {
   const navigate = useNavigate();
-  //const { register, handleSubmit } = useForm();
+
   const { register, handleSubmit } = useForm<RegisterWithRoleFormType>();
   const [role, setRole] = useState("");
-  const { firebaseRegister, loading, error } = useAuth();
+  const { firebaseRegister, loading } = useAuth();
 
   const roleOptions = [
     {
@@ -47,7 +48,7 @@ const Registration = () => {
   };
 
   return (
-    <Wrapper className="lg:mt-20">
+    <WrapperForm className="lg:mt-20">
       <Card>
         <CardHeader>
           <TitleCard>Inscription</TitleCard>
@@ -94,19 +95,19 @@ const Registration = () => {
                 />
               </div>
             </fieldset>
-            <Button
-              type="submit"
-              aria-label="Soumettre le formulaire"
-              className="w-full uppercase text-xs md:text-md"
-              disabled={loading}
-            >
-              {loading ? "Chargement..." : "Poursuivre mon inscription"}
-            </Button>
-            {error && <p className="text-destructive">{error}</p>}{" "}
+            {loading ? (
+              <Button type="submit" className="w-full" disabled>
+                <Spinner />
+              </Button>
+            ) : (
+              <Button type="submit" className="w-full">
+                Connexion
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>
-    </Wrapper>
+    </WrapperForm>
   );
 };
 

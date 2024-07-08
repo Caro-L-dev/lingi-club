@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import FormField from "@/components/common/formField/FormField";
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { WrapperForm } from "@/components/common/wrapper/WrapperForm";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -20,7 +20,7 @@ const RegistrationFamily = () => {
     };
 
   return (
-    <Wrapper className="lg:mt-20">
+    <WrapperForm className="lg:mt-20">
       <FormProvider {...methods}>
         <Card>
           <CardHeader>
@@ -48,7 +48,7 @@ const RegistrationFamily = () => {
           </CardContent>
         </Card>
       </FormProvider>
-    </Wrapper>
+    </WrapperForm>
   );
 };
 

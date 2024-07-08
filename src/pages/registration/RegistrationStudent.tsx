@@ -3,12 +3,16 @@ import { toast } from "react-toastify";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import FormField from "@/components/common/formField/FormField";
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { WrapperForm } from "@/components/common/wrapper/WrapperForm";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Spinner from "@/components/ui/Spinner";
+
+import { useAuth } from "@/hooks/useAuth";
 
 const RegistrationStudent = () => {
+  const { loading } = useAuth();
   const methods = useForm({
     mode: "onChange",
   });
@@ -20,7 +24,7 @@ const RegistrationStudent = () => {
     };
 
   return (
-    <Wrapper className="lg:mt-20">
+    <WrapperForm className="lg:mt-20">
       <FormProvider {...methods}>
         <Card>
           <CardHeader>
@@ -36,14 +40,20 @@ const RegistrationStudent = () => {
                 <FormField id="city" label="Ville" />
               </fieldset>
 
-              <Button type="submit" className="w-full mt-5 uppercase">
-                Valider mon inscription
-              </Button>
+              {loading ? (
+                <Button type="submit" className="w-full" disabled>
+                  <Spinner />
+                </Button>
+              ) : (
+                <Button type="submit" className="w-full">
+                  Valider mon inscription
+                </Button>
+              )}
             </form>
           </CardContent>
         </Card>
       </FormProvider>
-    </Wrapper>
+    </WrapperForm>
   );
 };
 

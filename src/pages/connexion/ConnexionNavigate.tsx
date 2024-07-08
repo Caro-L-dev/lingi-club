@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { TypographyP } from "@/components/common/typographyP/TypographyP";
-import { Wrapper } from "@/components/common/wrapper/Wrapper";
+import { WrapperForm } from "@/components/common/wrapper/WrapperForm";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const ConnexionNavigate = () => {
   return (
-    <Wrapper className="lg:mt-20">
+    <WrapperForm className="lg:mt-20">
       <Card>
         <CardHeader>
           <TitleCard>Oups !</TitleCard>
@@ -23,7 +23,7 @@ const ConnexionNavigate = () => {
           </Link>
         </CardContent>
       </Card>
-    </Wrapper>
+    </WrapperForm>
   );
 };
 
