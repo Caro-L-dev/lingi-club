@@ -17,24 +17,26 @@ const SearchFamily = () => {
     
 
     return (
-        <div className="flex flex-wrap gap-4">
-            <p>{state.key.region}</p>
-            { region &&
-            hostFamilies
-            .filter((famillies) => famillies.region === region)
-            .map((hostFamily) => (
-                <HostFamilyCard
-                    key={hostFamily.id}
-                    title={hostFamily.title}
-                    image={hostFamily.image}
-                    description={hostFamily.description}
-                    price={hostFamily.price}
-                    region={hostFamily.region}
-                    nativeLanguage={hostFamily.nativeLanguage}
-                    accept={hostFamily.accept}
-                />
-            ))
-            }
+        <div className="flex flex-wrap gap-4 justify-center">
+            <h2 className="py-4">
+                Vous regardez les familles disponibles en région:{" "}
+                <span className="text-secondary">{state.key.region}</span>
+            </h2>
+            {region &&
+                hostFamilies
+                    .filter((famillies) => famillies.region === region)
+                    .map((hostFamily) => (
+                        <HostFamilyCard
+                            key={hostFamily.id}
+                            title={hostFamily.title}
+                            image={hostFamily.image}
+                            description={hostFamily.description}
+                            price={hostFamily.price}
+                            region={hostFamily.region}
+                            nativeLanguage={hostFamily.nativeLanguage}
+                            accept={hostFamily.accept}
+                        />
+                    ))}
         </div>
     );
 };
