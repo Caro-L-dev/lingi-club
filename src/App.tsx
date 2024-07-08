@@ -11,26 +11,40 @@ import RegistrationStudent from "./pages/registration/RegistrationStudent";
 import Connexion from "./pages/connexion/Connexion";
 import SearchFamily from "./pages/search/SearchFamily";
 import Footer from "./components/footer/Footer";
+import UserInfos from "./pages/user-infos/UserInfos";
 
 function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Wrapper className="flex flex-col py-6">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/registration" element={<Registration />} />
-            <Route path="/family" element={<RegistrationFamily />} />
-            <Route path="/search-familly" element={<SearchFamily/>} />
-            <Route path="/student" element={<RegistrationStudent />} />
-            <Route path="/connexion" element={<Connexion />} />
-          </Routes>
-        </Wrapper>
-        <Footer />
-      </BrowserRouter>
-    </>
-  );
+    return (
+        <>
+            <BrowserRouter>
+                <Navbar />
+                <Wrapper className="flex flex-col py-6 min-h-[calc(100vh-152px)]">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route
+                            path="/registration"
+                            element={<Registration />}
+                        />
+                        <Route
+                            path="/family"
+                            element={<RegistrationFamily />}
+                        />
+                        <Route
+                            path="/search-familly"
+                            element={<SearchFamily />}
+                        />
+                        <Route
+                            path="/student"
+                            element={<RegistrationStudent />}
+                        />
+                        <Route path="/connexion" element={<Connexion />} />
+                        <Route path="/user-infos" element={<UserInfos />} />
+                    </Routes>
+                </Wrapper>
+                <Footer />
+            </BrowserRouter>
+        </>
+    );
 }
 
 export default App;
