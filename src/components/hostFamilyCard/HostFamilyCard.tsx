@@ -1,9 +1,6 @@
 import { Euro, Flag, MapPin } from "lucide-react";
-
 import { HostFamilyCardProps } from "@/types/HostFamily";
-
 import ItemInfo from "./ItemInfo";
-
 import { Button } from "../ui/button";
 import {
   Card,
@@ -12,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 
 export default function HostFamilyCard({
   title,
@@ -25,18 +23,18 @@ export default function HostFamilyCard({
   const defaultImage = "/public/images/family.jpg";
 
   return (
-    <Card className="relative flex flex-col lg:flex-row overflow-hidden">
-      <CardHeader className="relative w-full lg:w-1/2">
+    <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
+      <CardHeader className="relative">
         <img
-          className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
+          className="w-full object-cover object-center"
           src={image || defaultImage}
           alt={title}
         />
       </CardHeader>
 
-      <CardContent className="relative flex-grow lg:w-1/2 p-4 lg:pl-8">
+      <CardContent className="relative flex-grow">
         <CardContent>
-          <div className="flex flex-col lg:flex-row lg:justify-between items-center">
+          <div className="flex flex-col lg:flex-row sm:justify-between items-center">
             <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
               <ItemInfo nativeLanguage={nativeLanguage} icon={<Flag />} />
               <ItemInfo region={region} icon={<MapPin />} />

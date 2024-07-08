@@ -14,7 +14,7 @@ export type HostFamilyCardProps = {
 export type ItemInfoProps = {
   icon: React.ReactNode;
   nativeLanguage?: string;
-  region?: string;
+  region?: RegionType;
   price?: number;
   children?: React.ReactNode;
 };
