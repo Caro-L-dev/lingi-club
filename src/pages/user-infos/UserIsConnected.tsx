@@ -1,15 +1,11 @@
 import { AuthContext } from "@/contexts/AuthUserContext";
 import { useContext, useEffect, useState } from "react";
 import { z } from "zod";
-import { getDataFromFirebase } from "@/firebase/firestore";
+import { addOrUpdateDataToFirebase, getDataFromFirebase } from "@/firebase/firestore";
 import { UserType } from "@/types/User";
-import UserInfosForm from "./UserInfosForm";
+import FamillyInfosForm from "./FamillyInfosForm";
+import { formSchema } from "@/types/Forms";
 
-const formSchema = z.object({
-    displayName: z.string(),
-    email: z.string(),
-    description: z.string(),
-});
 
 const UserIsConnected = () => {
     const authUserInfo = useContext(AuthContext);
@@ -30,23 +26,23 @@ const UserIsConnected = () => {
             };
             handleGetUserData();
         }
-         console.log("result2", userData);
     }, [authUserInfo.authUserInfo?.uid, userData]);
-
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values);
+        if (authUserInfo && authUserInfo.authUserInfo) {
+            addOrUpdateDataToFirebase(
+                "users",
+                authUserInfo.authUserInfo.uid,
+                values
+            );
+        }
+        console.log("values", values);
     }
 
     return (
-        userData && (
-            <UserInfosForm
-                onSubmit={onSubmit}
-                userData={userData}
-            />
-        )
+        userData && <FamillyInfosForm onSubmit={onSubmit} userData={userData} />
     );
 };
 
