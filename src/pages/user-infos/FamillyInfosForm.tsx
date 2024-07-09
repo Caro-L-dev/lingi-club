@@ -174,10 +174,7 @@ const FamillyInfosForm = ({ onSubmit, userData }: Props) => {
                                                 <SelectValue placeholder="Selectionnez votre langue" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem
-                                                    {...field}
-                                                    
-                                                >
+                                                <SelectItem {...field}>
                                                     Anglais
                                                 </SelectItem>
                                             </SelectContent>
