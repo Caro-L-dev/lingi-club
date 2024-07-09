@@ -5,11 +5,13 @@ import { addOrUpdateDataToFirebase, getDataFromFirebase } from "@/firebase/fires
 import { UserType } from "@/types/User";
 import FamillyInfosForm from "./FamillyInfosForm";
 import { formSchema } from "@/types/Forms";
+import { toast } from "react-toastify";
 
 
 const UserIsConnected = () => {
     const authUserInfo = useContext(AuthContext);
     const [userData, setUserData] = useState<UserType | null>(null);
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         if (userData === null) {
@@ -28,19 +30,41 @@ const UserIsConnected = () => {
         }
     }, [authUserInfo.authUserInfo?.uid, userData]);
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true)
+
         if (authUserInfo && authUserInfo.authUserInfo) {
-            addOrUpdateDataToFirebase(
+            const { error } = await addOrUpdateDataToFirebase(
                 "users",
                 authUserInfo.authUserInfo.uid,
                 values
             );
+             if (error) {
+                 setLoading(false);
+                 toast.error("Un problème est survenu !");
+                 return;
+             }
+              toast.success("Mise à jour reussie");
         }
-        console.log("values", values);
+        // if (authUserInfo && authUserInfo.authUserInfo) {
+        //     addOrUpdateDataToFirebase(
+        //         "users",
+        //         authUserInfo.authUserInfo.uid,
+        //         values
+        //     );
+        // }
+        setLoading(false);
     }
 
+
     return (
-        userData && <FamillyInfosForm onSubmit={onSubmit} userData={userData} />
+        userData && (
+            <FamillyInfosForm
+                onSubmit={onSubmit}
+                userData={userData}
+                loading={loading}
+            />
+        )
     );
 };
 

@@ -24,13 +24,15 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { regionsList } from "@/lib/data/data";
+import Spinner from "@/components/ui/Spinner";
 
 type Props = {
     onSubmit(values: z.infer<typeof formSchema>): void;
     userData: UserType;
+    loading: boolean
 };
 
-const FamillyInfosForm = ({ onSubmit, userData }: Props) => {
+const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -184,7 +186,19 @@ const FamillyInfosForm = ({ onSubmit, userData }: Props) => {
                             />
 
                             <div className="flex justify-center">
-                                <Button type="submit">Modifier</Button>
+                                {loading ? (
+                                    <Button
+                                        type="submit"
+                                        className="w-full"
+                                        disabled
+                                    >
+                                        <Spinner />
+                                    </Button>
+                                ) : (
+                                    <Button type="submit" className="w-full">
+                                        Modifier
+                                    </Button>
+                                )}
                             </div>
                         </form>
                     </Form>
