@@ -5,15 +5,16 @@ import UserIsConnected from "./UserIsConnected";
 
 const UserInfos = () => {
     const { authUserInfo } = useContext(AuthContext);
-    console.log(authUserInfo);
 
-
-
-    return <div>
-        {
-        !authUserInfo ?  <UserNotConnected /> : <UserIsConnected />
-        }
-        </div>;
+    return (
+        <div>
+            {!authUserInfo ? (
+                <UserNotConnected />
+            ) : (
+                <UserIsConnected />
+            )}
+        </div>
+    );
 };
 
 export default UserInfos;
