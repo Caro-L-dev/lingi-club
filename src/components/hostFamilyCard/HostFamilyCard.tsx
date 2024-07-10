@@ -4,6 +4,8 @@ import { HostFamilyCardProps } from "@/types/HostFamily";
 
 import ItemInfo from "./ItemInfo";
 
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "../ui/button";
 import {
   Card,
@@ -23,9 +25,13 @@ export default function HostFamilyCard({
   accept = [],
 }: HostFamilyCardProps) {
   const defaultImage = "/public/images/family.jpg";
+  const navigate = useNavigate();
 
   return (
-    <Card className="relative flex flex-col lg:flex-row overflow-hidden">
+    <Card 
+      className="relative flex flex-col lg:flex-row overflow-hidden cursor-pointer"
+      onClick={() => navigate(`/family-infos/yeZ58bigXla7aAxOTLmulXgnkY83`)}
+    >
       <CardHeader className="relative w-full lg:w-1/2">
         <img
           className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
@@ -41,7 +47,7 @@ export default function HostFamilyCard({
               <ItemInfo nativeLanguage={nativeLanguage} icon={<Flag />} />
               <ItemInfo region={region} icon={<MapPin />} />
               <ItemInfo price={price} icon={<Euro />}>
-                / semaine
+                / jour
               </ItemInfo>
             </div>
             <Button className="w-full lg:w-fit">Réserver</Button>

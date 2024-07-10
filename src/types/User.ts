@@ -16,7 +16,7 @@ export type UserType = {
     emailVerified: boolean;
     photoUrl: string | null;
     creationDate: Date | null;
-    studentAge: string | null;
+    studentAge: number | null;
     familyDalyRate: number | null;
     familyLangages: string | null;
     familyAvailabilities: Availability[] | null;
