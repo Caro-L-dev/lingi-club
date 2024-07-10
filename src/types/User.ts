@@ -17,7 +17,7 @@ export type UserType = {
     photoUrl: string | null;
     creationDate: Date | null;
     studentAge: string | null;
-    familyDailyRate: number | null;
-    familyLangage: string | null;
+    familyDalyRate: number | null;
+    familyLangages: string | null;
     familyAvailabilities: Availability[] | null;
 }

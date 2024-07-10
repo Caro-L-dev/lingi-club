@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { Euro, Flag, MapPin } from "lucide-react";
 
 import { getDataFromFirebase } from "@/firebase/firestore";
 
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/Spinner";
 
 import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
 
@@ -14,10 +16,12 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 
 import { UserType } from "@/types/User";
 
-const Familly: React.FC = () => {
+const Familly = () => {
     const { id } = useParams<{ id: string }>();
     const [data, setData] = useState<UserType | null>(null);
     const [error, setError] = useState<string>("");
+
+    const navigate = useNavigate();
 
     const {authUserInfo, authUserIsLoading } = useAuthContext();
 
@@ -27,9 +31,7 @@ const Familly: React.FC = () => {
         if (!authUserIsLoading) {
             if (authUserInfo) {
                 getDataFromFirebase("users", id || "").then((response) => {
-                    console.log(response);
                     setData(response.data as UserType);
-                    // setData(response as FamilyData);
                 });
             } else {
                 setError("Vous devez être authentifié pour voir cette page");
@@ -42,37 +44,37 @@ const Familly: React.FC = () => {
     }
 
     if (!data) {
-        return <p>Chargement...</p>;
+        return <div className="mx-auto mt-12">
+                <Spinner />          
+            </div>
     }
 
-    const { email, displayName, photoUrl, familyLangage, region, city, familyDailyRate, description } = data;
-
-    console.log(email)
+    const { displayName, photoUrl, familyLangages, region, city, familyDalyRate, description } = data;
 
     return (
-        <Card
-            className="relative flex flex-col lg:flex-row overflow-hidden cursor-pointer"
-        >
-            <CardHeader className="relative w-full lg:w-1/2">
+        <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
+            <CardHeader className="relative">
                 <img
-                    className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
+                    className="w-full object-cover object-center"
                     src={photoUrl || defaultImage}
                     alt={`${displayName} family photo`}
                 />
             </CardHeader>
 
-            <CardContent className="relative flex-grow lg:w-1/2 p-4 lg:pl-8">
+            <CardContent className="relative flex-grow">
                 <CardContent>
-                    <div className="flex flex-col lg:flex-row lg:justify-between items-center">
+                    <div className="flex flex-col lg:flex-row sm:justify-between items-center">
                         <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
-                            <ItemInfo nativeLanguage={familyLangage || undefined} icon={<Flag />} />
-                            <ItemInfo region={region || undefined} icon={<MapPin />} />
-                            <ItemInfo region={`${region || undefined}${city ? ', ' + city : ''}`} icon={<MapPin />} />
-                            <ItemInfo price={familyDailyRate || undefined} icon={<Euro />}>
+                            <ItemInfo nativeLanguage={familyLangages || ""} icon={<Flag />} />
+                            <ItemInfo region={`${region || ""}${city ? ', ' + city : ''}`} icon={<MapPin />} />
+                            <ItemInfo price={familyDalyRate || undefined} icon={<Euro />}>
                                 / jour
                             </ItemInfo>
                         </div>
-                        <Button className="w-full lg:w-fit">Réserver</Button>
+                        <Button 
+                            className="w-full lg:w-fit"
+                            onClick={() => navigate('/')}
+                        >Réserver</Button>
                     </div>
                 </CardContent>
                 <CardContent className="border-t border-t-secondary pt-4">
