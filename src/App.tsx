@@ -12,6 +12,8 @@ import Connexion from "./pages/connexion/Connexion";
 import SearchFamily from "./pages/search/SearchFamily";
 import Footer from "./components/footer/Footer";
 import UserInfos from "./pages/user-infos/UserInfos";
+import Familly from "./pages/familly/Familly";
+import NotSale from "./pages/error/NotSale";
 
 function App() {
     return (
@@ -39,6 +41,9 @@ function App() {
                         />
                         <Route path="/connexion" element={<Connexion />} />
                         <Route path="/user-infos" element={<UserInfos />} />
+                        <Route path="/family-infos/:id" element={<Familly />} />
+                        <Route path="/not-sale" element={<NotSale />} />
+                        <Route path="/*" element={<Home />} />
                     </Routes>
                 </Wrapper>
                 <Footer />

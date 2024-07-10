@@ -46,13 +46,6 @@ const UserIsConnected = () => {
              }
               toast.success("Mise à jour reussie");
         }
-        // if (authUserInfo && authUserInfo.authUserInfo) {
-        //     addOrUpdateDataToFirebase(
-        //         "users",
-        //         authUserInfo.authUserInfo.uid,
-        //         values
-        //     );
-        // }
         setLoading(false);
     }
 

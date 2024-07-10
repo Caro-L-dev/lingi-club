@@ -1,7 +1,7 @@
 import { RegionType } from "./User";
 
 export type HostFamilyCardProps = {
-  id?: number;
+  id?: number | string;
   title: string;
   image: string;
   description: string;

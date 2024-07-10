@@ -33,6 +33,7 @@ export const hostFamilies: HostFamilyCardProps[] = [
         price: 300,
         region: "Auvergne-Rhône-Alpes",
         nativeLanguage: "Anglais",
+        accept: ["10-18 ans"],
     },
     {
         id: 4,
@@ -65,6 +66,7 @@ export const hostFamilies: HostFamilyCardProps[] = [
         price: 300,
         region: "Auvergne-Rhône-Alpes",
         nativeLanguage: "Anglais",
+        accept: ["10-18 ans"],
     },
 ];
 
