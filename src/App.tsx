@@ -5,11 +5,11 @@ import Navbar from "./components/navbar/Navbar";
 
 import Home from "./pages/home/Home";
 
+import Connexion from "./pages/connexion/Connexion";
+import Familly from "./pages/familly/Familly";
 import Registration from "./pages/registration/Registration";
 import RegistrationFamily from "./pages/registration/RegistrationFamily";
 import RegistrationStudent from "./pages/registration/RegistrationStudent";
-import Connexion from "./pages/connexion/Connexion";
-import Familly from "./pages/familly/Familly";
 
 function App() {
   return (
