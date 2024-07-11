@@ -1,51 +1,31 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
-import { TypographyP } from "@/components/common/typographyP/TypographyP";
-
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import Spinner from "@/components/ui/Spinner";
-
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+
 import { RegisterFormType } from "@/types/Forms";
+
+// Import the RoleSelection component
 import RoleSelection from "./roleselection/RoleSelection";
 
-import clsx from "clsx";
-
-const formSchema = z.object({
-  email: z.string().email("Email invalide"),
-  password: z
-    .string()
-    .min(6, "Le mot de passe doit comporter au moins 6 caractères"),
-  role: z.enum(["family", "student"]), // Validation du role
-});
-
 const Registration = () => {
-  const methods = useForm<RegisterFormType>({
-    resolver: zodResolver(formSchema),
-  });
-  const { firebaseRegister, loading, error } = useAuth();
   const navigate = useNavigate();
+  const methods = useForm<RegisterFormType>();
+  const { firebaseRegister, loading, error } = useAuth();
 
   const onSubmit = async (data: RegisterFormType) => {
+    if (!data.role) {
+      toast.error("Veuillez sélectionner votre rôle.");
+      return;
+    }
+
     const result = await firebaseRegister({
       email: data.email,
       password: data.password,
@@ -53,104 +33,63 @@ const Registration = () => {
       role: data.role, // Ajout de la propriété role
     });
 
-    if (result.data) {
-      navigate(`/${data.role}`);
-    }
+    result.data && navigate(`/${data.role}`);
   };
 
   return (
     <FormProvider {...methods}>
-      <div className="mx-auto mt-8">
-        <Card>
-          <CardHeader>
-            <TitleCard>Inscription</TitleCard>
-          </CardHeader>
-          <CardContent>
-            {error ? (
-              <TypographyP className="text-destructive">
-                Une erreur d'inscription est survenue.
-              </TypographyP>
-            ) : (
-              <legend className="text-muted-foreground text-center text-sm mb-4">
-                Entrez votre email et mot de passe.
+      <Card>
+        <CardHeader>
+          <TitleCard>Inscription</TitleCard>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-6" onSubmit={methods.handleSubmit(onSubmit)}>
+            <RoleSelection
+              setRole={(role) => methods.setValue("role", role)}
+              register={methods.register}
+              errors={methods.formState.errors}
+            />
+            <fieldset>
+              <legend className="text-center mb-2 text-sm text-muted-foreground">
+                Je crée mon compte :
               </legend>
-            )}
-
-            <Form {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-                className="space-y-8"
-                aria-describedby="form-description"
-              >
-                <RoleSelection
-                  setRole={(role) => methods.setValue("role", role)}
-                  register={methods.register}
-                  errors={methods.formState.errors}
+              <div>
+                <Label htmlFor="email" aria-label="Votre adresse e-mail">
+                  Email
+                </Label>
+                <Input id="email" type="email" {...methods.register("email")} />
+              </div>
+              <div>
+                <Label htmlFor="password" aria-label="Votre mot de passe">
+                  Mot de passe
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="on"
+                  {...methods.register("password")}
                 />
-                <FormField
-                  control={methods.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>E-mail</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Entrez un e-mail valide."
-                          {...field}
-                          aria-required="true"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={methods.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Mot de passe</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          autoComplete="on"
-                          placeholder="Entrez votre mot de passe."
-                          {...field}
-                          aria-required="true"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {loading ? (
-                  <Button type="submit" className="w-full" disabled>
-                    <Spinner />
-                  </Button>
-                ) : (
-                  <Button type="submit" className="w-full">
-                    Inscription
-                  </Button>
-                )}
-              </form>
-            </Form>
-            <CardFooter
-              className={clsx(
-                error && "text-destructive",
-                "text-center text-sm text-muted-foreground mt-6 gap-x-2"
-              )}
+              </div>
+            </fieldset>
+            <Button
+              type="submit"
+              aria-label="Soumettre le formulaire"
+              className="w-full uppercase"
+              disabled={loading || !methods.formState.isValid}
             >
-              Déjà un compte ?
-              <Link
-                className="font-medium text-foreground hover:underline"
-                to="/connexion"
-              >
-                Connectez-vous.
-              </Link>
-            </CardFooter>
-          </CardContent>
-        </Card>
-      </div>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Chargement...
+                </>
+              ) : (
+                "Poursuivre mon inscription"
+              )}
+            </Button>
+            {error && <p className="text-destructive">{error}</p>}
+          </form>
+        </CardContent>
+      </Card>
     </FormProvider>
   );
 };

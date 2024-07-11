@@ -20,9 +20,12 @@ export type FormValuesType = {
 export type LogInFormType = FormType;
 
 export const formSchema = z.object({
-  email: z.string().email("Email invalide"),
-  password: z
-    .string()
-    .min(6, "Le mot de passe doit comporter au moins 6 caractères"),
-  role: z.enum(["family", "student"]), // Ajout de la validation de role
+  displayName: z.string(),
+  email: z.string(),
+  description: z.string(),
+  city: z.string(),
+  region: z.any(),
+  familyLangages: z.string(),
+  photoUrl: z.string(),
+  studentAge: z.string(),
 });
