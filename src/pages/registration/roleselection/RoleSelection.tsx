@@ -1,20 +1,14 @@
-import { FieldErrors, useForm } from "react-hook-form";
+import { RegisterFormType } from "@/types/Forms";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 type RoleSelectionProps = {
   setRole: (role: "family" | "student") => void;
+  register: UseFormRegister<RegisterFormType>;
+  errors: FieldErrors<RegisterFormType>;
 };
 
-type FormValues = {
-  role: "family" | "student";
-};
-
-const RoleSelection = ({ setRole }: RoleSelectionProps) => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm<FormValues>();
-
-  const getErrorMessage = (error: FieldErrors<FormValues>["role"]) => {
+const RoleSelection = ({ setRole, register, errors }: RoleSelectionProps) => {
+  const getErrorMessage = (error: FieldErrors<RegisterFormType>["role"]) => {
     if (typeof error === "string") {
       return error;
     } else if (error && typeof error.message === "string") {
