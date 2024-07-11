@@ -19,7 +19,7 @@ import RoleSelection from "./roleselection/RoleSelection";
 const Registration = () => {
   const navigate = useNavigate();
   const methods = useForm<RegisterFormType>();
-  const [role, setRole] = useState<RoleType>("");
+  const [role, setRole] = useState<RoleType>("" as RoleType); // initialize with a valid type
   const { firebaseRegister, loading, error } = useAuth();
 
   const onSubmit = async (data: RegisterFormType) => {
@@ -34,7 +34,9 @@ const Registration = () => {
       isFamily: role === "family",
     });
 
-    result.data && navigate(`/${role}`);
+    if (result.data) {
+      navigate(`/${role}`);
+    }
   };
 
   return (

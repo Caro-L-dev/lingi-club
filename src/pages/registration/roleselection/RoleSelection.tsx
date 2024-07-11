@@ -1,16 +1,20 @@
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 
 type RoleSelectionProps = {
-  setRole: (role: string) => void;
+  setRole: (role: "family" | "student") => void;
+};
+
+type FormValues = {
+  role: "family" | "student";
 };
 
 const RoleSelection = ({ setRole }: RoleSelectionProps) => {
   const {
     register,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
 
-  const getErrorMessage = (error: any) => {
+  const getErrorMessage = (error: FieldErrors<FormValues>["role"]) => {
     if (typeof error === "string") {
       return error;
     } else if (error && typeof error.message === "string") {
@@ -32,7 +36,7 @@ const RoleSelection = ({ setRole }: RoleSelectionProps) => {
             value="family"
             {...register("role", {
               required: "Veuillez sélectionner votre rôle.",
-              onChange: (e) => setRole(e.target.value),
+              onChange: (e) => setRole(e.target.value as "family" | "student"),
             })}
             className="mr-2"
           />
@@ -45,7 +49,7 @@ const RoleSelection = ({ setRole }: RoleSelectionProps) => {
             value="student"
             {...register("role", {
               required: "Veuillez sélectionner votre rôle.",
-              onChange: (e) => setRole(e.target.value),
+              onChange: (e) => setRole(e.target.value as "family" | "student"),
             })}
             className="mr-2"
           />

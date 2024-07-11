@@ -5,6 +5,8 @@ export type FormType = {
   password: string;
 };
 
+export type RoleType = "family" | "student";
+
 export type RegisterFormType = FormType & {
   isFamily: boolean;
 };
