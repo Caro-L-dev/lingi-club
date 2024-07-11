@@ -23,7 +23,7 @@ const emptyUser: UserType = {
   emailVerified: false,
   photoUrl: null,
   creationDate: null,
-  studentAge: "",
+  studentAge: null,
   familyDalyRate: null,
   familyLangages: null,
   familyAvailabilities: null,
