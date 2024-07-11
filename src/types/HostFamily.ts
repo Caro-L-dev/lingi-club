@@ -1,9 +1,12 @@
+import { RegionType } from "./User";
+
 export type HostFamilyCardProps = {
+  id?: number | string;
   title: string;
   image: string;
   description: string;
   price: number;
-  region: string;
+  region: RegionType;
   nativeLanguage: string;
   accept?: string[];
 };
@@ -11,7 +14,7 @@ export type HostFamilyCardProps = {
 export type ItemInfoProps = {
   icon: React.ReactNode;
   nativeLanguage?: string;
-  region?: string;
+  region?: RegionType;
   price?: number;
   children?: React.ReactNode;
 };

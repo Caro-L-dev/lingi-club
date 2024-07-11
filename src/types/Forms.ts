@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type FormType = {
     email: string;
     password: string;
@@ -13,3 +15,14 @@ export type FormValuesType = {
 };
 
 export type LogInFormType = FormType
+
+export const formSchema = z.object({
+    displayName: z.string(),
+    email: z.string(),
+    description: z.string(),
+    city: z.string(),
+    region: z.any(),
+    familyLangages: z.string(),
+    photoUrl: z.string(),
+    studentAge: z.string(),
+});
