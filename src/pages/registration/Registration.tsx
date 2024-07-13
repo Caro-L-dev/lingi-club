@@ -18,6 +18,7 @@ import { RegisterFormType } from "@/types/Forms";
 const Registration = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<RegisterFormType>();
+
   const [role, setRole] = useState("");
   const { firebaseRegister, loading, error } = useAuth();
 
