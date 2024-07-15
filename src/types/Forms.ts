@@ -16,6 +16,11 @@ export type FormValuesType = {
 
 export type LogInFormType = FormType
 
+const availabilitySchema = z.object({
+    start: z.date(),
+    end: z.date(),
+});
+
 export const formSchema = z.object({
     displayName: z.string(),
     email: z.string(),
@@ -23,6 +28,8 @@ export const formSchema = z.object({
     city: z.string(),
     region: z.any(),
     familyLangages: z.string(),
+    familyDalyRate: z.string(),
+    familyAvailabilities: z.array(availabilitySchema).nullable(), 
     photoUrl: z.string(),
     studentAge: z.string(),
 });
