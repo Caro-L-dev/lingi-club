@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, Event, momentLocalizer, SlotInfo } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,15 +13,15 @@ import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { addOrUpdateDataToFirebase } from "@/firebase/firestore"; // Import the function to add or update data to Firebase
-import { useAuth } from "@/hooks/useAuth"; // Import the useAuth hook
+import { addOrUpdateDataToFirebase } from "@/firebase/firestore";
+import { useAuth } from "@/hooks/useAuth";
 
 const localizer = momentLocalizer(moment);
 
 const familyFormSchema = z.object({
   email: z.string().email({ message: "Email invalide" }),
   password: z.string().min(6, {
-    message: "Le mot de passe contient au moins 6 caractères.",
+    message: "Le mot de passe doit contenir au moins 6 caractères.",
   }),
   name: z.string().nonempty("Le nom est requis"),
   region: z.string().nonempty("La région est requise"),
@@ -42,8 +42,13 @@ type Availability = {
 
 const RegistrationFamily: React.FC = () => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(
+    null
+  );
+  const [isAvailabilitySelected, setIsAvailabilitySelected] = useState(false);
   const navigate = useNavigate();
-  const { firebaseRegister, isUserConnected, loading, error } = useAuth(); // Get the required functions from useAuth
+  const { firebaseRegister, isUserConnected, loading, error } = useAuth();
 
   const {
     control,
@@ -52,19 +57,52 @@ const RegistrationFamily: React.FC = () => {
   } = useForm<FamilyFormData>({
     mode: "onChange",
     resolver: zodResolver(familyFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      name: "",
+      region: "",
+      city: "",
+      dailyRate: "",
+    },
   });
 
   useEffect(() => {
     if (isUserConnected) {
-      navigate("/"); // Adjust this path as needed
+      navigate("/family");
     }
   }, [isUserConnected, navigate]);
 
-  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
+  useEffect(() => {
+    setIsAvailabilitySelected(availabilities.length > 0);
+  }, [availabilities]);
+
+  const handleSelectSlot = ({ start, end }: SlotInfo) => {
     setAvailabilities([...availabilities, { start, end }]);
   };
 
+  const handleSelectEvent = (event: Event) => {
+    setSelectedEvent(event as Availability);
+  };
+
+  const handleDeleteEvent = () => {
+    if (selectedEvent) {
+      setAvailabilities(
+        availabilities.filter((event) => event !== selectedEvent)
+      );
+      setSelectedEvent(null);
+    }
+  };
+
   const onSubmit = async (data: FamilyFormData) => {
+    if (availabilities.length === 0) {
+      setAvailabilityError("Veuillez sélectionner au moins une disponibilité.");
+      toast.error("Veuillez sélectionner au moins une disponibilité.");
+      return;
+    } else {
+      setAvailabilityError(null);
+    }
+
     try {
       const result = await firebaseRegister({
         email: data.email,
@@ -74,7 +112,7 @@ const RegistrationFamily: React.FC = () => {
       });
 
       if (result.data) {
-        const uid = result.data.uid; // Get the UID of the current user
+        const uid = result.data.uid;
         await addOrUpdateDataToFirebase("users", uid, {
           ...data,
           availabilities: availabilities.map(({ start, end }) => ({
@@ -86,9 +124,10 @@ const RegistrationFamily: React.FC = () => {
         toast.success("Votre inscription a été enregistrée avec succès !");
         console.log("Form data: ", { ...data, availabilities });
 
-        navigate("/"); // Adjust this path as needed
+        navigate("/");
       }
     } catch (error) {
+      console.error("Erreur lors de l'inscription:", error);
       toast.error("Une erreur est survenue lors de l'inscription.");
     }
   };
@@ -101,6 +140,34 @@ const RegistrationFamily: React.FC = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
+            <div>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => <Input {...field} placeholder="Email" />}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+            <div>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Mot de passe"
+                  />
+                )}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
             <div>
               <Controller
                 name="name"
@@ -163,13 +230,30 @@ const RegistrationFamily: React.FC = () => {
               endAccessor="end"
               selectable
               onSelectSlot={handleSelectSlot}
+              onSelectEvent={handleSelectEvent}
               style={{ height: 500 }}
             />
+            {availabilityError && (
+              <p className="text-red-500 text-sm mt-2">{availabilityError}</p>
+            )}
           </div>
+          {selectedEvent && (
+            <div className="mt-4">
+              <Button
+                type="button"
+                className="w-full bg-red-500 hover:bg-red-700"
+                onClick={handleDeleteEvent}
+              >
+                Supprimer la disponibilité
+              </Button>
+            </div>
+          )}
           <Button
             type="submit"
             className="w-full mt-5 uppercase"
-            disabled={!isValid || isSubmitting || loading}
+            disabled={
+              !isValid || isSubmitting || loading || !isAvailabilitySelected
+            }
           >
             {loading || isSubmitting ? (
               <>

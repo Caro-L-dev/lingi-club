@@ -31,7 +31,11 @@ const Registration = () => {
     });
 
     if (result.data) {
-      navigate(`/family`);
+      if (data.role === "family") {
+        navigate("/family");
+      } else {
+        navigate("/");
+      }
     }
   };
 
