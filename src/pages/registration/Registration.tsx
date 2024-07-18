@@ -92,5 +92,5 @@ const Registration = () => {
     </FormProvider>
   );
 };
-la phrase "retouche calendrier :" est traduite en "
+
 export default Registration;
