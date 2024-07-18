@@ -45,7 +45,7 @@ The project uses Jest and React Testing Library for testing. To run the tests, e
 - uuid / react-query
   <br/>
 - vitest / react-testing-library
-- firebase
+- Firebase
 
 ## Contributing 🤝
 

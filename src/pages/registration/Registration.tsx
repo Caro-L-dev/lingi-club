@@ -1,23 +1,20 @@
-import { Loader2 } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-
 import { RegisterFormType } from "@/types/Forms";
-
-// Import the RoleSelection component
+import { Loader2 } from "lucide-react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import RoleSelection from "./roleselection/RoleSelection";
 
 const Registration = () => {
   const navigate = useNavigate();
   const methods = useForm<RegisterFormType>();
+  const { register, handleSubmit, setValue } = methods;
   const { firebaseRegister, loading, error } = useAuth();
 
   const onSubmit = async (data: RegisterFormType) => {
@@ -30,10 +27,12 @@ const Registration = () => {
       email: data.email,
       password: data.password,
       isFamily: data.role === "family",
-      role: data.role, // Ajout de la propriété role
+      role: data.role,
     });
 
-    result.data && navigate(`/${data.role}`);
+    if (result.data) {
+      navigate(`/${data.role}`);
+    }
   };
 
   return (
@@ -43,10 +42,10 @@ const Registration = () => {
           <TitleCard>Inscription</TitleCard>
         </CardHeader>
         <CardContent>
-          <form className="space-y-6" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <RoleSelection
-              setRole={(role) => methods.setValue("role", role)}
-              register={methods.register}
+              setRole={(role) => setValue("role", role)}
+              register={register}
               errors={methods.formState.errors}
             />
             <fieldset>
@@ -57,7 +56,7 @@ const Registration = () => {
                 <Label htmlFor="email" aria-label="Votre adresse e-mail">
                   Email
                 </Label>
-                <Input id="email" type="email" {...methods.register("email")} />
+                <Input id="email" type="email" {...register("email")} />
               </div>
               <div>
                 <Label htmlFor="password" aria-label="Votre mot de passe">
@@ -67,7 +66,7 @@ const Registration = () => {
                   id="password"
                   type="password"
                   autoComplete="on"
-                  {...methods.register("password")}
+                  {...register("password")}
                 />
               </div>
             </fieldset>
@@ -93,5 +92,5 @@ const Registration = () => {
     </FormProvider>
   );
 };
-
+la phrase "retouche calendrier :" est traduite en "
 export default Registration;

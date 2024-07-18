@@ -10,6 +10,8 @@ export type RoleType = "family" | "student";
 export type RegisterFormType = FormType & {
   isFamily: boolean;
   role: RoleType; // Ajout de la propriété role
+  email: string;
+  password: string;
 };
 
 export type FormValuesType = {
