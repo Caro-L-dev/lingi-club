@@ -1,19 +1,27 @@
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Spinner from "@/components/ui/Spinner";
 import { useAuth } from "@/hooks/useAuth";
 import { RegisterFormType } from "@/types/Forms";
-import { Loader2 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./Registration.css";
 import RoleSelection from "./roleselection/RoleSelection";
 
 const Registration = () => {
   const navigate = useNavigate();
-  const methods = useForm<RegisterFormType>();
+  const methods = useForm<RegisterFormType>({
+    mode: "onChange",
+  });
   const { register, handleSubmit, setValue } = methods;
   const { firebaseRegister, loading, error } = useAuth();
 
@@ -41,11 +49,14 @@ const Registration = () => {
 
   return (
     <FormProvider {...methods}>
-      <Card>
+      <Card className="responsive-card">
         <CardHeader>
           <TitleCard>Inscription</TitleCard>
         </CardHeader>
         <CardContent>
+          {error && (
+            <p className="text-destructive text-center mb-4">{error}</p>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <RoleSelection
               setRole={(role) => setValue("role", role)}
@@ -74,24 +85,31 @@ const Registration = () => {
                 />
               </div>
             </fieldset>
-            <Button
-              type="submit"
-              aria-label="Soumettre le formulaire"
-              className="w-full uppercase"
-              disabled={loading || !methods.formState.isValid}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Chargement...
-                </>
-              ) : (
-                "Poursuivre mon inscription"
-              )}
-            </Button>
-            {error && <p className="text-destructive">{error}</p>}
+            {loading ? (
+              <Button type="submit" className="w-full" disabled>
+                <Spinner />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                aria-label="Soumettre le formulaire"
+                className="w-full uppercase"
+                disabled={!methods.formState.isValid}
+              >
+                Poursuivre mon inscription
+              </Button>
+            )}
           </form>
         </CardContent>
+        <CardFooter className="text-center text-sm text-muted-foreground mt-6 gap-x-2">
+          Déjà inscrit ?
+          <Link
+            className="font-medium text-foreground hover:underline"
+            to="/connexion"
+          >
+            Connectez-vous.
+          </Link>
+        </CardFooter>
       </Card>
     </FormProvider>
   );

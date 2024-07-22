@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const studentFormSchema = z.object({
-  name: z.string().nonempty("Le nom est requis"),
-  region: z.string().nonempty("La région est requise"),
-  city: z.string().nonempty("La ville est requise"),
+  name: z.string().min(1, "Le nom est requis"),
+  region: z.string().min(1, "La région est requise"),
+  city: z.string().min(1, "La ville est requise"),
 });
 
 type StudentFormData = z.infer<typeof studentFormSchema>;
@@ -26,16 +26,10 @@ const RegistrationStudent = () => {
     resolver: zodResolver(studentFormSchema),
   });
 
-  const onSubmit = async (data: StudentFormData) => {
+  const onSubmit = () => {
     try {
-      // Simulate an API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       toast.success("Votre inscription a été enregistrée avec succès !");
-      console.log("Données du formulaire : ", data);
-
-      // Redirect to home page
-      navigate("/"); // Adjust this path as needed
+      navigate("/");
     } catch (error) {
       toast.error("Une erreur est survenue lors de l'inscription.");
     }
@@ -56,22 +50,22 @@ const RegistrationStudent = () => {
               <FormField id="region" label="Région" />
               <FormField id="city" label="Ville" />
             </fieldset>
-            <Button
-              type="submit"
-              className="w-full mt-5 uppercase"
-              disabled={
-                !methods.formState.isValid || methods.formState.isSubmitting
-              }
-            >
-              {methods.formState.isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Chargement...
-                </>
-              ) : (
-                "Valider mon inscription"
-              )}
-            </Button>
+            {methods.formState.isSubmitting ? (
+              <Button type="submit" className="w-full mt-5 uppercase" disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Chargement...
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full mt-5 uppercase"
+                disabled={
+                  !methods.formState.isValid || methods.formState.isSubmitting
+                }
+              >
+                Valider mon inscription
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>

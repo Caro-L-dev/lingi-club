@@ -1,0 +1,30 @@
+/* Registration.css */
+.responsive-card {
+  width: 100%;
+  max-width: 400px; /* Taille maximale de la carte */
+  margin: 0 auto;
+  padding: 2rem; /* Ajoute un peu de padding pour rendre la carte plus spacieuse */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour un meilleur effet visuel */
+}
+
+@media (max-width: 768px) {
+  .responsive-card {
+    padding: 1rem;
+  }
+
+  .responsive-card form {
+    padding: 0 1rem;
+  }
+
+  .responsive-card .text-center {
+    text-align: center;
+  }
+
+  .responsive-card legend {
+    font-size: 1rem;
+  }
+
+  .responsive-card .w-full {
+    width: 100%;
+  }
+}

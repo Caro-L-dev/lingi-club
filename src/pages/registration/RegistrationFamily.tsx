@@ -13,19 +13,14 @@ import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { addOrUpdateDataToFirebase } from "@/firebase/firestore";
 import { useAuth } from "@/hooks/useAuth";
 
 const localizer = momentLocalizer(moment);
 
 const familyFormSchema = z.object({
-  email: z.string().email({ message: "Email invalide" }),
-  password: z.string().min(6, {
-    message: "Le mot de passe doit contenir au moins 6 caractères.",
-  }),
-  name: z.string().nonempty("Le nom est requis"),
-  region: z.string().nonempty("La région est requise"),
-  city: z.string().nonempty("La ville est requise"),
+  name: z.string().min(1, { message: "Le nom est requis" }),
+  region: z.string().min(1, { message: "La région est requise" }),
+  city: z.string().min(1, { message: "La ville est requise" }),
   dailyRate: z
     .string()
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -48,7 +43,7 @@ const RegistrationFamily: React.FC = () => {
   );
   const [isAvailabilitySelected, setIsAvailabilitySelected] = useState(false);
   const navigate = useNavigate();
-  const { firebaseRegister, isUserConnected, loading, error } = useAuth();
+  const { isUserConnected, loading, error } = useAuth();
 
   const {
     control,
@@ -58,8 +53,6 @@ const RegistrationFamily: React.FC = () => {
     mode: "onChange",
     resolver: zodResolver(familyFormSchema),
     defaultValues: {
-      email: "",
-      password: "",
       name: "",
       region: "",
       city: "",
@@ -94,7 +87,7 @@ const RegistrationFamily: React.FC = () => {
     }
   };
 
-  const onSubmit = async (data: FamilyFormData) => {
+  const onSubmit = () => {
     if (availabilities.length === 0) {
       setAvailabilityError("Veuillez sélectionner au moins une disponibilité.");
       toast.error("Veuillez sélectionner au moins une disponibilité.");
@@ -104,28 +97,11 @@ const RegistrationFamily: React.FC = () => {
     }
 
     try {
-      const result = await firebaseRegister({
-        email: data.email,
-        password: data.password,
-        isFamily: true,
-        role: "family",
-      });
+      // Simulate data saving without actual API call
+      console.log("Form data: ", { availabilities });
 
-      if (result.data) {
-        const uid = result.data.uid;
-        await addOrUpdateDataToFirebase("users", uid, {
-          ...data,
-          availabilities: availabilities.map(({ start, end }) => ({
-            start,
-            end,
-          })),
-        });
-
-        toast.success("Votre inscription a été enregistrée avec succès !");
-        console.log("Form data: ", { ...data, availabilities });
-
-        navigate("/");
-      }
+      toast.success("Votre inscription a été enregistrée avec succès !");
+      navigate("/");
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error);
       toast.error("Une erreur est survenue lors de l'inscription.");
@@ -140,34 +116,6 @@ const RegistrationFamily: React.FC = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <div>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => <Input {...field} placeholder="Email" />}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="password"
-                    placeholder="Mot de passe"
-                  />
-                )}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
             <div>
               <Controller
                 name="name"
