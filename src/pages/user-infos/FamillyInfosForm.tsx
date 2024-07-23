@@ -42,6 +42,9 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       city: `${userData.city}`,
       region: `${userData?.region}`,
       familyLangages: `${userData?.familyLangages}`,
+      familyDalyRate: `${userData?.familyDalyRate}`,
+      // familyAvailabilities: `${userData?.familyAvailabilities}`,
+      familyAvailabilities: [],
       photoUrl: `${userData?.photoUrl}`,
       studentAge: `${userData?.studentAge}`,
     },
@@ -165,6 +168,32 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="familyDalyRate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prix journalier</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Entrez votre prix journalier"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {userData.photoUrl && (
+                <img
+                  src={userData.photoUrl}
+                  alt="User Photo"
+                  className="user-photo"
+                />
+              )}
 
               <div className="flex justify-center">
                 {loading ? (
