@@ -41,6 +41,9 @@ const Registration = () => {
     if (result.data) {
       if (data.role === "family") {
         navigate("/family");
+      }
+      if (data.role === "student") {
+        navigate("/student");
       } else {
         navigate("/");
       }

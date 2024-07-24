@@ -13,15 +13,18 @@ import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/useAuth";
+import { addOrUpdateDataToFirebase } from "@/firebase/firestore";
+
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { Availability } from "@/types/User";
 
 const localizer = momentLocalizer(moment);
 
 const familyFormSchema = z.object({
-  name: z.string().min(1, { message: "Le nom est requis" }),
+  displayName: z.string().min(1, { message: "Le nom est requis" }),
   region: z.string().min(1, { message: "La région est requise" }),
   city: z.string().min(1, { message: "La ville est requise" }),
-  dailyRate: z
+  familyDalyRate: z
     .string()
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Le tarif journalier doit être un nombre positif",
@@ -30,20 +33,17 @@ const familyFormSchema = z.object({
 
 type FamilyFormData = z.infer<typeof familyFormSchema>;
 
-type Availability = {
-  start: Date;
-  end: Date;
-};
-
 const RegistrationFamily: React.FC = () => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
+
+  const { authUserInfo, authUserIsLoading } = useAuthContext();
+
   const [availabilityError, setAvailabilityError] = useState<string | null>(
     null
   );
   const [isAvailabilitySelected, setIsAvailabilitySelected] = useState(false);
   const navigate = useNavigate();
-  const { isUserConnected, loading, error } = useAuth();
 
   const {
     control,
@@ -53,18 +53,18 @@ const RegistrationFamily: React.FC = () => {
     mode: "onChange",
     resolver: zodResolver(familyFormSchema),
     defaultValues: {
-      name: "",
+      displayName: "",
       region: "",
       city: "",
-      dailyRate: "",
+      familyDalyRate: "",
     },
   });
 
   useEffect(() => {
-    if (isUserConnected) {
+    if (!authUserIsLoading && authUserInfo) {
       navigate("/family");
     }
-  }, [isUserConnected, navigate]);
+  }, [authUserIsLoading, authUserInfo, navigate]);
 
   useEffect(() => {
     setIsAvailabilitySelected(availabilities.length > 0);
@@ -87,7 +87,7 @@ const RegistrationFamily: React.FC = () => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async (data: FamilyFormData) => {
     if (availabilities.length === 0) {
       setAvailabilityError("Veuillez sélectionner au moins une disponibilité.");
       toast.error("Veuillez sélectionner au moins une disponibilité.");
@@ -96,16 +96,19 @@ const RegistrationFamily: React.FC = () => {
       setAvailabilityError(null);
     }
 
-    try {
-      // Simulate data saving without actual API call
-      console.log("Form data: ", { availabilities });
+    const uid = authUserInfo?.uid ?? "";
+    await addOrUpdateDataToFirebase("users", uid, {
+      ...data,
+      availabilities: availabilities.map(({ start, end }) => ({
+        start,
+        end,
+      })),
+    });
 
-      toast.success("Votre inscription a été enregistrée avec succès !");
-      navigate("/");
-    } catch (error) {
-      console.error("Erreur lors de l'inscription:", error);
-      toast.error("Une erreur est survenue lors de l'inscription.");
-    }
+    toast.success("Votre inscription a été enregistrée avec succès !");
+    console.log("Form data: ", { ...data, availabilities });
+
+    navigate("/");
   };
 
   return (
@@ -118,12 +121,14 @@ const RegistrationFamily: React.FC = () => {
           <div className="space-y-4">
             <div>
               <Controller
-                name="name"
+                name="displayName"
                 control={control}
                 render={({ field }) => <Input {...field} placeholder="Nom" />}
               />
-              {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              {errors.displayName && (
+                <p className="text-red-500 text-sm">
+                  {errors.displayName.message}
+                </p>
               )}
             </div>
             <div>
@@ -150,7 +155,7 @@ const RegistrationFamily: React.FC = () => {
             </div>
             <div>
               <Controller
-                name="dailyRate"
+                name="familyDalyRate"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -160,9 +165,9 @@ const RegistrationFamily: React.FC = () => {
                   />
                 )}
               />
-              {errors.dailyRate && (
+              {errors.familyDalyRate && (
                 <p className="text-red-500 text-sm">
-                  {errors.dailyRate.message}
+                  {errors.familyDalyRate.message}
                 </p>
               )}
             </div>
@@ -199,11 +204,9 @@ const RegistrationFamily: React.FC = () => {
           <Button
             type="submit"
             className="w-full mt-5 uppercase"
-            disabled={
-              !isValid || isSubmitting || loading || !isAvailabilitySelected
-            }
+            disabled={!isValid || isSubmitting || !isAvailabilitySelected}
           >
-            {loading || isSubmitting ? (
+            {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Chargement...
@@ -212,7 +215,6 @@ const RegistrationFamily: React.FC = () => {
               "Valider mon inscription"
             )}
           </Button>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
       </CardContent>
     </Card>
