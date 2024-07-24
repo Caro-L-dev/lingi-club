@@ -1,37 +1,54 @@
-import HostFamilyCard from "@/components/hostFamilyCard/HostFamilyCard";
-import { hostFamilies } from "@/lib/data/data";
-import { RegionType } from "@/types/User";
 import { useEffect, useState } from "react";
+import HostFamilyCard from "@/components/hostFamilyCard/HostFamilyCard";
+import { getAllFamiliesFromFirebase } from "@/firebase/firestore";
+import { toast } from "react-toastify";
 import { useLocation } from "react-router";
 
+import { UserType } from "@/types/User";
+import { RegionType } from "@/types/User";
+
 const SearchFamily = () => {
-    const location = useLocation();
-    const { state } = location;
-    const [region, setRegion] = useState<RegionType>(null);
+  const location = useLocation();
+  const { state } = location;
+  const [region, setRegion] = useState<RegionType>(null);
 
-    useEffect(() => {
-        setRegion(state.key.region);
-    }, [state]);
+  useEffect(() => {
+    setRegion(state.key.region);
+  }, [state]);
 
-    return (
-        <div>
-            <h2 className="py-4 text-center">
-                Vous regardez les familles disponibles en région:{" "}
-                <span className="text-secondary">{state.key.region}</span>
-            </h2>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
-                {region &&
-                    hostFamilies
-                        .filter((famillies) => famillies.region === region)
-                        .map((hostFamily) => (
-                            <HostFamilyCard
-                                key={hostFamily.id}
-                                hostFamily={hostFamily}
-                            />
-                        ))}
-            </div>
-        </div>
-    );
+  const [allFamilies, setAllFamilies] = useState<UserType[]>([]);
+
+  useEffect(() => {
+    const fetchAllFamilies = async () => {
+      const result = await getAllFamiliesFromFirebase("users");
+
+      if (result.error) {
+        toast.error("Erreur lors de la récupération des familles");
+      } else {
+        const data = result.data as UserType[];
+        setAllFamilies(data ?? []);
+      }
+    };
+
+    fetchAllFamilies();
+  }, []);
+
+  return (
+    <div>
+      <h2 className="py-4 text-center">
+        Vous regardez les familles disponibles en région:{" "}
+        <span className="text-secondary">{state.key.region}</span>
+      </h2>
+      <div className="flex flex-wrap gap-4 justify-center items-center">
+        {region &&
+          allFamilies
+            .filter((famillies) => famillies.region === region)
+            .map((hostFamily) => (
+              <HostFamilyCard key={hostFamily.uid} hostFamily={hostFamily} />
+            ))}
+      </div>
+    </div>
+  );
 };
 
 export default SearchFamily;
