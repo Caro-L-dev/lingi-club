@@ -17,7 +17,6 @@ import NotSale from "./pages/error/NotSale";
 
 function App() {
     return (
-        <>
             <BrowserRouter>
                 <Navbar />
                 <Wrapper className="flex flex-col py-6 min-h-[calc(100vh-152px)]">
@@ -48,7 +47,6 @@ function App() {
                 </Wrapper>
                 <Footer />
             </BrowserRouter>
-        </>
     );
 }
 

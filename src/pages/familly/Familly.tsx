@@ -20,7 +20,7 @@ const Familly = () => {
     const navigate = useNavigate();
     const { authUserInfo } = useAuthContext();
 
-    const defaultImage = "/public/images/family.jpg";
+    const defaultImage = "/images/family.jpg";
 
     useEffect(() => {
         if (!authUserInfo) {
@@ -42,11 +42,19 @@ const Familly = () => {
     return (
         <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
             <CardHeader className="relative">
-                <img
-                    className="w-full object-cover object-center"
-                    src={`${state.image}` || defaultImage}
-                    alt={`${state.title} family photo`}
-                />
+                {state.image ? (
+                    <img
+                        className="w-full object-cover object-center"
+                        src={`${state.image}`}
+                        alt={`${state.title} family photo`}
+                    />
+                ) : (
+                    <img
+                        className="w-full object-cover object-center"
+                        src={`${defaultImage}`}
+                        alt="family photo"
+                    />
+                )}
             </CardHeader>
 
             <CardContent className="relative flex-grow">
@@ -59,7 +67,7 @@ const Familly = () => {
                             />
                             <ItemInfo region={state.region} icon={<MapPin />} />
                             <ItemInfo
-                                price={state.price || undefined}
+                                price={state.price || null}
                                 icon={<Euro />}
                             >
                                 / jour
@@ -82,7 +90,7 @@ const Familly = () => {
                         {state.description}
                     </CardDescription>
 
-                    {state.accept.length > 0 && (
+                    {state.accept && state.accept.length > 0 && (
                         <CardDescription className="border-t border-t-muted pt-4">
                             Accepte :{state.accept.join(", ")}
                         </CardDescription>
