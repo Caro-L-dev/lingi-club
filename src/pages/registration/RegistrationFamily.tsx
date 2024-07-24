@@ -13,10 +13,13 @@ import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { addOrUpdateDataToFirebase } from "@/firebase/firestore";
+import {
+  addOrUpdateDataToFirebase,
+  getDataFromFirebase,
+} from "@/firebase/firestore";
 
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { Availability } from "@/types/User";
+import { Availability, UserType } from "@/types/User";
 
 const localizer = momentLocalizer(moment);
 
@@ -33,9 +36,12 @@ const familyFormSchema = z.object({
 
 type FamilyFormData = z.infer<typeof familyFormSchema>;
 
+type UserData = Omit<UserType, "uid" | "isFamily" | "emailVerified">;
+
 const RegistrationFamily: React.FC = () => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const { authUserInfo, authUserIsLoading } = useAuthContext();
 
@@ -87,6 +93,15 @@ const RegistrationFamily: React.FC = () => {
     }
   };
 
+  const fetchUserData = async (uid: string) => {
+    const response = await getDataFromFirebase("users", uid);
+    if ("data" in response) {
+      setUserData(response.data as UserData);
+    } else {
+      console.error(response.error);
+    }
+  };
+
   const onSubmit = async (data: FamilyFormData) => {
     if (availabilities.length === 0) {
       setAvailabilityError("Veuillez sélectionner au moins une disponibilité.");
@@ -97,7 +112,7 @@ const RegistrationFamily: React.FC = () => {
     }
 
     const uid = authUserInfo?.uid ?? "";
-    await addOrUpdateDataToFirebase("users", uid, {
+    const response = await addOrUpdateDataToFirebase("users", uid, {
       ...data,
       availabilities: availabilities.map(({ start, end }) => ({
         start,
@@ -105,10 +120,22 @@ const RegistrationFamily: React.FC = () => {
       })),
     });
 
-    toast.success("Votre inscription a été enregistrée avec succès !");
-    console.log("Form data: ", { ...data, availabilities });
+    if ("data" in response) {
+      toast.success("Votre inscription a été enregistrée avec succès !");
+      console.log("Form data: ", { ...data, availabilities });
 
-    navigate("/");
+      // Fetch user data to verify it has been saved correctly
+      await fetchUserData(uid);
+
+      // Wait for 5 seconds before redirecting
+      setTimeout(() => {
+        navigate("/");
+      }, 50000);
+    } else {
+      toast.error(
+        "Une erreur est survenue lors de l'inscription : " + response.error
+      );
+    }
   };
 
   return (
@@ -216,6 +243,12 @@ const RegistrationFamily: React.FC = () => {
             )}
           </Button>
         </form>
+        {userData && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">Données utilisateur</h3>
+            <pre>{JSON.stringify(userData, null, 2)}</pre>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
