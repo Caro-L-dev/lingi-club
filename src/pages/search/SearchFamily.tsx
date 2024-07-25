@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import HostFamilyCard from "@/components/hostFamilyCard/HostFamilyCard";
-import { getAllFamiliesFromFirebase } from "@/firebase/firestore";
+
 import { toast } from "react-toastify";
 import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
+
+import { TypographyP } from "@/components/common/typographyP/TypographyP";
+import HostFamilyCard from "@/components/hostFamilyCard/HostFamilyCard";
+
+import { Button } from "@/components/ui/button";
+
+import { getAllFamiliesFromFirebase } from "@/firebase/firestore";
 
 import { UserType } from "@/types/User";
 import { RegionType } from "@/types/User";
@@ -33,19 +40,31 @@ const SearchFamily = () => {
     fetchAllFamilies();
   }, []);
 
+  const filteredFamilies = region
+    ? allFamilies.filter((families) => families.region === region)
+    : [];
+
   return (
-    <div>
-      <h2 className="py-4 text-center">
-        Vous regardez les familles disponibles en région:{" "}
-        <span className="text-secondary">{state.key.region}</span>
-      </h2>
+    <div className="m-auto">
+      <TypographyP className="flex flex-col py-4 text-center">
+        Vous regardez les familles disponibles en région{" "}
+        <span className="text-secondary font-bold uppercase">
+          {state.key.region}
+        </span>
+      </TypographyP>
       <div className="flex flex-wrap gap-4 justify-center items-center">
-        {region &&
-          allFamilies
-            .filter((famillies) => famillies.region === region)
-            .map((hostFamily) => (
-              <HostFamilyCard key={hostFamily.uid} hostFamily={hostFamily} />
-            ))}
+        {filteredFamilies.length > 0 ? (
+          filteredFamilies.map((hostFamily) => (
+            <HostFamilyCard key={hostFamily.uid} hostFamily={hostFamily} />
+          ))
+        ) : (
+          <div className="flex flex-col gap-2">
+            <p>Désolé, aucune famille n'a été trouvée dans votre région :/</p>
+            <Button variant="secondary">
+              <Link to="/">Retourner à l'accueil</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

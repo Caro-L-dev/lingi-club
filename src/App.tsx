@@ -12,42 +12,30 @@ import Connexion from "./pages/connexion/Connexion";
 import SearchFamily from "./pages/search/SearchFamily";
 import Footer from "./components/footer/Footer";
 import UserInfos from "./pages/user-infos/UserInfos";
-import Familly from "./pages/familly/Familly";
+import Familly from "./pages/family/Family";
 import NotSale from "./pages/error/NotSale";
 
 function App() {
-    return (
-            <BrowserRouter>
-                <Navbar />
-                <Wrapper className="flex flex-col py-6 min-h-[calc(100vh-152px)]">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route
-                            path="/registration"
-                            element={<Registration />}
-                        />
-                        <Route
-                            path="/family"
-                            element={<RegistrationFamily />}
-                        />
-                        <Route
-                            path="/search-familly"
-                            element={<SearchFamily />}
-                        />
-                        <Route
-                            path="/student"
-                            element={<RegistrationStudent />}
-                        />
-                        <Route path="/connexion" element={<Connexion />} />
-                        <Route path="/user-infos" element={<UserInfos />} />
-                        <Route path="/family-infos/:id" element={<Familly />} />
-                        <Route path="/not-sale" element={<NotSale />} />
-                        <Route path="/*" element={<Home />} />
-                    </Routes>
-                </Wrapper>
-                <Footer />
-            </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Wrapper className="flex flex-col py-6 min-h-[calc(100vh-152px)]">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/family" element={<RegistrationFamily />} />
+          <Route path="/search-familly" element={<SearchFamily />} />
+          <Route path="/student" element={<RegistrationStudent />} />
+          <Route path="/connexion" element={<Connexion />} />
+          <Route path="/user-infos" element={<UserInfos />} />
+          <Route path="/family-infos/:id" element={<Familly />} />
+          <Route path="/not-sale" element={<NotSale />} />
+          <Route path="/*" element={<Home />} />
+        </Routes>
+      </Wrapper>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
 export default App;
