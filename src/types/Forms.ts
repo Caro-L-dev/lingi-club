@@ -26,7 +26,7 @@ export const formSchema = z.object({
     email: z.string(),
     description: z.string(),
     city: z.string(),
-    region: z.any(),
+    region: z.string(),
     familyLangages: z.string(),
     familyDalyRate: z.string(),
     familyAvailabilities: z.array(availabilitySchema).nullable(), 
