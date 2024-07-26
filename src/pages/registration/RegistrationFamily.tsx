@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import {
   addOrUpdateDataToFirebase,
   getDataFromFirebase,
+  uploadImageOnFirebase,
 } from "@/firebase/firestore";
 
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -42,6 +43,7 @@ const RegistrationFamily: React.FC = () => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
 
   const { authUserInfo, authUserIsLoading } = useAuthContext();
 
@@ -111,6 +113,12 @@ const RegistrationFamily: React.FC = () => {
       setAvailabilityError(null);
     }
 
+    let photoUrl: string = "";
+    if (imageUpload) {
+      const uploadedPhotoUrl = await uploadImageOnFirebase(imageUpload);
+      photoUrl = uploadedPhotoUrl ?? "";
+    }
+
     const uid = authUserInfo?.uid ?? "";
     const response = await addOrUpdateDataToFirebase("users", uid, {
       ...data,
@@ -118,11 +126,12 @@ const RegistrationFamily: React.FC = () => {
         start,
         end,
       })),
+      photoUrl,
     });
 
     if ("data" in response) {
       toast.success("Votre inscription a été enregistrée avec succès !");
-      console.log("Form data: ", { ...data, availabilities });
+      console.log("Form data: ", { ...data, availabilities, photoUrl });
 
       // Fetch user data to verify it has been saved correctly
       await fetchUserData(uid);
@@ -130,7 +139,7 @@ const RegistrationFamily: React.FC = () => {
       // Wait for 5 seconds before redirecting
       setTimeout(() => {
         navigate("/");
-      }, 50000);
+      }, 5000);
     } else {
       toast.error(
         "Une erreur est survenue lors de l'inscription : " + response.error
@@ -198,6 +207,14 @@ const RegistrationFamily: React.FC = () => {
                 </p>
               )}
             </div>
+            <div>
+              <input
+                type="file"
+                onChange={(event) =>
+                  event.target.files && setImageUpload(event.target.files[0])
+                }
+              />
+            </div>
           </div>
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">
@@ -209,6 +226,7 @@ const RegistrationFamily: React.FC = () => {
               startAccessor="start"
               endAccessor="end"
               selectable
+              views={["month", "week", "agenda"]}
               onSelectSlot={handleSelectSlot}
               onSelectEvent={handleSelectEvent}
               style={{ height: 500 }}
