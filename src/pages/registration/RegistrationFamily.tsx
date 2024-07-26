@@ -19,6 +19,13 @@ import {
   uploadImageOnFirebase,
 } from "@/firebase/firestore";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { Availability, UserType } from "@/types/User";
 
@@ -26,7 +33,24 @@ const localizer = momentLocalizer(moment);
 
 const familyFormSchema = z.object({
   displayName: z.string().min(1, { message: "Le nom est requis" }),
-  region: z.string().min(1, { message: "La région est requise" }),
+  region: z.enum(
+    [
+      "Auvergne-Rhône-Alpes",
+      "Bourgogne-Franche-Comté",
+      "Bretagne",
+      "Centre-Val de Loire",
+      "Corse",
+      "Grand Est",
+      "Hauts-de-France",
+      "Île-de-France",
+      "Normandie",
+      "Nouvelle-Aquitaine",
+      "Occitanie",
+      "Pays de la Loire",
+      "Provence-Alpes-Côte d'Azur",
+    ],
+    { message: "La région est requise" }
+  ),
   city: z.string().min(1, { message: "La ville est requise" }),
   familyDalyRate: z
     .string()
@@ -62,7 +86,7 @@ const RegistrationFamily: React.FC = () => {
     resolver: zodResolver(familyFormSchema),
     defaultValues: {
       displayName: "",
-      region: "",
+      region: "Auvergne-Rhône-Alpes",
       city: "",
       familyDalyRate: "",
     },
@@ -79,7 +103,10 @@ const RegistrationFamily: React.FC = () => {
   }, [availabilities]);
 
   const handleSelectSlot = ({ start, end }: SlotInfo) => {
-    setAvailabilities([...availabilities, { start, end }]);
+    setAvailabilities([
+      ...availabilities,
+      { start: new Date(start), end: new Date(end) },
+    ]);
   };
 
   const handleSelectEvent = (event: Event) => {
@@ -122,9 +149,9 @@ const RegistrationFamily: React.FC = () => {
     const uid = authUserInfo?.uid ?? "";
     const response = await addOrUpdateDataToFirebase("users", uid, {
       ...data,
-      availabilities: availabilities.map(({ start, end }) => ({
-        start: start.toISOString(),
-        end: end.toISOString(),
+      familyAvailabilities: availabilities.map(({ start, end }) => ({
+        start,
+        end,
       })),
       photoUrl,
     });
@@ -146,6 +173,25 @@ const RegistrationFamily: React.FC = () => {
       );
     }
   };
+
+  const regionOptions = [
+    { value: "Auvergne-Rhône-Alpes", label: "Auvergne-Rhône-Alpes" },
+    { value: "Bourgogne-Franche-Comté", label: "Bourgogne-Franche-Comté" },
+    { value: "Bretagne", label: "Bretagne" },
+    { value: "Centre-Val de Loire", label: "Centre-Val de Loire" },
+    { value: "Corse", label: "Corse" },
+    { value: "Grand Est", label: "Grand Est" },
+    { value: "Hauts-de-France", label: "Hauts-de-France" },
+    { value: "Île-de-France", label: "Île-de-France" },
+    { value: "Normandie", label: "Normandie" },
+    { value: "Nouvelle-Aquitaine", label: "Nouvelle-Aquitaine" },
+    { value: "Occitanie", label: "Occitanie" },
+    { value: "Pays de la Loire", label: "Pays de la Loire" },
+    {
+      value: "Provence-Alpes-Côte d'Azur",
+      label: "Provence-Alpes-Côte d'Azur",
+    },
+  ];
 
   return (
     <Card>
@@ -172,7 +218,18 @@ const RegistrationFamily: React.FC = () => {
                 name="region"
                 control={control}
                 render={({ field }) => (
-                  <Input {...field} placeholder="Région" />
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez votre région" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {regionOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
               />
               {errors.region && (
