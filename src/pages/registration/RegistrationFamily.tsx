@@ -123,8 +123,8 @@ const RegistrationFamily: React.FC = () => {
     const response = await addOrUpdateDataToFirebase("users", uid, {
       ...data,
       availabilities: availabilities.map(({ start, end }) => ({
-        start,
-        end,
+        start: start.toISOString(),
+        end: end.toISOString(),
       })),
       photoUrl,
     });
