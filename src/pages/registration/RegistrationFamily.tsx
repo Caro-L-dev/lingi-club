@@ -12,11 +12,11 @@ const RegistrationFamily = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (
+  const onSubmit = () =>
     //data
-    ) => {
-    toast.success("Votre famille a été enregistrée avec succès !");
-  };
+    {
+      toast.success("Votre famille a été enregistrée avec succès !");
+    };
 
   return (
     <FormProvider {...methods}>
