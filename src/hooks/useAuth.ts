@@ -24,8 +24,8 @@ const emptyUser: UserType = {
   photoUrl: null,
   creationDate: null,
   studentAge: null,
-  familyDalyRate: null,
-  familyLangages: null,
+  familyDailyRate: null,
+  familyLanguage: null,
   familyAvailabilities: null,
 }
 
