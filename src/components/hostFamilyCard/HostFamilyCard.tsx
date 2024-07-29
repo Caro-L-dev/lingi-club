@@ -38,7 +38,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
                             <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
                                 <ItemInfo
                                     nativeLanguage={
-                                        hostFamily.familyLangages ?? "Langues ?"
+                                        hostFamily.familyLanguage ?? "Langues ?"
                                     }
                                     icon={<Flag />}
                                 />
@@ -47,7 +47,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
                                     icon={<MapPin />}
                                 />
                                 <ItemInfo
-                                    price={hostFamily.familyDalyRate ?? 0}
+                                    price={hostFamily.familyDailyRate ?? 0}
                                     icon={<Euro />}
                                 >
                                     / jour
