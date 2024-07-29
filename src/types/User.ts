@@ -8,16 +8,16 @@ export type RegionType = "Auvergne-Rhône-Alpes" | "Bourgogne-Franche-Comté" | 
 export type UserType = {
     uid: string;
     isFamily: boolean;
-    email: string | null;
-    displayName: string | null;
-    city: string | null;
+    email: string;
+    displayName: string;
+    city: string;
     region: RegionType;
     description: string | null;
     emailVerified: boolean;
-    photoUrl: string | null;
+    photoUrl: string;
     creationDate: Date | null;
     studentAge: number | null;
     familyDailyRate: number | null;
-    familyLanguage: string | null;
-    familyAvailabilities: Availability[] | null;
+    familyLanguage: string;
+    familyAvailabilities: Availability[];
 }
