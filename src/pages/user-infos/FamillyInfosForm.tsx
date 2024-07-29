@@ -65,7 +65,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="space-y-8"
                         >
-
                             <FormField
                                 control={form.control}
                                 name="displayName"
@@ -141,7 +140,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Région</FormLabel>
-                                        <Select>
+
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selectionnez votre région" />
                                             </SelectTrigger>
@@ -151,11 +154,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                                                         if (region) {
                                                             return (
                                                                 <SelectItem
+                                                                    key={index}
                                                                     {...field}
                                                                     value={
                                                                         region
                                                                     }
-                                                                    key={index}
                                                                 >
                                                                     {region}
                                                                 </SelectItem>
@@ -175,13 +178,25 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Langue</FormLabel>
-                                        <Select>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selectionnez votre langue" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem {...field}>
+                                                <SelectItem
+                                                    {...field}
+                                                    value="Anglais"
+                                                >
                                                     Anglais
+                                                </SelectItem>
+                                                <SelectItem
+                                                    {...field}
+                                                    value="Espagnol"
+                                                >
+                                                    Espagnol
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -207,8 +222,20 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                                 )}
                             />
 
-                            {userData.photoUrl && <img src={userData.photoUrl} alt="User Photo" className="user-photo" />}
-
+                            {
+                            userData.photoUrl !== null ? (
+                                <img
+                                    src={userData.photoUrl}
+                                    alt="User Photo"
+                                    className="user-photo"
+                                />
+                            ) : (
+                                <img
+                                    src="/images/family.jpg"
+                                    alt="User Photo generique"
+                                    className="user-photo"
+                                />
+                            )}
 
                             <div className="flex justify-center">
                                 {loading ? (
