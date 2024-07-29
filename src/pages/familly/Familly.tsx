@@ -39,20 +39,25 @@ const Familly = () => {
         );
     }
 
+    const handleReserve = () => {
+        const priceInCent: number = Number(state.familyDalyRate)
+        navigate(`/payment/${state.uid}`, { state: priceInCent });
+    };
+
     return (
         <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
             <CardHeader className="relative">
-                {state.image ? (
+                {state.photoUrl !== "null" ? (
                     <img
                         className="w-full object-cover object-center"
-                        src={`${state.image}`}
-                        alt={`${state.title} family photo`}
+                        src={`${state.photoUrl}`}
+                        alt={`${state.displayName} family photo`}
                     />
                 ) : (
                     <img
                         className="w-full object-cover object-center"
-                        src={`${defaultImage}`}
-                        alt="family photo"
+                        src={defaultImage}
+                        alt="family photo générique"
                     />
                 )}
             </CardHeader>
@@ -62,12 +67,12 @@ const Familly = () => {
                     <div className="flex flex-col lg:flex-row sm:justify-between items-center">
                         <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
                             <ItemInfo
-                                nativeLanguage={state.nativeLanguage || ""}
+                                nativeLanguage={state.familyLangages || ""}
                                 icon={<Flag />}
                             />
                             <ItemInfo region={state.region} icon={<MapPin />} />
                             <ItemInfo
-                                price={state.price || null}
+                                price={state.familyDalyRate || null}
                                 icon={<Euro />}
                             >
                                 / jour
@@ -75,7 +80,7 @@ const Familly = () => {
                         </div>
                         <Button
                             className="w-full lg:w-fit"
-                            onClick={() => navigate("/not-sale")}
+                            onClick={handleReserve}
                         >
                             Réserver
                         </Button>
@@ -83,18 +88,19 @@ const Familly = () => {
                 </CardContent>
                 <CardContent className="border-t border-t-secondary pt-4">
                     <CardTitle className="text-secondary text-balance py-2">
-                        Bienvenue chez la famille {state.title}
+                        Bienvenue chez la famille {state.displayName}
                     </CardTitle>
 
                     <CardDescription className="line-clamp-3 tracking-tight my-2 mb-4">
                         {state.description}
                     </CardDescription>
 
-                    {state.accept && state.accept.length > 0 && (
-                        <CardDescription className="border-t border-t-muted pt-4">
-                            Accepte :{state.accept.join(", ")}
-                        </CardDescription>
-                    )}
+                    {state.availabilities &&
+                        state.availabilities.length > 0 && (
+                            <CardDescription className="border-t border-t-muted pt-4">
+                                Accepte :{state.availabilities.join(", ")}
+                            </CardDescription>
+                        )}
                 </CardContent>
             </CardContent>
         </Card>
