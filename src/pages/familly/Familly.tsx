@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Euro, Flag, MapPin } from "lucide-react";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardDescription,
+    Card,
+    CardHeader,
+    CardContent,
+    CardTitle,
+    CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
@@ -15,22 +15,24 @@ import { toast } from "react-toastify";
 import { UserType } from "@/types/User";
 
 const Familly = () => {
-  const location = useLocation();
-  const { state } = location as { state: UserType };
-  const navigate = useNavigate();
-  const { authUserInfo } = useAuthContext();
+    const location = useLocation();
+    const { state } = location as { state: UserType };
+    const navigate = useNavigate();
+    const { authUserInfo } = useAuthContext();
 
-  const defaultImage = "/images/family.jpg";
+    const defaultImage = "/images/family.jpg";
 
-  useEffect(() => {
-    if (!authUserInfo) {
-      navigate("/");
-      toast.error("Vous devez être connecté pour accéder aux informations");
-    }
-  }, [authUserInfo, navigate]);
+    useEffect(() => {
+        if (!authUserInfo) {
+            navigate("/");
+            toast.error(
+                "Vous devez être connecté pour accéder aux informations"
+            );
+        }
+    }, [authUserInfo, navigate]);
 
     const handleReserve = () => {
-        const priceInCent: number = Number(state.familyDailyRate)
+        const priceInCent: number = Number(state.familyDailyRate);
         navigate(`/payment/${state.uid}`, { state: priceInCent });
     };
 
@@ -52,74 +54,44 @@ const Familly = () => {
                 )}
             </CardHeader>
 
-                <CardContent>
-                    <div className="flex flex-col lg:flex-row sm:justify-between items-center">
-                        <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
-                            <ItemInfo
-                                nativeLanguage={state.familyLanguage || ""}
-                                icon={<Flag />}
-                            />
-                            <ItemInfo region={state.region} icon={<MapPin />} />
-                            <ItemInfo
-                                price={state.familyDailyRate || null}
-                                icon={<Euro />}
-                            >
-                                / jour
-                            </ItemInfo>
-                        </div>
-                        <Button
-                            className="w-full lg:w-fit"
-                            onClick={handleReserve}
+            <CardTitle className="text-secondary text-balance text-center pt-2 pb-4">
+                Bienvenue chez la famille{" "}
+                <span className="text-gray-600">{state.displayName}</span>
+            </CardTitle>
+
+            <CardContent className="relative flex-grow">
+                <div className="flex flex-col lg:flex-row sm:justify-between items-center">
+                    <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
+                        <ItemInfo
+                            nativeLanguage={state.familyLanguage || ""}
+                            icon={<Flag />}
+                        />
+                        <ItemInfo region={state.region} icon={<MapPin />} />
+                        <ItemInfo
+                            price={state.familyDailyRate || undefined}
+                            icon={<Euro />}
                         >
-                            Réserver
-                        </Button>
+                            / jour
+                        </ItemInfo>
                     </div>
-                </CardContent>
+                    <Button className="w-full lg:w-fit" onClick={handleReserve}>
+                        Réserver
+                    </Button>
+                </div>
 
-                    <CardTitle className="text-secondary text-balance py-2">
-                        Bienvenue chez la famille {state.displayName}
-                    </CardTitle>
+                <CardTitle className="border-t border-t-secondary text-secondary text-balance mt-4 py-4">
+                    Informations
+                </CardTitle>
+                <CardDescription className="my-2 mb-4">
+                    {state.description}
+                </CardDescription>
 
-      <CardContent className="relative flex-grow">
-        <CardContent>
-          <div className="flex flex-col lg:flex-row sm:justify-between items-center">
-            <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
-              <ItemInfo
-                nativeLanguage={state.familyLanguage || ""}
-                icon={<Flag />}
-              />
-              <ItemInfo region={state.region} icon={<MapPin />} />
-              <ItemInfo
-                price={state.familyDailyRate || undefined}
-                icon={<Euro />}
-              >
-                / jour
-              </ItemInfo>
-            </div>
-            <Button
-              className="w-full lg:w-fit"
-              onClick={() => navigate("/not-sale")}
-            >
-              Réserver
-            </Button>
-          </div>
-        </CardContent>
-        <CardContent className="border-t border-t-secondary pt-4">
-          <CardTitle className="text-secondary text-balance py-2">
-            Bienvenue chez la famille{" "}
-            <span className="text-gray-600">{state.displayName}</span>
-          </CardTitle>
-          <CardDescription className="my-2 mb-4">
-            {state.description}
-          </CardDescription>
-
-                    {state.familyAvailabilities &&
-                        state.familyAvailabilities.length > 0 && (
-                            <CardDescription className="border-t border-t-muted pt-4">
-                                Accepte :{state.familyAvailabilities.join(", ")}
-                            </CardDescription>
-                        )}
-                </CardContent>
+                {state.familyAvailabilities &&
+                    state.familyAvailabilities.length > 0 && (
+                        <CardDescription className="border-t border-t-muted pt-4">
+                            Accepte :{state.familyAvailabilities.join(", ")}
+                        </CardDescription>
+                    )}
             </CardContent>
         </Card>
     );

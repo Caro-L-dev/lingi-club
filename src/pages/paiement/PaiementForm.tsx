@@ -67,7 +67,6 @@ const PaiementForm = ({price}: Props) => {
         }
 
         if (!hasErrors) {
-            console.log("Formulaire soumis avec succès");
             navigate("/payment-valide");
         }
     };
@@ -75,7 +74,8 @@ const PaiementForm = ({price}: Props) => {
         <Card className="w-full max-w-md">
             <CardHeader>
                 <CardTitle>Paiement par carte</CardTitle>
-                <p className="py-2">Montant de la transaction: {price} euros</p>
+                {/* Par défaut j'ai mis 5 jours de réservation */}
+                <p className="py-2 text-secondary">Montant de la transaction: <span className="text-lg">{price * 5}</span> euros</p>
                 <CardDescription>
                     Entrez vos informations de paiement.
                 </CardDescription>
