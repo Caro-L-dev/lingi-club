@@ -41,8 +41,8 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       description: `${userData?.description}`,
       city: `${userData.city}`,
       region: `${userData?.region}`,
-      familyLangages: `${userData?.familyLangages}`,
-      familyDalyRate: `${userData?.familyDalyRate}`,
+      familyLanguage: `${userData?.familyLanguage}`,
+      familyDailyRate: `${userData?.familyDailyRate}`,
       // familyAvailabilities: `${userData?.familyAvailabilities}`,
       familyAvailabilities: [],
       photoUrl: `${userData?.photoUrl}`,
@@ -131,7 +131,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Région</FormLabel>
-                    <Select>
+
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Selectionnez votre région" />
                       </SelectTrigger>
@@ -139,7 +143,7 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         {regionsList.map((region, index) => {
                           if (region) {
                             return (
-                              <SelectItem {...field} value={region} key={index}>
+                              <SelectItem key={index} {...field} value={region}>
                                 {region}
                               </SelectItem>
                             );
@@ -153,16 +157,24 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
 
               <FormField
                 control={form.control}
-                name="familyLangages"
+                name="familyLanguage"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Langue</FormLabel>
-                    <Select>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Selectionnez votre langue" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem {...field}>Anglais</SelectItem>
+                        <SelectItem {...field} value="Anglais">
+                          Anglais
+                        </SelectItem>
+                        <SelectItem {...field} value="Espagnol">
+                          Espagnol
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -171,7 +183,7 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
 
               <FormField
                 control={form.control}
-                name="familyDalyRate"
+                name="familyDailyRate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prix journalier</FormLabel>
@@ -187,10 +199,16 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                 )}
               />
 
-              {userData.photoUrl && (
+              {userData.photoUrl !== null ? (
                 <img
                   src={userData.photoUrl}
                   alt="User Photo"
+                  className="user-photo"
+                />
+              ) : (
+                <img
+                  src="/images/family.jpg"
+                  alt="User Photo generique"
                   className="user-photo"
                 />
               )}

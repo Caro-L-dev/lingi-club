@@ -1,3 +1,4 @@
+// types/User.ts
 export type Availability = {
   start: Date;
   end: Date;
@@ -31,7 +32,7 @@ export type UserType = {
   photoUrl: string | null;
   creationDate: Date | null;
   studentAge: number | null;
-  familyDalyRate: number | null;
-  familyLangages: string | null;
+  familyDailyRate: number | null;
+  familyLanguage: string | null;
   familyAvailabilities: Availability[] | null;
 };
