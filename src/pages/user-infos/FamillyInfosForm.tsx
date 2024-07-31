@@ -19,8 +19,24 @@ import {
 } from "@/components/ui/select";
 import Spinner from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
-
 import { regionsList } from "@/lib/data/data";
+import { UserType } from "@/types/User";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const formSchema = z.object({
+  displayName: z.string().nonempty("Le nom est requis"),
+  email: z.string().email("E-mail invalide"),
+  description: z.string().optional(),
+  city: z.string().nonempty("La ville est requise"),
+  region: z.string().nonempty("La région est requise"),
+  familyLanguage: z.string().nonempty("La langue est requise"),
+  familyDailyRate: z.string().nonempty("Le tarif journalier est requis"),
+  familyAvailabilities: z.array(z.string()).optional(),
+  photoUrl: z.string().optional(),
+  studentAge: z.string().optional(),
+});
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
@@ -134,15 +150,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         <SelectValue placeholder="Selectionnez votre région" />
                       </SelectTrigger>
                       <SelectContent>
-                        {regionsList.map((region, index) => {
-                          if (region) {
-                            return (
-                              <SelectItem key={index} {...field} value={region}>
-                                {region}
-                              </SelectItem>
-                            );
-                          }
-                        })}
+                        {regionsList.map((region, index) => (
+                          <SelectItem key={index} value={region}>
+                            {region}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -163,12 +175,8 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         <SelectValue placeholder="Selectionnez votre langue" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem {...field} value="Anglais">
-                          Anglais
-                        </SelectItem>
-                        <SelectItem {...field} value="Espagnol">
-                          Espagnol
-                        </SelectItem>
+                        <SelectItem value="Anglais">Anglais</SelectItem>
+                        <SelectItem value="Espagnol">Espagnol</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

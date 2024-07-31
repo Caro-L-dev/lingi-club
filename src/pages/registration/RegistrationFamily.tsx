@@ -1,35 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { Calendar, Event, momentLocalizer, SlotInfo } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
-
-import { TitleCard } from "@/components/common/titleCard/TitleCard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  addOrUpdateDataToFirebase,
-  getDataFromFirebase,
-  uploadImageOnFirebase,
-} from "@/firebase/firestore";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { Availability, UserType } from "@/types/User";
-
-const localizer = momentLocalizer(moment);
+import MyCalendar from "./MyCalendar.ts"; // Assurez-vous d'importer le composant MyCalendar
 
 const familyFormSchema = z.object({
   displayName: z.string().min(1, { message: "Le nom est requis" }),
@@ -61,22 +35,7 @@ const familyFormSchema = z.object({
 
 type FamilyFormData = z.infer<typeof familyFormSchema>;
 
-type UserData = Omit<UserType, "uid" | "isFamily" | "emailVerified">;
-
-const RegistrationFamily: React.FC = () => {
-  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [imageUpload, setImageUpload] = useState<File | null>(null);
-
-  const { authUserInfo, authUserIsLoading } = useAuthContext();
-
-  const [availabilityError, setAvailabilityError] = useState<string | null>(
-    null
-  );
-  const [isAvailabilitySelected, setIsAvailabilitySelected] = useState(false);
-  const navigate = useNavigate();
-
+const RegistrationFamily = () => {
   const {
     control,
     handleSubmit,
@@ -91,241 +50,122 @@ const RegistrationFamily: React.FC = () => {
       familyDalyRate: "",
     },
   });
-
-  useEffect(() => {
-    if (!authUserIsLoading && authUserInfo) {
-      navigate("/family");
-    }
-  }, [authUserIsLoading, authUserInfo, navigate]);
-
-  useEffect(() => {
-    setIsAvailabilitySelected(availabilities.length > 0);
-  }, [availabilities]);
-
-  const handleSelectSlot = ({ start, end }: SlotInfo) => {
-    setAvailabilities([
-      ...availabilities,
-      { start: new Date(start), end: new Date(end) },
-    ]);
-  };
-
-  const handleSelectEvent = (event: Event) => {
-    setSelectedEvent(event as Availability);
-  };
-
-  const handleDeleteEvent = () => {
-    if (selectedEvent) {
-      setAvailabilities(
-        availabilities.filter((event) => event !== selectedEvent)
-      );
-      setSelectedEvent(null);
-    }
-  };
-
-  const fetchUserData = async (uid: string) => {
-    const response = await getDataFromFirebase("users", uid);
-    if ("data" in response) {
-      setUserData(response.data as UserData);
-    } else {
-      console.error(response.error);
-    }
-  };
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FamilyFormData) => {
-    if (availabilities.length === 0) {
-      setAvailabilityError("Veuillez sélectionner au moins une disponibilité.");
-      toast.error("Veuillez sélectionner au moins une disponibilité.");
-      return;
-    } else {
-      setAvailabilityError(null);
-    }
+    toast.success("Votre inscription a été enregistrée avec succès !");
+    console.log("Form data: ", data);
 
-    let photoUrl: string = "";
-    if (imageUpload) {
-      const uploadedPhotoUrl = await uploadImageOnFirebase(imageUpload);
-      photoUrl = uploadedPhotoUrl ?? "";
-    }
-
-    const uid = authUserInfo?.uid ?? "";
-    const response = await addOrUpdateDataToFirebase("users", uid, {
-      ...data,
-      familyAvailabilities: availabilities.map(({ start, end }) => ({
-        start,
-        end,
-      })),
-      photoUrl,
-    });
-
-    if ("data" in response) {
-      toast.success("Votre inscription a été enregistrée avec succès !");
-      console.log("Form data: ", { ...data, availabilities, photoUrl });
-
-      // Fetch user data to verify it has been saved correctly
-      await fetchUserData(uid);
-
-      // Wait for 5 seconds before redirecting
-      setTimeout(() => {
-        navigate("/");
-      }, 5000);
-    } else {
-      toast.error(
-        "Une erreur est survenue lors de l'inscription : " + response.error
-      );
-    }
+    setTimeout(() => {
+      navigate("/");
+    }, 5000);
   };
 
-  const regionOptions = [
-    { value: "Auvergne-Rhône-Alpes", label: "Auvergne-Rhône-Alpes" },
-    { value: "Bourgogne-Franche-Comté", label: "Bourgogne-Franche-Comté" },
-    { value: "Bretagne", label: "Bretagne" },
-    { value: "Centre-Val de Loire", label: "Centre-Val de Loire" },
-    { value: "Corse", label: "Corse" },
-    { value: "Grand Est", label: "Grand Est" },
-    { value: "Hauts-de-France", label: "Hauts-de-France" },
-    { value: "Île-de-France", label: "Île-de-France" },
-    { value: "Normandie", label: "Normandie" },
-    { value: "Nouvelle-Aquitaine", label: "Nouvelle-Aquitaine" },
-    { value: "Occitanie", label: "Occitanie" },
-    { value: "Pays de la Loire", label: "Pays de la Loire" },
-    {
-      value: "Provence-Alpes-Côte d'Azur",
-      label: "Provence-Alpes-Côte d'Azur",
-    },
-  ];
-
   return (
-    <Card>
-      <CardHeader>
-        <TitleCard>Famille d'accueil</TitleCard>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div>
-              <Controller
-                name="displayName"
-                control={control}
-                render={({ field }) => <Input {...field} placeholder="Nom" />}
-              />
-              {errors.displayName && (
-                <p className="text-red-500 text-sm">
-                  {errors.displayName.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="region"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez votre région" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regionOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.region && (
-                <p className="text-red-500 text-sm">{errors.region.message}</p>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="city"
-                control={control}
-                render={({ field }) => <Input {...field} placeholder="Ville" />}
-              />
-              {errors.city && (
-                <p className="text-red-500 text-sm">{errors.city.message}</p>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="familyDalyRate"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="number"
-                    placeholder="Tarif journalier"
-                  />
-                )}
-              />
-              {errors.familyDalyRate && (
-                <p className="text-red-500 text-sm">
-                  {errors.familyDalyRate.message}
-                </p>
-              )}
-            </div>
-            <div>
+    <div className="max-w-md mx-auto p-8 shadow-lg">
+      <h2 className="text-lg font-semibold mb-2">Famille d'accueil</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Controller
+            name="displayName"
+            control={control}
+            render={({ field }) => (
               <input
-                type="file"
-                onChange={(event) =>
-                  event.target.files && setImageUpload(event.target.files[0])
-                }
+                {...field}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Nom"
               />
-            </div>
-          </div>
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">
-              Sélectionnez vos disponibilités
-            </h3>
-            <Calendar
-              localizer={localizer}
-              events={availabilities}
-              startAccessor="start"
-              endAccessor="end"
-              selectable
-              views={["month", "week", "agenda"]}
-              onSelectSlot={handleSelectSlot}
-              onSelectEvent={handleSelectEvent}
-              style={{ height: 500 }}
-            />
-            {availabilityError && (
-              <p className="text-red-500 text-sm mt-2">{availabilityError}</p>
             )}
-          </div>
-          {selectedEvent && (
-            <div className="mt-4">
-              <Button
-                type="button"
-                className="w-full bg-red-500 hover:bg-red-700"
-                onClick={handleDeleteEvent}
-              >
-                Supprimer la disponibilité
-              </Button>
-            </div>
+          />
+          {errors.displayName && (
+            <p className="text-red-500 text-sm">{errors.displayName.message}</p>
           )}
-          <Button
-            type="submit"
-            className="w-full mt-5 uppercase"
-            disabled={!isValid || isSubmitting || !isAvailabilitySelected}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Chargement...
-              </>
-            ) : (
-              "Valider mon inscription"
+        </div>
+        <div>
+          <Controller
+            name="region"
+            control={control}
+            render={({ field }) => (
+              <select
+                {...field}
+                className="w-full p-2 border border-gray-300 rounded"
+              >
+                <option value="Auvergne-Rhône-Alpes">
+                  Auvergne-Rhône-Alpes
+                </option>
+                <option value="Bourgogne-Franche-Comté">
+                  Bourgogne-Franche-Comté
+                </option>
+                <option value="Bretagne">Bretagne</option>
+                <option value="Centre-Val de Loire">Centre-Val de Loire</option>
+                <option value="Corse">Corse</option>
+                <option value="Grand Est">Grand Est</option>
+                <option value="Hauts-de-France">Hauts-de-France</option>
+                <option value="Île-de-France">Île-de-France</option>
+                <option value="Normandie">Normandie</option>
+                <option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
+                <option value="Occitanie">Occitanie</option>
+                <option value="Pays de la Loire">Pays de la Loire</option>
+                <option value="Provence-Alpes-Côte d'Azur">
+                  Provence-Alpes-Côte d'Azur
+                </option>
+              </select>
             )}
-          </Button>
-        </form>
-        {userData && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Données utilisateur</h3>
-            <pre>{JSON.stringify(userData, null, 2)}</pre>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          />
+          {errors.region && (
+            <p className="text-red-500 text-sm">{errors.region.message}</p>
+          )}
+        </div>
+        <div>
+          <Controller
+            name="city"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Ville"
+              />
+            )}
+          />
+          {errors.city && (
+            <p className="text-red-500 text-sm">{errors.city.message}</p>
+          )}
+        </div>
+        <div>
+          <Controller
+            name="familyDalyRate"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                type="number"
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Tarif journalier"
+              />
+            )}
+          />
+          {errors.familyDalyRate && (
+            <p className="text-red-500 text-sm">
+              {errors.familyDalyRate.message}
+            </p>
+          )}
+        </div>
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">
+            Sélectionnez vos disponibilités
+          </h3>
+          <MyCalendar />
+        </div>
+        <button
+          type="submit"
+          className="w-full mt-5 uppercase bg-blue-500 hover:bg-blue-700"
+          disabled={!isValid || isSubmitting}
+        >
+          {isSubmitting ? "Chargement..." : "Valider mon inscription"}
+        </button>
+      </form>
+    </div>
   );
 };
 
