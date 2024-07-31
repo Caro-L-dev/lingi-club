@@ -23,8 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { regionsList } from "@/lib/data/data";
+
 import Spinner from "@/components/ui/Spinner";
+import { regionsList } from "@/lib/data/data";
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
