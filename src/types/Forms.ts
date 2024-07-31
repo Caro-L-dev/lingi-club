@@ -28,8 +28,9 @@ export const formSchema = z.object({
     city: z.string(),
     region: z.string(),
     familyLanguage: z.string(),
-    familyDailyRate: z.string(),
+    familyDailyRate: z.number().min(0).nullable(),
     familyAvailabilities: z.array(availabilitySchema).nullable(), 
     photoUrl: z.string(),
-    studentAge: z.string(),
+    studentAge: z.number().min(0).nullable().optional(),
+    familyAcceptedPersons: z.array(z.string()),
 });
