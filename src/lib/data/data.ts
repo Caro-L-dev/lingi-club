@@ -24,5 +24,4 @@ export const acceptedPersonList: AcceptedPersonType[] = [
   "couples",
   "2 personnes",
   "> 2 personnes", 
-  "TOUS"
 ];

@@ -30,7 +30,7 @@ export const formSchema = z.object({
     familyLanguage: z.string(),
     familyDailyRate: z.number().min(0).nullable(),
     familyAvailabilities: z.array(availabilitySchema).nullable(), 
+    familyAcceptedPersons: z.array(z.string()),
     photoUrl: z.string(),
     studentAge: z.number().min(0).nullable().optional(),
-    familyAcceptedPersons: z.array(z.string()),
 });

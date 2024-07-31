@@ -66,11 +66,12 @@ export default function HostFamilyCard({ hostFamily }: Props) {
               {hostFamily.description}
             </CardDescription>
 
-            {/* {hostFamily.accept && hostFamily.accept.length > 0 && (
-              <CardDescription className="border-t border-t-muted pt-4">
-                Accepte : {hostFamily.accept.join(", ")}
-              </CardDescription>
-            )} */}
+            {hostFamily.familyAcceptedPersons &&
+              hostFamily.familyAcceptedPersons.length > 0 && (
+                <CardDescription className="border-t border-t-muted pt-4">
+                  Accepte : {hostFamily.familyAcceptedPersons.join(", ")}
+                </CardDescription>
+              )}
           </CardContent>
         </CardContent>
       </Link>

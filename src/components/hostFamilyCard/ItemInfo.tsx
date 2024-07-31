@@ -1,4 +1,4 @@
-import { ItemInfoProps } from "@/types/HostFamily";
+
 
 export default function ItemInfo({
   icon,
@@ -6,7 +6,8 @@ export default function ItemInfo({
   region,
   price,
   children,
-}: ItemInfoProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}: any) {
   return (
     <div className="flex items-center gap-x-1">
       <span className="text-secondary">{icon}</span>
