@@ -21,6 +21,7 @@ export type RegionType =
   | null;
 
 export type UserType = {
+<<<<<<< HEAD
   uid: string;
   isFamily: boolean;
   email: string | null;
@@ -36,3 +37,20 @@ export type UserType = {
   familyLanguage: string | null;
   familyAvailabilities: Availability[] | null;
 };
+=======
+    uid: string;
+    isFamily: boolean;
+    email: string;
+    displayName: string;
+    city: string;
+    region: RegionType;
+    description: string | null;
+    emailVerified: boolean;
+    photoUrl: string;
+    creationDate: Date | null;
+    studentAge: number | null;
+    familyDailyRate: number | null;
+    familyLanguage: string;
+    familyAvailabilities: Availability[];
+}
+>>>>>>> c06d7a8010ad17037e251c0be31d934cbf13fd70

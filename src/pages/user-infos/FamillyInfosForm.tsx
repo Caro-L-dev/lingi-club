@@ -19,12 +19,8 @@ import {
 } from "@/components/ui/select";
 import Spinner from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
+
 import { regionsList } from "@/lib/data/data";
-import { formSchema } from "@/types/Forms";
-import { UserType } from "@/types/User";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
@@ -43,7 +39,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       region: `${userData?.region}`,
       familyLanguage: `${userData?.familyLanguage}`,
       familyDailyRate: `${userData?.familyDailyRate}`,
-      // familyAvailabilities: `${userData?.familyAvailabilities}`,
       familyAvailabilities: [],
       photoUrl: `${userData?.photoUrl}`,
       studentAge: `${userData?.studentAge}`,
@@ -67,11 +62,10 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Login</FormLabel>
+                    <FormLabel>Nom</FormLabel>
                     <FormControl>
-                      <Input placeholder="Login" {...field} />
+                      <Input placeholder="Nom" {...field} />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}

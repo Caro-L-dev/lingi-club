@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Spinner from "@/components/ui/Spinner";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { UserType } from "@/types/User";
 import { Euro, Flag, MapPin } from "lucide-react";
@@ -30,23 +29,34 @@ const Familly = () => {
     }
   }, [authUserInfo, navigate]);
 
-  if (!state) {
-    return (
-      <div className="mx-auto mt-12">
-        <Spinner />
-      </div>
-    );
-  }
+  const handleReserve = () => {
+    const priceInCent: number = Number(state.familyDailyRate);
+    navigate(`/payment/${state.uid}`, { state: priceInCent });
+  };
 
   return (
-    <Card className="relative flex flex-col overflow-hidden max-w-[800px] min-w-[320px] m-auto">
+    <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
       <CardHeader className="relative">
-        <img
-          className="w-full object-cover object-center"
-          src={state.photoUrl ? state.photoUrl : defaultImage}
-          alt={`${state.displayName} family photo`}
-        />
+        {state.photoUrl !== "null" ? (
+          <img
+            className="w-full object-cover object-center"
+            src={`${state.photoUrl}`}
+            alt={`${state.displayName} family photo`}
+          />
+        ) : (
+          <img
+            className="w-full object-cover object-center"
+            src={defaultImage}
+            alt="family photo générique"
+          />
+        )}
       </CardHeader>
+
+      <CardTitle className="text-secondary text-balance text-center pt-2 pb-4">
+        Bienvenue chez la famille{" "}
+        <span className="text-gray-600">{state.displayName}</span>
+      </CardTitle>
+
       <CardContent className="relative flex-grow">
         <div className="flex flex-col lg:flex-row sm:justify-between items-center">
           <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
@@ -62,22 +72,24 @@ const Familly = () => {
               / jour
             </ItemInfo>
           </div>
-          <Button
-            className="w-full lg:w-fit"
-            onClick={() => navigate("/not-sale")}
-          >
+          <Button className="w-full lg:w-fit" onClick={handleReserve}>
             Réserver
           </Button>
         </div>
-        <CardContent className="border-t border-t-secondary pt-4">
-          <CardTitle className="text-secondary text-balance py-2">
-            Bienvenue chez la famille{" "}
-            <span className="text-gray-600">{state.displayName}</span>
-          </CardTitle>
-          <CardDescription className="my-2 mb-4">
-            {state.description}
-          </CardDescription>
-        </CardContent>
+
+        <CardTitle className="border-t border-t-secondary text-secondary text-balance mt-4 py-4">
+          Informations
+        </CardTitle>
+        <CardDescription className="my-2 mb-4">
+          {state.description}
+        </CardDescription>
+
+        {state.familyAvailabilities &&
+          state.familyAvailabilities.length > 0 && (
+            <CardDescription className="border-t border-t-muted pt-4">
+              Accepte : {state.familyAvailabilities.join(", ")}
+            </CardDescription>
+          )}
       </CardContent>
     </Card>
   );
