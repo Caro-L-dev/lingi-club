@@ -1,3 +1,5 @@
+// A quoi sert cette page ??
+
 import { useEffect } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
