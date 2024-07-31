@@ -1,17 +1,19 @@
 import { AuthContext } from "@/contexts/AuthUserContext";
 import { useContext, useEffect, useState } from "react";
 import { z } from "zod";
-import { addOrUpdateDataToFirebase, getDataFromFirebase } from "@/firebase/firestore";
+import {
+    addOrUpdateDataToFirebase,
+    getDataFromFirebase,
+} from "@/firebase/firestore";
 import { UserType } from "@/types/User";
 import FamillyInfosForm from "./FamillyInfosForm";
 import { formSchema } from "@/types/Forms";
 import { toast } from "react-toastify";
 
-
 const UserIsConnected = () => {
     const authUserInfo = useContext(AuthContext);
     const [userData, setUserData] = useState<UserType | null>(null);
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (userData === null) {
@@ -31,7 +33,7 @@ const UserIsConnected = () => {
     }, [authUserInfo.authUserInfo?.uid, userData]);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true)
+        setLoading(true);
 
         if (authUserInfo && authUserInfo.authUserInfo) {
             const { error } = await addOrUpdateDataToFirebase(
@@ -39,16 +41,15 @@ const UserIsConnected = () => {
                 authUserInfo.authUserInfo.uid,
                 values
             );
-             if (error) {
-                 setLoading(false);
-                 toast.error("Un problème est survenu !");
-                 return;
-             }
-              toast.success("Mise à jour reussie");
+            if (error) {
+                setLoading(false);
+                toast.error("Un problème est survenu !");
+                return;
+            }
+            toast.success("Mise à jour reussie");
         }
         setLoading(false);
     }
-
 
     return (
         userData && (

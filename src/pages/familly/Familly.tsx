@@ -9,18 +9,18 @@ import {
     CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Spinner from "@/components/ui/Spinner";
 import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-toastify";
+import { UserType } from "@/types/User";
 
 const Familly = () => {
     const location = useLocation();
-    const { state } = location;
+    const { state } = location as { state: UserType };
     const navigate = useNavigate();
     const { authUserInfo } = useAuthContext();
 
-    const defaultImage = "/public/images/family.jpg";
+    const defaultImage = "/images/family.jpg";
 
     useEffect(() => {
         if (!authUserInfo) {
@@ -31,63 +31,67 @@ const Familly = () => {
         }
     }, [authUserInfo, navigate]);
 
-    if (!state) {
-        return (
-            <div className="mx-auto mt-12">
-                <Spinner />
-            </div>
-        );
-    }
+    const handleReserve = () => {
+        const priceInCent: number = Number(state.familyDailyRate);
+        navigate(`/payment/${state.uid}`, { state: priceInCent });
+    };
 
     return (
         <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
             <CardHeader className="relative">
-                <img
-                    className="w-full object-cover object-center"
-                    src={`${state.image}` || defaultImage}
-                    alt={`${state.title} family photo`}
-                />
+                {state.photoUrl !== "null" ? (
+                    <img
+                        className="w-full object-cover object-center"
+                        src={`${state.photoUrl}`}
+                        alt={`${state.displayName} family photo`}
+                    />
+                ) : (
+                    <img
+                        className="w-full object-cover object-center"
+                        src={defaultImage}
+                        alt="family photo générique"
+                    />
+                )}
             </CardHeader>
 
+            <CardTitle className="text-secondary text-balance text-center pt-2 pb-4">
+                Bienvenue chez la famille{" "}
+                <span className="text-gray-600">{state.displayName}</span>
+            </CardTitle>
+
             <CardContent className="relative flex-grow">
-                <CardContent>
-                    <div className="flex flex-col lg:flex-row sm:justify-between items-center">
-                        <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
-                            <ItemInfo
-                                nativeLanguage={state.nativeLanguage || ""}
-                                icon={<Flag />}
-                            />
-                            <ItemInfo region={state.region} icon={<MapPin />} />
-                            <ItemInfo
-                                price={state.price || undefined}
-                                icon={<Euro />}
-                            >
-                                / jour
-                            </ItemInfo>
-                        </div>
-                        <Button
-                            className="w-full lg:w-fit"
-                            onClick={() => navigate("/not-sale")}
+                <div className="flex flex-col lg:flex-row sm:justify-between items-center">
+                    <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
+                        <ItemInfo
+                            nativeLanguage={state.familyLanguage || ""}
+                            icon={<Flag />}
+                        />
+                        <ItemInfo region={state.region} icon={<MapPin />} />
+                        <ItemInfo
+                            price={state.familyDailyRate || undefined}
+                            icon={<Euro />}
                         >
-                            Réserver
-                        </Button>
+                            / jour
+                        </ItemInfo>
                     </div>
-                </CardContent>
-                <CardContent className="border-t border-t-secondary pt-4">
-                    <CardTitle className="text-secondary text-balance py-2">
-                        Bienvenue chez la famille {state.title}
-                    </CardTitle>
+                    <Button className="w-full lg:w-fit" onClick={handleReserve}>
+                        Réserver
+                    </Button>
+                </div>
 
-                    <CardDescription className="line-clamp-3 tracking-tight my-2 mb-4">
-                        {state.description}
-                    </CardDescription>
+                <CardTitle className="border-t border-t-secondary text-secondary text-balance mt-4 py-4">
+                    Informations
+                </CardTitle>
+                <CardDescription className="my-2 mb-4">
+                    {state.description}
+                </CardDescription>
 
-                    {state.accept.length > 0 && (
+                {state.familyAvailabilities &&
+                    state.familyAvailabilities.length > 0 && (
                         <CardDescription className="border-t border-t-muted pt-4">
-                            Accepte :{state.accept.join(", ")}
+                            Accepte :{state.familyAvailabilities.join(", ")}
                         </CardDescription>
                     )}
-                </CardContent>
             </CardContent>
         </Card>
     );

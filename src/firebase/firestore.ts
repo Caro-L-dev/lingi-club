@@ -1,5 +1,5 @@
 import { db, storage } from "@/firebase/firebase-config"
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { FirebaseError } from "firebase/app"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 } from "uuid"
@@ -43,6 +43,24 @@ export const getDataFromFirebase = async (
             return {
                 error: "No such document!"
             }
+        }
+    } catch (error) {
+        const firebaseError = error as FirebaseError
+
+        return {
+            error: firebaseError.message
+        };
+    }
+}
+
+export const getAllFamiliesFromFirebase = async (collectionName: string) => {
+    try {
+        const q = query(collection(db, collectionName), where("isFamily", "==", true));
+        const querySnapshot = await getDocs(q);
+        const data = querySnapshot.docs.map((doc) => doc.data());
+
+        return {
+            data: data
         }
     } catch (error) {
         const firebaseError = error as FirebaseError
