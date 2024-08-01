@@ -14,6 +14,7 @@ import { RegisterFormType } from "@/types/Forms";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./Registration.css";
 import RoleSelection from "./roleselection/RoleSelection";
 
 const Registration = () => {

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -19,7 +19,7 @@ const studentFormSchema = z.object({
 type StudentFormData = z.infer<typeof studentFormSchema>;
 
 const RegistrationStudent = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const methods = useForm<StudentFormData>({
     mode: "onChange",
@@ -37,38 +37,47 @@ const RegistrationStudent = () => {
 
   return (
     <FormProvider {...methods}>
-      <Card>
-        <CardHeader>
-          <TitleCard>Apprenant</TitleCard>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <fieldset>
-              <FormField id="name" label="Nom" />
-            </fieldset>
-            <fieldset>
-              <FormField id="region" label="Région" />
-              <FormField id="city" label="Ville" />
-            </fieldset>
-            {methods.formState.isSubmitting ? (
-              <Button type="submit" className="w-full mt-5 uppercase" disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Chargement...
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                className="w-full mt-5 uppercase"
-                disabled={
-                  !methods.formState.isValid || methods.formState.isSubmitting
-                }
-              >
-                Valider mon inscription
-              </Button>
-            )}
-          </form>
-        </CardContent>
-      </Card>
+      <div className="responsive-card">
+        <Card>
+          <CardHeader>
+            <TitleCard>Apprenant</TitleCard>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
+              <fieldset>
+                <FormField id="name" label="Nom" />
+              </fieldset>
+              <fieldset>
+                <FormField id="region" label="Région" />
+                <FormField id="city" label="Ville" />
+              </fieldset>
+              {methods.formState.isSubmitting ? (
+                <Button
+                  type="submit"
+                  className="w-full mt-5 uppercase"
+                  disabled
+                >
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Chargement...
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full mt-5 uppercase"
+                  disabled={
+                    !methods.formState.isValid || methods.formState.isSubmitting
+                  }
+                >
+                  Valider mon inscription
+                </Button>
+              )}
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </FormProvider>
   );
 };

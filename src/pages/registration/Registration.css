@@ -118,4 +118,13 @@
   .responsive-card .w-full {
     width: 100%;
   }
+
+  .calendar-container {
+    height: auto;
+    margin-top: 20px;
+  }
+
+  .submit-button-container {
+    margin-top: 20px;
+  }
 }

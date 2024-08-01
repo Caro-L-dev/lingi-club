@@ -42,7 +42,13 @@ const UserIsConnected: React.FC = () => {
       const { error } = await addOrUpdateDataToFirebase(
         "users",
         authContext.authUserInfo.uid,
-        values
+        {
+          ...values,
+          description: values.description || "",
+          familyAvailabilities: values.familyAvailabilities || [],
+          photoUrl: values.photoUrl || "",
+          studentAge: values.studentAge || "",
+        }
       );
       if (error) {
         setLoading(false);
@@ -53,6 +59,10 @@ const UserIsConnected: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (!authContext?.authUserInfo?.uid) {
+    return null; // ou afficher un message d'erreur approprié
+  }
 
   return (
     userData && (

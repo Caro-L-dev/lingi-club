@@ -1,9 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import MyCalendar from "./MyCalendar.tsx"; // Assurez-vous d'importer le composant MyCalendar
+import MyCalendar from "./MyCalendar";
+import "./Registration.css";
 
 const familyFormSchema = z.object({
   displayName: z.string().min(1, { message: "Le nom est requis" }),
@@ -31,6 +38,7 @@ const familyFormSchema = z.object({
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Le tarif journalier doit être un nombre positif",
     }),
+  photo: z.instanceof(File).optional(),
 });
 
 type FamilyFormData = z.infer<typeof familyFormSchema>;
@@ -53,16 +61,46 @@ const RegistrationFamily = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: FamilyFormData) => {
-    toast.success("Votre inscription a été enregistrée avec succès !");
-    console.log("Form data: ", data);
+    try {
+      let photoUrl = "";
+      if (data.photo) {
+        const storage = getStorage();
+        const storageRef = ref(storage, `photos/${data.photo.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, data.photo);
 
-    setTimeout(() => {
-      navigate("/");
-    }, 5000);
+        await new Promise<void>((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            null,
+            (error) => {
+              toast.error(
+                "Une erreur est survenue lors de l'upload de l'image."
+              );
+              reject(error);
+            },
+            async () => {
+              photoUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve();
+            }
+          );
+        });
+      }
+
+      const formDataWithPhotoUrl = { ...data, photoUrl };
+      toast.success("Votre inscription a été enregistrée avec succès !");
+      console.log("Form data: ", formDataWithPhotoUrl);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 5000);
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de l'inscription.");
+      console.error("Error:", error);
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 shadow-lg">
+    <div className="responsive-card">
       <h2 className="text-lg font-semibold mb-2">Famille d'accueil</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
@@ -151,19 +189,41 @@ const RegistrationFamily = () => {
             </p>
           )}
         </div>
+        <div>
+          <Controller
+            name="photo"
+            control={control}
+            render={({ field: { onChange, onBlur, ref } }) => (
+              <input
+                type="file"
+                className="w-full p-2 border border-gray-300 rounded"
+                accept="image/*"
+                onChange={(e) => onChange(e.target.files?.[0])}
+                onBlur={onBlur}
+                ref={ref}
+              />
+            )}
+          />
+        </div>
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">
             Sélectionnez vos disponibilités
           </h3>
+          <p className="text-sm text-muted-foreground">
+            Cliquez sur une plage de dates pour ajouter un événement, puis
+            cliquez sur l'événement pour le modifier ou le supprimer.
+          </p>
           <MyCalendar />
         </div>
-        <button
-          type="submit"
-          className="w-full mt-5 uppercase bg-blue-500 hover:bg-blue-700"
-          disabled={!isValid || isSubmitting}
-        >
-          {isSubmitting ? "Chargement..." : "Valider mon inscription"}
-        </button>
+        <div className="submit-button-container">
+          <button
+            type="submit"
+            className="w-full mt-5 uppercase bg-blue-500 hover:bg-blue-700"
+            disabled={!isValid || isSubmitting}
+          >
+            {isSubmitting ? "Chargement..." : "Valider mon inscription"}
+          </button>
+        </div>
       </form>
     </div>
   );
