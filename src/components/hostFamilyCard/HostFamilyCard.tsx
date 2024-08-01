@@ -2,9 +2,8 @@ import { Euro, Flag, MapPin } from "lucide-react";
 import { UserType } from "@/types/User";
 import ItemInfo from "./ItemInfo";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -19,7 +18,6 @@ type Props = {
 
 export default function HostFamilyCard({ hostFamily }: Props) {
   const defaultImage = "/images/family.jpg";
-  const navigate = useNavigate();
 
   return (
     <Card className="relative flex flex-col overflow-hidden cursor-pointer max-w-[600px]">
@@ -48,12 +46,6 @@ export default function HostFamilyCard({ hostFamily }: Props) {
                   / jour
                 </ItemInfo>
               </div>
-              <Button
-                className="w-full lg:w-fit"
-                onClick={() => navigate("/not-sale")}
-              >
-                Réserver
-              </Button>
             </div>
           </CardContent>
           <CardContent className="border-t border-t-secondary pt-4">

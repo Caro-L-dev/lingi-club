@@ -20,8 +20,6 @@ export const acceptedPersonList: AcceptedPersonType[] = [
   "enfants",
   "ados",
   "adultes",
-  "familles",
-  "couples",
   "2 personnes",
   "> 2 personnes", 
 ];
