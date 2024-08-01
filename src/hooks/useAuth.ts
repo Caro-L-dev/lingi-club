@@ -21,12 +21,12 @@ const emptyUser: UserType = {
   region: null,
   description: "",
   emailVerified: false,
-  photoUrl: null,
+  photoUrl: "",
   creationDate: null,
   studentAge: null,
-  familyDalyRate: null,
-  familyLangages: null,
-  familyAvailabilities: null,
+  familyDailyRate: null,
+  familyLanguage: "",
+  familyAvailabilities: [],
 }
 
 export const useAuth = () => {
@@ -56,7 +56,7 @@ export const useAuth = () => {
           ...emptyUser,
           uid: user.uid,
           isFamily: isFamily,
-          email: user.email,
+          email: user.email || "",
           creationDate: new Date()
         }
         // We add the user to the database 
