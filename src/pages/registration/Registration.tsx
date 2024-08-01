@@ -14,7 +14,6 @@ import { RegisterFormType } from "@/types/Forms";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./Registration.css";
 import RoleSelection from "./roleselection/RoleSelection";
 
 const Registration = () => {
@@ -51,7 +50,7 @@ const Registration = () => {
 
   return (
     <FormProvider {...methods}>
-      <Card className="responsive-card">
+      <Card className="responsive-card mx-auto mt-8 p-4 max-w-lg w-full">
         <CardHeader>
           <TitleCard>Inscription</TitleCard>
         </CardHeader>
@@ -69,13 +68,22 @@ const Registration = () => {
               <legend className="text-center mb-2 text-sm text-muted-foreground">
                 Je crée mon compte :
               </legend>
-              <div>
+              <div className="mb-4">
                 <Label htmlFor="email" aria-label="Votre adresse e-mail">
                   Email
                 </Label>
-                <Input id="email" type="email" {...register("email")} />
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email", { required: "Email est requis" })}
+                />
+                {methods.formState.errors.email && (
+                  <p className="text-red-500 text-sm">
+                    {methods.formState.errors.email.message}
+                  </p>
+                )}
               </div>
-              <div>
+              <div className="mb-4">
                 <Label htmlFor="password" aria-label="Votre mot de passe">
                   Mot de passe
                 </Label>
@@ -83,8 +91,15 @@ const Registration = () => {
                   id="password"
                   type="password"
                   autoComplete="on"
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Mot de passe est requis",
+                  })}
                 />
+                {methods.formState.errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {methods.formState.errors.password.message}
+                  </p>
+                )}
               </div>
             </fieldset>
             {loading ? (

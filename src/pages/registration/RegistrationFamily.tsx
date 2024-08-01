@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import MyCalendar from "./MyCalendar.ts"; // Assurez-vous d'importer le composant MyCalendar
+import MyCalendar from "./MyCalendar.tsx"; // Assurez-vous d'importer le composant MyCalendar
 
 const familyFormSchema = z.object({
   displayName: z.string().min(1, { message: "Le nom est requis" }),
