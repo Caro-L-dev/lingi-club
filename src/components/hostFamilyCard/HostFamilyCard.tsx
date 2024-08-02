@@ -23,7 +23,6 @@ export default function HostFamilyCard({ hostFamily }: Props) {
 
   return (
     <Card className="relative flex flex-col overflow-hidden max-w-[600px]">
-      {/* <Link to={`/family-infos/${hostFamily.uid}`} state={hostFamily}> */}
       <CardHeader className="w-full">
         <img
           className="w-full object-cover object-center"
@@ -68,7 +67,6 @@ export default function HostFamilyCard({ hostFamily }: Props) {
             )}
         </CardContent>
       </CardContent>
-      {/* </Link> */}
     </Card>
   );
 }
