@@ -12,7 +12,7 @@ import Connexion from "./pages/connexion/Connexion";
 import SearchFamily from "./pages/search/SearchFamily";
 import Footer from "./components/footer/Footer";
 import UserInfos from "./pages/user-infos/UserInfos";
-import Familly from "./pages/familly/Familly";
+import FamilyInfos from "./pages/family/FamilyInfos";
 import Paiement from "./pages/paiement/Paiement";
 import PaiementValide from "./pages/paiement/PaiementValide";
 
@@ -29,7 +29,7 @@ function App() {
           <Route path="/student" element={<RegistrationStudent />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/user-infos" element={<UserInfos />} />
-          <Route path="/family-infos/:id" element={<Familly />} />
+          <Route path="/family-infos/:id" element={<FamilyInfos />} />
           <Route path="/payment/:id" element={<Paiement />} />
           <Route path="/payment-valide" element={<PaiementValide />} />
           <Route path="/*" element={<Home />} />

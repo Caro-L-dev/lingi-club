@@ -14,9 +14,14 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-toastify";
 import { UserType } from "@/types/User";
 
-const Familly = () => {
+const FamilyInfos = () => {
   const location = useLocation();
   const { state } = location as { state: UserType };
+
+  console.log("state", state);
+  // console.log(state.hostFamily);
+  // console.log(state.hostFamily.displayName);
+
   const navigate = useNavigate();
   const { authUserInfo } = useAuthContext();
 
@@ -102,4 +107,4 @@ const Familly = () => {
   );
 };
 
-export default Familly;
+export default FamilyInfos;
