@@ -27,6 +27,7 @@ const emptyUser: UserType = {
   familyDailyRate: null,
   familyLanguage: "",
   familyAvailabilities: [],
+  familyAcceptedPersons: [],
 }
 
 export const useAuth = () => {

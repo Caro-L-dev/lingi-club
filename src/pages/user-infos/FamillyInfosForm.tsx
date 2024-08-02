@@ -1,8 +1,10 @@
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ReactSelect from "react-select";
+
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -13,9 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserType } from "@/types/User";
 import { Textarea } from "@/components/ui/textarea";
-import { formSchema } from "@/types/Forms";
 import {
   Select,
   SelectContent,
@@ -23,9 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import Spinner from "@/components/ui/Spinner";
-import { regionsList } from "@/lib/data/data";
+
+import { UserType } from "@/types/User";
+import { formSchema } from "@/types/Forms";
+
+import { regionsList, acceptedPersonList } from "@/lib/data/data";
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
@@ -43,11 +46,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       city: `${userData.city}`,
       region: `${userData?.region}`,
       familyLanguage: `${userData?.familyLanguage}`,
-      familyDailyRate: `${userData?.familyDailyRate}`,
-      // familyAvailabilities: `${userData?.familyAvailabilities}`,
-      familyAvailabilities: [],
+      familyDailyRate: userData?.familyDailyRate,
+      familyAvailabilities: userData?.familyAvailabilities,
       photoUrl: `${userData?.photoUrl}`,
-      studentAge: `${userData?.studentAge}`,
+      // studentAge: userData?.studentAge,
+      familyAcceptedPersons: userData?.familyAcceptedPersons,
     },
   });
 
@@ -193,9 +196,44 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         type="number"
                         placeholder="Entrez votre prix journalier"
                         {...field}
+                        value={field.value || 0}
+                        // HTML form field values are always strings: we convert them to numbers
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null
+                          )
+                        }
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="familyAcceptedPersons"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Personnes acceptées</FormLabel>
+                    <ReactSelect
+                      isMulti
+                      options={acceptedPersonList.map((acceptedPerson) => ({
+                        value: acceptedPerson,
+                        label: acceptedPerson,
+                      }))}
+                      onChange={(selectedOption) => {
+                        console.log("Selected Option:", selectedOption);
+                        return field.onChange(
+                          selectedOption.map((option) => option.value)
+                        );
+                      }}
+                      defaultValue={field.value.map((value) => ({
+                        value,
+                        label: value,
+                      }))}
+                      closeMenuOnSelect={false}
+                    />
                   </FormItem>
                 )}
               />
