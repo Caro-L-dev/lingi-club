@@ -19,7 +19,6 @@ import FamilyDetails from "./pages/family/FamilyDetails";
 
 import Paiement from "./pages/paiement/Paiement";
 import PaiementValide from "./pages/paiement/PaiementValide";
-import NotSale from "./pages/error/NotSale";
 
 function App() {
   return (
@@ -28,6 +27,7 @@ function App() {
       <Wrapper className="flex flex-col py-6 min-h-[calc(100vh-152px)]">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/*" element={<Home />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/family" element={<RegistrationFamily />} />
           <Route path="/search-familly" element={<SearchFamily />} />
@@ -37,8 +37,6 @@ function App() {
           <Route path="/family-infos/:id" element={<FamilyDetails />} />
           <Route path="/payment/:id" element={<Paiement />} />
           <Route path="/payment-valide" element={<PaiementValide />} />
-          <Route path="/not-sale" element={<NotSale />} />
-          <Route path="/*" element={<Home />} />
         </Routes>
       </Wrapper>
       <Footer />

@@ -1,10 +1,11 @@
+import { Link, useNavigate } from "react-router-dom";
+
 import { Euro, Flag, MapPin } from "lucide-react";
 import { UserType } from "@/types/User";
 import ItemInfo from "./ItemInfo";
 
-import { Link, useNavigate } from "react-router-dom";
-
 import { Button } from "../ui/button";
+
 import {
   Card,
   CardContent,
@@ -65,12 +66,6 @@ export default function HostFamilyCard({ hostFamily }: Props) {
             <CardDescription className="line-clamp-3 tracking-tight my-2 mb-4">
               {hostFamily.description}
             </CardDescription>
-
-            {/* {hostFamily.accept && hostFamily.accept.length > 0 && (
-              <CardDescription className="border-t border-t-muted pt-4">
-                Accepte : {hostFamily.accept.join(", ")}
-              </CardDescription>
-            )} */}
           </CardContent>
         </CardContent>
       </Link>
