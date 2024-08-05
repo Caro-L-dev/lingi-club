@@ -56,7 +56,7 @@ const Sidebar = () => {
         <Button
           variant="outline"
           className="uppercase text-secondary w-full"
-          onClick={() => navigate("/not-sale")}
+          onClick={() => navigate("/")}
         >
           {`Contacter ${state.displayName}` ||
             `Ce contact n'est pas disponible`}

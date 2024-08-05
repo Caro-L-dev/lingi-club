@@ -49,10 +49,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
                   / jour
                 </ItemInfo>
               </div>
-              <Button
-                className="w-full lg:w-fit"
-                onClick={() => navigate("/not-sale")}
-              >
+              <Button className="w-full lg:w-fit" onClick={() => navigate("/")}>
                 Réserver
               </Button>
             </div>
