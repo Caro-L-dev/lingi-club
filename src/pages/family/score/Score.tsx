@@ -3,12 +3,12 @@ import { Star } from "lucide-react";
 function Score() {
   return (
     <div>
-      <span className="flex">
-        <Star className="text-secondary" strokeWidth={2} />
-        <Star className="text-secondary" strokeWidth={2} />
-        <Star className="text-secondary" strokeWidth={2} />
-        <Star className="text-secondary" strokeWidth={2} />
-        <Star className="text-secondary" strokeWidth={2} />
+      <span className="flex items-center">
+        <span>⭐</span>
+        <span>⭐</span>
+        <span>⭐</span>
+        <span>⭐</span>
+        <Star size={19} strokeWidth={2} />
       </span>
     </div>
   );

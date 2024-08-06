@@ -3,7 +3,7 @@ import Sidebar from "./sidebar/Sidebar";
 
 const FamilyDetails = () => {
   return (
-    <div className="flex flex-col-reverse md:flex-row justify-between">
+    <div className="flex flex-col md:flex-row justify-between">
       <Details />
       <Sidebar />
     </div>
