@@ -2,7 +2,6 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, Event, momentLocalizer, SlotInfo } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./Registration.css"; // Assurez-vous d'importer le fichier CSS personnalisé
 
 const localizer = momentLocalizer(moment);
 

@@ -1,5 +1,4 @@
-// types/User.ts
-export type Availability = {
+type Availability = {
   start: Date;
   end: Date;
 };

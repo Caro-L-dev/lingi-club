@@ -14,7 +14,6 @@ import { RegisterFormType } from "@/types/Forms";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./Registration.css";
 import RoleSelection from "./roleselection/RoleSelection";
 
 const Registration = () => {
@@ -22,7 +21,7 @@ const Registration = () => {
   const methods = useForm<RegisterFormType>({
     mode: "onChange",
   });
-  const { register, handleSubmit, setValue } = methods;
+  const { register, handleSubmit, setValue, formState } = methods;
   const { firebaseRegister, loading, error } = useAuth();
 
   const onSubmit = async (data: RegisterFormType) => {
@@ -51,25 +50,25 @@ const Registration = () => {
 
   return (
     <FormProvider {...methods}>
-      <Card className="responsive-card mx-auto mt-8 p-4 max-w-lg w-full">
+      <Card className="responsive-card mx-auto mt-4 p-2 max-w-sm w-full">
         <CardHeader>
           <TitleCard>Inscription</TitleCard>
         </CardHeader>
         <CardContent>
           {error && (
-            <p className="text-destructive text-center mb-4">{error}</p>
+            <p className="text-destructive text-center mb-2">{error}</p>
           )}
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
             <RoleSelection
               setRole={(role) => setValue("role", role)}
               register={register}
               errors={methods.formState.errors}
             />
             <fieldset>
-              <legend className="text-center mb-2 text-sm text-muted-foreground">
+              <legend className="text-center mb-1 text-sm text-muted-foreground">
                 Je crée mon compte :
               </legend>
-              <div className="mb-4">
+              <div className="mb-2">
                 <Label htmlFor="email" aria-label="Votre adresse e-mail">
                   Email
                 </Label>
@@ -84,7 +83,7 @@ const Registration = () => {
                   </p>
                 )}
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <Label htmlFor="password" aria-label="Votre mot de passe">
                   Mot de passe
                 </Label>
@@ -108,18 +107,25 @@ const Registration = () => {
                 <Spinner />
               </Button>
             ) : (
-              <Button
-                type="submit"
-                aria-label="Soumettre le formulaire"
-                className="w-full uppercase"
-                disabled={!methods.formState.isValid}
-              >
-                Poursuivre mon inscription
-              </Button>
+              <>
+                {formState.isSubmitted && !formState.isValid && (
+                  <p className="text-red-500 text-sm">
+                    Veuillez corriger les erreurs dans le formulaire.
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  aria-label="Soumettre le formulaire"
+                  className="w-full uppercase"
+                  disabled={!formState.isValid || loading}
+                >
+                  Poursuivre mon inscription
+                </Button>
+              </>
             )}
           </form>
         </CardContent>
-        <CardFooter className="text-center text-sm text-muted-foreground mt-6 gap-x-2">
+        <CardFooter className="text-center text-sm text-muted-foreground mt-4 gap-x-2">
           Déjà inscrit ?
           <Link
             className="font-medium text-foreground hover:underline"

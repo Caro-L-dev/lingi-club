@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/hooks/useAuth";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import ConnexionForm from "./ConnexionForm";
 import ConnexionNavigate from "./ConnexionNavigate";
