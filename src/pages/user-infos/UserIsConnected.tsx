@@ -1,65 +1,78 @@
 import { AuthContext } from "@/contexts/AuthUserContext";
-import { useContext, useEffect, useState } from "react";
-import { z } from "zod";
 import {
-    addOrUpdateDataToFirebase,
-    getDataFromFirebase,
+  addOrUpdateDataToFirebase,
+  getDataFromFirebase,
 } from "@/firebase/firestore";
-import { UserType } from "@/types/User";
-import FamillyInfosForm from "./FamillyInfosForm";
 import { formSchema } from "@/types/Forms";
+import { UserType } from "@/types/User";
+import { useContext, useEffect, useState } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { toast } from "react-toastify";
+import { z } from "zod";
+import FamillyInfosForm from "./FamillyInfosForm";
 
-const UserIsConnected = () => {
-    const authUserInfo = useContext(AuthContext);
-    const [userData, setUserData] = useState<UserType | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+type FormSchemaType = z.infer<typeof formSchema>;
 
-    useEffect(() => {
-        if (userData === null) {
-            const handleGetUserData = async () => {
-                const result = await getDataFromFirebase(
-                    "users",
-                    authUserInfo.authUserInfo?.uid || ""
-                );
-                if (result.error) {
-                    console.error(result.error);
-                    return;
-                }
-                if (result.data) setUserData(result.data as UserType);
-            };
-            handleGetUserData();
+const UserIsConnected: React.FC = () => {
+  const authContext = useContext(AuthContext);
+  const [userData, setUserData] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (userData === null && authContext?.authUserInfo?.uid) {
+      const handleGetUserData = async () => {
+        const result = await getDataFromFirebase(
+          "users",
+          authContext.authUserInfo.uid
+        );
+        if (result.error) {
+          console.error(result.error);
+          return;
         }
-    }, [authUserInfo.authUserInfo?.uid, userData]);
-
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
-
-        if (authUserInfo && authUserInfo.authUserInfo) {
-            const { error } = await addOrUpdateDataToFirebase(
-                "users",
-                authUserInfo.authUserInfo.uid,
-                values
-            );
-            if (error) {
-                setLoading(false);
-                toast.error("Un problème est survenu !");
-                return;
-            }
-            toast.success("Mise à jour reussie");
-        }
-        setLoading(false);
+        setUserData(result.data as UserType);
+      };
+      handleGetUserData();
     }
+  }, [authContext, userData]);
 
-    return (
-        userData && (
-            <FamillyInfosForm
-                onSubmit={onSubmit}
-                userData={userData}
-                loading={loading}
-            />
-        )
-    );
+  const onSubmit = async (values: FormSchemaType) => {
+    setLoading(true);
+
+    if (authContext?.authUserInfo?.uid) {
+      const { error } = await addOrUpdateDataToFirebase(
+        "users",
+        authContext.authUserInfo.uid,
+        {
+          ...values,
+          description: values.description || "",
+          familyAvailabilities: values.familyAvailabilities || [],
+          photoUrl: values.photoUrl || "",
+          studentAge: values.studentAge || "",
+        }
+      );
+      if (error) {
+        setLoading(false);
+        toast.error("Un problème est survenu !");
+        return;
+      }
+      toast.success("Mise à jour réussie");
+      setLoading(false);
+    }
+  };
+
+  if (!authContext?.authUserInfo?.uid) {
+    return null; // ou afficher un message d'erreur approprié
+  }
+
+  return (
+    userData && (
+      <FamillyInfosForm
+        onSubmit={onSubmit}
+        userData={userData}
+        loading={loading}
+      />
+    )
+  );
 };
 
 export default UserIsConnected;

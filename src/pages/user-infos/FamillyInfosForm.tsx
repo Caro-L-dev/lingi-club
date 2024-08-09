@@ -1,9 +1,10 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
+import { z } from "zod";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
+import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import {
   Form,
@@ -13,9 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -24,11 +23,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Spinner from "@/components/ui/Spinner";
+import { Textarea } from "@/components/ui/textarea";
 
-import { UserType } from "@/types/User";
 import { formSchema } from "@/types/Forms";
+import { UserType } from "@/types/User";
 
-import { regionsList, acceptedPersonList } from "@/lib/data/data";
+import { acceptedPersonList, regionsList } from "@/lib/data/data";
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
@@ -71,11 +71,10 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Login</FormLabel>
+                    <FormLabel>Nom</FormLabel>
                     <FormControl>
-                      <Input placeholder="Login" {...field} />
+                      <Input placeholder="Nom" {...field} />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -173,12 +172,8 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         <SelectValue placeholder="Selectionnez votre langue" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem {...field} value="Anglais">
-                          Anglais
-                        </SelectItem>
-                        <SelectItem {...field} value="Espagnol">
-                          Espagnol
-                        </SelectItem>
+                        <SelectItem value="Anglais">Anglais</SelectItem>
+                        <SelectItem value="Espagnol">Espagnol</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

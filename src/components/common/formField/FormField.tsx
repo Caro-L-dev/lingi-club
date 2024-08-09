@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 interface FormFieldProps {
   id: string;
   label: string;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ id, label }) => {

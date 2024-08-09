@@ -5,16 +5,16 @@ import Navbar from "./components/navbar/Navbar";
 
 import Home from "./pages/home/Home";
 
-import Registration from "./pages/registration/Registration";
-import RegistrationFamily from "./pages/registration/RegistrationFamily";
-import RegistrationStudent from "./pages/registration/RegistrationStudent";
-import Connexion from "./pages/connexion/Connexion";
-import SearchFamily from "./pages/search/SearchFamily";
 import Footer from "./components/footer/Footer";
-import UserInfos from "./pages/user-infos/UserInfos";
+import Connexion from "./pages/connexion/Connexion";
 import FamilyInfos from "./pages/family/FamilyInfos";
 import Paiement from "./pages/paiement/Paiement";
 import PaiementValide from "./pages/paiement/PaiementValide";
+import Registration from "./pages/registration/Registration";
+import RegistrationFamily from "./pages/registration/RegistrationFamily";
+import RegistrationStudent from "./pages/registration/RegistrationStudent";
+import SearchFamily from "./pages/search/SearchFamily";
+import UserInfos from "./pages/user-infos/UserInfos";
 
 function App() {
   return (
