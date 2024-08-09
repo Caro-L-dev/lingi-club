@@ -1,10 +1,11 @@
 import { Euro, Flag, MapPin } from "lucide-react";
-
-import { HostFamilyCardProps } from "@/types/HostFamily";
-
+import { UserType } from "@/types/User";
 import ItemInfo from "./ItemInfo";
 
+import { Link } from "react-router-dom";
+
 import { Button } from "../ui/button";
+
 import {
   Card,
   CardContent,
@@ -13,54 +14,57 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function HostFamilyCard({
-  title,
-  image,
-  description,
-  price,
-  region,
-  nativeLanguage,
-  accept = [],
-}: HostFamilyCardProps) {
-  const defaultImage = "/public/images/family.jpg";
+type Props = {
+  hostFamily: UserType;
+};
+
+export default function HostFamilyCard({ hostFamily }: Props) {
+  const defaultImage = "/images/family.jpg";
 
   return (
-    <Card className="relative flex flex-col lg:flex-row overflow-hidden">
-      <CardHeader className="relative w-full lg:w-1/2">
+    <Card className="relative flex flex-col overflow-hidden max-w-[600px]">
+      <CardHeader className="w-full">
         <img
-          className="lg:absolute lg:inset-0 w-full h-full lg:object-cover :object-center"
-          src={image || defaultImage}
-          alt={title}
+          className="w-full object-cover object-center"
+          src={hostFamily.photoUrl || defaultImage}
+          alt={hostFamily.displayName ?? "Family"}
         />
       </CardHeader>
 
-      <CardContent className="relative flex-grow lg:w-1/2 p-4 lg:pl-8">
+      <CardContent className="flex-grow">
         <CardContent>
-          <div className="flex flex-col lg:flex-row lg:justify-between items-center">
+          <div className="flex flex-col lg:flex-row sm:justify-between items-center">
             <div className="flex gap-2 mb-4 lg:mb-0 flex-col">
-              <ItemInfo nativeLanguage={nativeLanguage} icon={<Flag />} />
-              <ItemInfo region={region} icon={<MapPin />} />
-              <ItemInfo price={price} icon={<Euro />}>
-                / semaine
+              <ItemInfo
+                nativeLanguage={hostFamily.familyLanguage ?? "Langues ?"}
+                icon={<Flag />}
+              />
+              <ItemInfo region={hostFamily.region} icon={<MapPin />} />
+              <ItemInfo price={hostFamily.familyDailyRate ?? 0} icon={<Euro />}>
+                / jour
               </ItemInfo>
             </div>
-            <Button className="w-full lg:w-fit">Réserver</Button>
+            <Link to={`/family-infos/${hostFamily.uid}`} state={hostFamily}>
+              <Button className="w-full lg:w-fit">Plus d'infos</Button>
+            </Link>
           </div>
         </CardContent>
         <CardContent className="border-t border-t-secondary pt-4">
           <CardTitle className="text-secondary text-balance py-2">
-            Bienvenue chez {title}
+            Bienvenue chez la famille{" "}
+            <span className="text-gray-600">{hostFamily.displayName}</span>
           </CardTitle>
 
           <CardDescription className="line-clamp-3 tracking-tight my-2 mb-4">
-            {description}
+            {hostFamily.description}
           </CardDescription>
 
-          {accept.length > 0 && (
-            <CardDescription className="border-t border-t-muted pt-4">
-              Accepte : {accept.join(", ")}
-            </CardDescription>
-          )}
+          {hostFamily.familyAcceptedPersons &&
+            hostFamily.familyAcceptedPersons.length > 0 && (
+              <CardDescription className="border-t border-t-muted pt-4">
+                Accepte : {hostFamily.familyAcceptedPersons.join(", ")}
+              </CardDescription>
+            )}
         </CardContent>
       </CardContent>
     </Card>
