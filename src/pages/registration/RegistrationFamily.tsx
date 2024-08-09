@@ -38,6 +38,20 @@ import ReactSelect from "react-select";
 
 import { regionsList, acceptedPersonList } from "@/lib/data/data";
 
+type FormValues = {
+  displayName: string;
+  email: string;
+  description: string;
+  city: string;
+  region: string;
+  familyLanguage: string;
+  familyDailyRate: number | null;
+  familyAvailabilities: { start: Date; end: Date }[] | null;
+  familyAcceptedPersons: string[] | null;
+  photoUrl: string | null;
+  studentAge?: number | null;
+};
+
 const RegistrationFamily = () => {
   const { authUserInfo } = useAuthContext();
 
@@ -68,7 +82,7 @@ const RegistrationFamily = () => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormValues) => {
     if (authUserInfo) {
       try {
         await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
@@ -259,9 +273,11 @@ const RegistrationFamily = () => {
                       {isImageLoading ? (
                         <Spinner />
                       ) : (
-                        <Button type="button" onClick={uploadImage}>
-                          Télécharger l'image
-                        </Button>
+                        imageUpload && (
+                          <Button type="button" onClick={uploadImage}>
+                            Télécharger l'image
+                          </Button>
+                        )
                       )}
                     </>
                   </FormControl>

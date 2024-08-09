@@ -50,7 +50,7 @@ const SearchBarre = () => {
             <Select onValueChange={(value) => setValue("language", value)}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue
-                  placeholder="Choisir une langue:"
+                  placeholder="Choisir une langue"
                   id="language"
                   {...register("language", {
                     validate: validateAtLeastOneField,
@@ -71,7 +71,7 @@ const SearchBarre = () => {
             <Select onValueChange={(value) => setValue("region", value)}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue
-                  placeholder="Choisir une région:"
+                  placeholder="Choisir une région"
                   id="region"
                   {...register("region", { validate: validateAtLeastOneField })}
                 />
