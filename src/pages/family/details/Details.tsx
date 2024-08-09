@@ -1,12 +1,7 @@
 import useAuthNavigation from "@/hooks/useAuthNavigation";
-
 import { Flag, MapPin, MessageSquareText } from "lucide-react";
-
 import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
-
 import Score from "../score/Score";
-import Opinion from "../opinion/Opinion";
-import OtherFamilies from "../otherFamilies/OtherFamilies";
 
 export default function Details() {
   const { state } = useAuthNavigation();
@@ -66,8 +61,6 @@ export default function Details() {
               Accepte :{state.familyAvailabilities.join(", ")}
             </div>
           )}
-        <Opinion />
-        <OtherFamilies />
       </div>
     </div>
   );
