@@ -22,15 +22,15 @@ const availabilitySchema = z.object({
 });
 
 export const formSchema = z.object({
-    displayName: z.string(),
+    displayName: z.string().min(3, 'Le nom d\'affichage doit contenir au moins 3 caractères'),
     email: z.string(),
-    description: z.string(),
-    city: z.string(),
-    region: z.string(),
-    familyLanguage: z.string(),
+    description: z.string().min(10, 'La description doit contenir au moins 10 caractères'),
+    city: z.string().min(3, 'La ville doit contenir au moins 3 caractères'),
+    region: z.string().min(1, 'La région est requise'),
+    familyLanguage: z.string().min(1, 'La langue de la famille est requise'),
     familyDailyRate: z.number().min(0).nullable(),
     familyAvailabilities: z.array(availabilitySchema).nullable(), 
-    familyAcceptedPersons: z.array(z.string()),
-    photoUrl: z.string(),
+    familyAcceptedPersons: z.array(z.string()).nullable(),
+    photoUrl: z.string().nullable(),
     studentAge: z.number().min(0).nullable().optional(),
 });
