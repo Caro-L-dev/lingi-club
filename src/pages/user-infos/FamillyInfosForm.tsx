@@ -223,7 +223,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         label: acceptedPerson,
                       }))}
                       onChange={(selectedOption) => {
-                        console.log("Selected Option:", selectedOption);
                         return field.onChange(
                           selectedOption.map((option) => option.value)
                         );
