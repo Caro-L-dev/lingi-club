@@ -1,3 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import ReactSelect from "react-select";
+import { z } from "zod";
+
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
@@ -19,24 +24,11 @@ import {
 } from "@/components/ui/select";
 import Spinner from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { regionsList } from "@/lib/data/data";
-import { UserType } from "@/types/User";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-const formSchema = z.object({
-  displayName: z.string().nonempty("Le nom est requis"),
-  email: z.string().email("E-mail invalide"),
-  description: z.string().optional(),
-  city: z.string().nonempty("La ville est requise"),
-  region: z.string().nonempty("La région est requise"),
-  familyLanguage: z.string().nonempty("La langue est requise"),
-  familyDailyRate: z.string().nonempty("Le tarif journalier est requis"),
-  familyAvailabilities: z.array(z.string()).optional(),
-  photoUrl: z.string().optional(),
-  studentAge: z.string().optional(),
-});
+import { formSchema } from "@/types/Forms";
+import { UserType } from "@/types/User";
+
+import { acceptedPersonList, regionsList } from "@/lib/data/data";
 
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
@@ -54,10 +46,11 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       city: `${userData.city}`,
       region: `${userData?.region}`,
       familyLanguage: `${userData?.familyLanguage}`,
-      familyDailyRate: `${userData?.familyDailyRate}`,
-      familyAvailabilities: [],
+      familyDailyRate: userData?.familyDailyRate,
+      familyAvailabilities: userData?.familyAvailabilities,
       photoUrl: `${userData?.photoUrl}`,
-      studentAge: `${userData?.studentAge}`,
+      // studentAge: userData?.studentAge,
+      familyAcceptedPersons: userData?.familyAcceptedPersons,
     },
   });
 
@@ -150,11 +143,15 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         <SelectValue placeholder="Selectionnez votre région" />
                       </SelectTrigger>
                       <SelectContent>
-                        {regionsList.map((region, index) => (
-                          <SelectItem key={index} value={region}>
-                            {region}
-                          </SelectItem>
-                        ))}
+                        {regionsList.map((region, index) => {
+                          if (region) {
+                            return (
+                              <SelectItem key={index} {...field} value={region}>
+                                {region}
+                              </SelectItem>
+                            );
+                          }
+                        })}
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -194,9 +191,44 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         type="number"
                         placeholder="Entrez votre prix journalier"
                         {...field}
+                        value={field.value || 0}
+                        // HTML form field values are always strings: we convert them to numbers
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null
+                          )
+                        }
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="familyAcceptedPersons"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Personnes acceptées</FormLabel>
+                    <ReactSelect
+                      isMulti
+                      options={acceptedPersonList.map((acceptedPerson) => ({
+                        value: acceptedPerson,
+                        label: acceptedPerson,
+                      }))}
+                      onChange={(selectedOption) => {
+                        console.log("Selected Option:", selectedOption);
+                        return field.onChange(
+                          selectedOption.map((option) => option.value)
+                        );
+                      }}
+                      defaultValue={field.value.map((value) => ({
+                        value,
+                        label: value,
+                      }))}
+                      closeMenuOnSelect={false}
+                    />
                   </FormItem>
                 )}
               />

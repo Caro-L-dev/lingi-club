@@ -1,22 +1,23 @@
-import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Euro, Flag, MapPin } from "lucide-react";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
+  CardContent,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { UserType } from "@/types/User";
-import { Euro, Flag, MapPin } from "lucide-react";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { UserType } from "@/types/User";
 
-const Familly = () => {
+const FamilyInfos = () => {
   const location = useLocation();
   const { state } = location as { state: UserType };
+
   const navigate = useNavigate();
   const { authUserInfo } = useAuthContext();
 
@@ -35,7 +36,7 @@ const Familly = () => {
   };
 
   return (
-    <Card className="relative flex flex-col overflow-hidden max-w-[600px] min-w-[320px]">
+    <Card className="relative flex flex-col overflow-hidden max-w-[800px] min-w-[320px] m-auto">
       <CardHeader className="relative">
         {state.photoUrl !== "null" ? (
           <img
@@ -84,10 +85,17 @@ const Familly = () => {
           {state.description}
         </CardDescription>
 
+        {state.familyAcceptedPersons &&
+          state.familyAcceptedPersons.length > 0 && (
+            <CardDescription className="border-t border-t-muted pt-4">
+              Accepte : {state.familyAcceptedPersons.join(", ")}
+            </CardDescription>
+          )}
+
         {state.familyAvailabilities &&
           state.familyAvailabilities.length > 0 && (
             <CardDescription className="border-t border-t-muted pt-4">
-              Accepte : {state.familyAvailabilities.join(", ")}
+              Accepte :{state.familyAvailabilities.join(", ")}
             </CardDescription>
           )}
       </CardContent>
@@ -95,4 +103,4 @@ const Familly = () => {
   );
 };
 
-export default Familly;
+export default FamilyInfos;

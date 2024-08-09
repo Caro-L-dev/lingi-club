@@ -20,37 +20,27 @@ export type RegionType =
   | "Provence-Alpes-Côte d'Azur"
   | null;
 
+export type AcceptedPersonType =
+  | "enfants"
+  | "ados"
+  | "adultes"
+  | "2 personnes"
+  | "> 2 personnes";
+
 export type UserType = {
-<<<<<<< HEAD
   uid: string;
   isFamily: boolean;
-  email: string | null;
-  displayName: string | null;
-  city: string | null;
+  email: string;
+  displayName: string;
+  city: string;
   region: RegionType;
   description: string | null;
   emailVerified: boolean;
-  photoUrl: string | null;
+  photoUrl: string;
   creationDate: Date | null;
   studentAge: number | null;
   familyDailyRate: number | null;
-  familyLanguage: string | null;
-  familyAvailabilities: Availability[] | null;
+  familyLanguage: string;
+  familyAvailabilities: Availability[];
+  familyAcceptedPersons: AcceptedPersonType[];
 };
-=======
-    uid: string;
-    isFamily: boolean;
-    email: string;
-    displayName: string;
-    city: string;
-    region: RegionType;
-    description: string | null;
-    emailVerified: boolean;
-    photoUrl: string;
-    creationDate: Date | null;
-    studentAge: number | null;
-    familyDailyRate: number | null;
-    familyLanguage: string;
-    familyAvailabilities: Availability[];
-}
->>>>>>> c06d7a8010ad17037e251c0be31d934cbf13fd70

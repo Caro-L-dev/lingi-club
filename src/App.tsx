@@ -7,8 +7,7 @@ import Home from "./pages/home/Home";
 
 import Footer from "./components/footer/Footer";
 import Connexion from "./pages/connexion/Connexion";
-import NotSale from "./pages/error/NotSale";
-import Familly from "./pages/familly/Familly";
+import FamilyInfos from "./pages/family/FamilyInfos";
 import Paiement from "./pages/paiement/Paiement";
 import PaiementValide from "./pages/paiement/PaiementValide";
 import Registration from "./pages/registration/Registration";
@@ -30,10 +29,9 @@ function App() {
           <Route path="/student" element={<RegistrationStudent />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/user-infos" element={<UserInfos />} />
-          <Route path="/family-infos/:id" element={<Familly />} />
+          <Route path="/family-infos/:id" element={<FamilyInfos />} />
           <Route path="/payment/:id" element={<Paiement />} />
           <Route path="/payment-valide" element={<PaiementValide />} />
-          <Route path="/not-sale" element={<NotSale />} />
           <Route path="/*" element={<Home />} />
         </Routes>
       </Wrapper>
