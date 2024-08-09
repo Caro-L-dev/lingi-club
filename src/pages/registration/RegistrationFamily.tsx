@@ -15,11 +15,9 @@ import {
   uploadImageOnFirebase,
 } from "@/firebase/firestore";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { UserType } from "@/types/User";
 import { formSchema } from "@/types/Forms";
 
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -42,6 +40,17 @@ import { regionsList, acceptedPersonList } from "@/lib/data/data";
 
 const RegistrationFamily = () => {
   const { authUserInfo } = useAuthContext();
+
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+
+  const uploadImage = async () => {
+    setIsImageLoading(true);
+    const url = await uploadImageOnFirebase(imageUpload);
+    setIsImageLoading(false);
+    url && form.setValue("photoUrl", url);
+    toast.success("Image uploadée");
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,16 +79,13 @@ const RegistrationFamily = () => {
           familyLanguage: data.familyLanguage,
           familyDailyRate: data.familyDailyRate,
           familyAcceptedPersons: data.familyAcceptedPersons,
+          photoUrl: data.photoUrl,
         });
         toast.success("Votre famille a été enregistrée avec succès !");
-        console.log("data", data);
       } catch (error) {
         console.error(error);
       }
     }
-    // {
-    //   toast.success("V}otre famille a été enregistrée avec succès !");
-    // }
   };
 
   return (
@@ -104,7 +110,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="description"
@@ -121,7 +126,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="city"
@@ -135,7 +139,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="region"
@@ -165,7 +168,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="familyLanguage"
@@ -191,7 +193,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="familyDailyRate"
@@ -216,7 +217,6 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="familyAcceptedPersons"
@@ -230,20 +230,54 @@ const RegistrationFamily = () => {
                       label: acceptedPerson,
                     }))}
                     onChange={(selectedOption) => {
-                      console.log("Selected Option:", selectedOption);
                       return field.onChange(
                         selectedOption.map((option) => option.value)
                       );
                     }}
-                    // defaultValue={field.value.map((value) => ({
-                    //   value,
-                    //   label: value,
-                    // }))}
                     closeMenuOnSelect={false}
                   />
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="photoUrl"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Photo</FormLabel>
+                  <FormControl>
+                    <>
+                      <Input
+                        type="file"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImageUpload(e.target.files[0]);
+                          }
+                        }}
+                        className="cursor-pointer"
+                      />
+                      {isImageLoading ? (
+                        <Spinner />
+                      ) : (
+                        <Button type="button" onClick={uploadImage}>
+                          Télécharger l'image
+                        </Button>
+                      )}
+                    </>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.watch("photoUrl") && (
+              <img
+                src={form.watch("photoUrl") ?? ""}
+                alt="Image sélectionnée"
+                //style={{ width: "400px", height: "auto" }}
+              />
+            )}
+
             <Button type="submit" className="w-full mt-5 uppercase">
               Valider l'inscription de ma famille
             </Button>
