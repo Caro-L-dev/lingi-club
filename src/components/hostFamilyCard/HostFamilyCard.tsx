@@ -23,7 +23,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
   const navigate = useNavigate();
 
   return (
-    <Card className="relative flex flex-col overflow-hidden cursor-pointer max-w-[600px]">
+    <Card className="relative flex flex-col overflow-hidden cursor-pointer max-w-[600px] min-h-[735px]">
       <Link to={`/family-infos/${hostFamily.uid}`} state={hostFamily}>
         <CardHeader className="w-full">
           <img
