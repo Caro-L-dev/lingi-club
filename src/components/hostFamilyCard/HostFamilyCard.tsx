@@ -49,7 +49,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
                 </ItemInfo>
               </div>
               <Button className="w-full lg:w-fit">
-                PLus d'infos
+                Réserver
               </Button>
             </div>
           </CardContent>
