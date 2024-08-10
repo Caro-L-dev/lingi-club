@@ -1,7 +1,6 @@
-import useAuthNavigation from "@/hooks/useAuthNavigation";
 import { Flag, MapPin, MessageSquareText } from "lucide-react";
 import ItemInfo from "@/components/hostFamilyCard/ItemInfo";
-import { Availability, RegionType } from "@/types/User";
+import { AcceptedPersonType, RegionType } from "@/types/User";
 import getRandomIndex from "@/utils/random";
 import { toast } from "react-toastify";
 
@@ -11,7 +10,7 @@ type DetailsType = {
     familyLanguage: string;
     photoUrl: string;
     description: string | null;
-    familyAvailabilities: Availability[];
+    familyAcceptedPersons: AcceptedPersonType[];
 };
 
 export default function Details({
@@ -20,11 +19,12 @@ export default function Details({
     familyLanguage,
     photoUrl,
     description,
-    familyAvailabilities,
+    familyAcceptedPersons,
 }: DetailsType) {
-    const { state } = useAuthNavigation();
 
     const defaultImage = "/images/family.jpg";
+
+    console.log(familyAcceptedPersons);
 
     return (
         <div className="w-full md:mr-40">
@@ -43,9 +43,12 @@ export default function Details({
                             icon={<MapPin />}
                         />
                     </div>
-                    <div className="flex gap-x-2 hover:cursor-pointer" onClick={() => toast.info("Messagerie non disponible")}>
+                    <div
+                        className="flex gap-x-2 hover:cursor-pointer"
+                        onClick={() => toast.info("Messagerie non disponible")}
+                    >
                         {getRandomIndex(1, 5)}
-                         <MessageSquareText />
+                        <MessageSquareText />
                     </div>
                 </div>
                 <div className="relative">
@@ -74,12 +77,11 @@ export default function Details({
                     {description || "Aucune description pour le moment."}
                 </p>
 
-                {state.familyAvailabilities &&
-                    familyAvailabilities.length > 0 && (
-                        <div className="border-t border-t-muted pt-4">
-                            Accepte :{familyAvailabilities.join(", ")}
-                        </div>
-                    )}
+                {familyAcceptedPersons && familyAcceptedPersons.length > 0 && (
+                    <div className="border-t border-t-muted pt-4 pb-8">
+                        Accepte: {familyAcceptedPersons.join(", ")}
+                    </div>
+                )}
             </div>
         </div>
     );

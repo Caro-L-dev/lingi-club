@@ -3,14 +3,21 @@ import { toast } from "react-toastify";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Availability } from "@/types/User";
 
 type SideBarType = {
     uid: string;
     familyDailyRate: number | null;
     displayName: string;
+    familyAvailabilities: Availability[];
 };
 
-const Sidebar = ({ uid, familyDailyRate, displayName }: SideBarType) => {
+const Sidebar = ({
+    uid,
+    familyDailyRate,
+    displayName,
+    familyAvailabilities,
+}: SideBarType) => {
     const navigate = useNavigate();
 
     const handleContact = () => {
@@ -38,9 +45,20 @@ const Sidebar = ({ uid, familyDailyRate, displayName }: SideBarType) => {
                 <div className="flex flex-col gap-4 justify-center items-center">
                     <span>Dates</span>
                     <div className="flex flex-col space-y-3">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[250px]" />
+                        {familyAvailabilities.length > 0 ? (
+                            familyAvailabilities.map((date, index) => (
+                                <div key={index} className="h-4 w-[250px]">
+                                    {date.start.toString()} au{" "}
+                                    {date.end.toString()}
+                                </div>
+                            ))
+                        ) : (
+                            <>
+                                <Skeleton className="h-4 w-[250px]" />
+                                <Skeleton className="h-4 w-[250px]" />
+                                <Skeleton className="h-4 w-[250px]" />
+                            </>
+                        )}
                     </div>
 
                     <span>Calendrier</span>

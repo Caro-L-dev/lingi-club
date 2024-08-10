@@ -51,7 +51,7 @@ const FamilyDetails = () => {
                     familyLanguage={state.familyLanguage}
                     photoUrl={state.photoUrl}
                     description={state.description}
-                    familyAvailabilities={state.familyAvailabilities}
+                    familyAcceptedPersons={state.familyAcceptedPersons}
                 />
                 <Opinion />
                 <OtherFamilies
@@ -64,6 +64,7 @@ const FamilyDetails = () => {
                 uid={state.uid}
                 familyDailyRate={state.familyDailyRate}
                 displayName={state.displayName}
+                familyAvailabilities={state.familyAvailabilities}
             />
         </div>
     );
