@@ -55,9 +55,9 @@ const FamilyDetails = () => {
                 />
                 <Opinion />
                 <OtherFamilies
-                    otherFamilly={allFamilies}
+                    otherFamily={allFamilies}
                     region={state.region}
-                    famillyShowId={state.uid}
+                    familyShowId={state.uid}
                 />
             </div>
             <Sidebar

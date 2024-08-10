@@ -3,18 +3,18 @@ import { Link } from "react-router-dom";
 
 
 type OtherFamiliesType = {
-    otherFamilly: UserType[] | [];
+    otherFamily: UserType[] | [];
     region: RegionType;
-    famillyShowId: string
+    familyShowId: string
 };
 
 export default function OtherFamilies({
-    otherFamilly,
+    otherFamily,
     region,
-    famillyShowId,
+    familyShowId,
 }: OtherFamiliesType) {
-    const famillySameRegion = otherFamilly.filter(
-        (familly) => familly.region === region && familly.uid !== famillyShowId
+    const familySameRegion = otherFamily.filter(
+        (family) => family.region === region && family.uid !== familyShowId
     );
 
     return (
@@ -27,19 +27,19 @@ export default function OtherFamilies({
                 <span className="text-secondary font-bold">{region}</span>.
             </p>
             <div className="flex flex-col flex-wrap gap-4 justify-center items-center md:flex-row ">
-                {famillySameRegion.length > 0 ? (
+                {familySameRegion.length > 0 ? (
                     <>
-                        {famillySameRegion.map((familly, index) => (
+                        {familySameRegion.map((family, index) => (
                             <div
                                 key={index}
                                 className="w-full md:w-72 h-52 bg-neutral-100"
                             >
                                 <Link
-                                    to={`/family-infos/${familly.uid}`}
-                                    state={familly}
+                                    to={`/family-infos/${family.uid}`}
+                                    state={family}
                                 >
                                     <img
-                                        src={familly.photoUrl}
+                                        src={family.photoUrl}
                                         className="w-full h-full object-cover rounded-md"
                                     />
                                 </Link>

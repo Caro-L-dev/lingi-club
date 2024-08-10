@@ -1,5 +1,6 @@
+import UserNoteStars from "@/components/common/UserNoteStars/UserNoteStars";
 import getRandomIndex from "@/utils/random";
-import UserNoteStars from "@/components/common/UserNoteStars";
+
 
 export default function Opinion() {
     return (
