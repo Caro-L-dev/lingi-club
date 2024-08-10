@@ -26,7 +26,7 @@ export default function HostFamilyCard({ hostFamily }: Props) {
       <Link to={`/family-infos/${hostFamily.uid}`} state={hostFamily}>
         <CardHeader className="w-full">
           <img
-            className="w-full object-cover object-center"
+            className="w-full object-cover object-center max-h-[368px]"
             src={hostFamily.photoUrl || defaultImage}
             alt={hostFamily.displayName ?? "Family"}
           />
