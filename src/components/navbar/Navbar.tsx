@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
             aria-label="Home"
           >
             <img src="/logo.png" className="h-10 w-10 mr-2" />
-            Lingi Club
+            Lingui Club
           </Link>
           <button
             className="md:hidden text-secondary"

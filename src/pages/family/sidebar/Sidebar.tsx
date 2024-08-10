@@ -1,36 +1,25 @@
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { useAuthContext } from "@/hooks/useAuthContext";
-
-import { UserType } from "@/types/User";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Sidebar = () => {
-    const location = useLocation();
-    const { state } = location as { state: UserType };
-    const navigate = useNavigate();
-    const { authUserInfo } = useAuthContext();
+type SideBarType = {
+    uid: string;
+    familyDailyRate: number | null;
+    displayName: string;
+};
 
-    useEffect(() => {
-        if (!authUserInfo) {
-            navigate("/");
-            toast.error(
-                "Vous devez être connecté pour accéder aux informations"
-            );
-        }
-    }, [authUserInfo, navigate]);
+const Sidebar = ({ uid, familyDailyRate, displayName }: SideBarType) => {
+    const navigate = useNavigate();
 
     const handleContact = () => {
         toast.info("La messagerie n'est pas disponible");
     };
 
     const handleReserve = () => {
-        const priceInCent: number = Number(state.familyDailyRate);
-        navigate(`/payment/${state.uid}`, { state: priceInCent });
+        const priceInCent: number = Number(familyDailyRate);
+        navigate(`/payment/${uid}`, { state: priceInCent });
     };
     return (
         <div className="w-full bg-neutral-100 text-center p-2 md:p-7 text-xl">
@@ -38,13 +27,13 @@ const Sidebar = () => {
                 <p className="text-2xl">À partir de:</p>
                 <p className="text-4xl sm:text-6xl">
                     <span className="font-bold text-secondary">
-                        {state.familyDailyRate || "XXX"}€{" "}
+                        {familyDailyRate || "XXX"}€{" "}
                     </span>
                     / sem
                 </p>
 
                 <p className="py-4">
-                    Votre séjour chez les {state.displayName || "famille"}.
+                    Votre séjour chez les {displayName || "famille"}.
                 </p>
                 <div className="flex flex-col gap-4 justify-center items-center">
                     <span>Dates</span>
@@ -72,7 +61,7 @@ const Sidebar = () => {
                     className="uppercase text-secondary w-[200px] xl:w-full"
                     onClick={handleContact}
                 >
-                    {`Contacter ${state.displayName}` ||
+                    {`Contacter ${displayName}` ||
                         `Ce contact n'est pas disponible`}
                 </Button>
             </div>

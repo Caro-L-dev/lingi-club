@@ -1,50 +1,57 @@
-import { useEffect, useState } from "react";
+import { RegionType, UserType } from "@/types/User";
+import { Link } from "react-router-dom";
 
-import { getAllFamiliesFromFirebase } from "@/firebase/firestore";
-import { UserType } from "@/types/User";
-import { toast } from "react-toastify";
-import HostFamilyCard from "@/components/hostFamilyCard/HostFamilyCard";
-import useAuthNavigation from "@/hooks/useAuthNavigation";
 
-export default function OtherFamilies() {
-  const { state } = useAuthNavigation();
-  const [allFamilies, setAllFamilies] = useState<UserType[]>([]);
+type OtherFamiliesType = {
+    otherFamilly: UserType[] | [];
+    region: RegionType;
+    famillyShowId: string
+};
 
-  useEffect(() => {
-    const fetchAllFamilies = async () => {
-      const result = await getAllFamiliesFromFirebase("users");
+export default function OtherFamilies({
+    otherFamilly,
+    region,
+    famillyShowId,
+}: OtherFamiliesType) {
+    const famillySameRegion = otherFamilly.filter(
+        (familly) => familly.region === region && familly.uid !== famillyShowId
+    );
 
-      if (result.error) {
-        toast.error("Erreur lors de la récupération des familles");
-      } else {
-        const data = result.data as UserType[];
-        setAllFamilies(data ?? []);
-      }
-    };
-
-    fetchAllFamilies();
-  }, []);
-
-  return (
-    <div>
-      <div className="text-center my-12">
-        {state.region === state.region ? (
-          <>
+    return (
+        <div className="text-center my-12">
             <p className="text-2xl">
-              Découvrez d'autres séjours en famille d'accueil
+                Découvrez d'autres séjours en famille d'accueil
             </p>
             <p className="my-4">
-              Ces familles sont aussi disponibles dans la région de{" "}
-              <span className="text-secondary font-bold">{state.region}</span>.
+                Ces familles sont aussi disponibles dans la région de{" "}
+                <span className="text-secondary font-bold">{region}</span>.
             </p>
-            <div className="flex flex-col gap-2 justify-center items-center md:flex-row ">
-              <div className="w-full md:w-72 h-52 bg-neutral-100" />
-              <div className="w-full md:w-72 h-52 bg-neutral-100" />
-              <div className="w-full md:w-72 h-52 bg-neutral-100" />
+            <div className="flex flex-col flex-wrap gap-4 justify-center items-center md:flex-row ">
+                {famillySameRegion.length > 0 ? (
+                    <>
+                        {famillySameRegion.map((familly, index) => (
+                            <div
+                                key={index}
+                                className="w-full md:w-72 h-52 bg-neutral-100"
+                            >
+                                <Link
+                                    to={`/family-infos/${familly.uid}`}
+                                    state={familly}
+                                >
+                                    <img
+                                        src={familly.photoUrl}
+                                        className="w-full h-full object-cover rounded-md"
+                                    />
+                                </Link>
+                            </div>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        <p>Aucunes familles</p>
+                    </>
+                )}
             </div>
-          </>
-        ) : null}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
