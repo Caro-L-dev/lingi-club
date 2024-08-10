@@ -1,8 +1,10 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ReactSelect from "react-select";
-
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import {
@@ -30,6 +32,8 @@ import { formSchema } from "@/types/Forms";
 
 import { regionsList, acceptedPersonList } from "@/lib/data/data";
 
+import { uploadImageOnFirebase } from "@/firebase/firestore";
+
 type Props = {
   onSubmit(values: z.infer<typeof formSchema>): void;
   userData: UserType;
@@ -37,6 +41,17 @@ type Props = {
 };
 
 const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+
+  const uploadImage = async () => {
+    setIsImageLoading(true);
+    const url = await uploadImageOnFirebase(imageUpload);
+    setIsImageLoading(false);
+    url && form.setValue("photoUrl", url);
+    toast.success("Image uploadée");
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,7 +95,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -97,7 +111,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="description"
@@ -114,7 +127,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="city"
@@ -128,7 +140,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="region"
@@ -158,7 +169,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="familyLanguage"
@@ -184,7 +194,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="familyDailyRate"
@@ -209,7 +218,6 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="familyAcceptedPersons"
@@ -223,32 +231,58 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                         label: acceptedPerson,
                       }))}
                       onChange={(selectedOption) => {
-                        console.log("Selected Option:", selectedOption);
                         return field.onChange(
                           selectedOption.map((option) => option.value)
                         );
                       }}
-                      defaultValue={field.value.map((value) => ({
-                        value,
-                        label: value,
-                      }))}
+                      defaultValue={
+                        field.value
+                          ? field.value.map((value) => ({
+                              value,
+                              label: value,
+                            }))
+                          : []
+                      }
                       closeMenuOnSelect={false}
                     />
                   </FormItem>
                 )}
               />
-
-              {userData.photoUrl !== null ? (
+              <FormField
+                control={form.control}
+                name="photoUrl"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Nouvelle Photo</FormLabel>
+                    <FormControl>
+                      <>
+                        <Input
+                          type="file"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              setImageUpload(e.target.files[0]);
+                            }
+                          }}
+                          className="cursor-pointer"
+                        />
+                        {isImageLoading ? (
+                          <Spinner />
+                        ) : (
+                          <Button type="button" onClick={uploadImage}>
+                            Télécharger l'image
+                          </Button>
+                        )}
+                      </>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("photoUrl") && (
                 <img
-                  src={userData.photoUrl}
-                  alt="User Photo"
-                  className="user-photo"
-                />
-              ) : (
-                <img
-                  src="/images/family.jpg"
-                  alt="User Photo generique"
-                  className="user-photo"
+                  src={form.watch("photoUrl") ?? ""}
+                  alt="Image sélectionnée"
+                  //style={{ width: "400px", height: "auto" }}
                 />
               )}
 

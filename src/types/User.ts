@@ -1,4 +1,4 @@
-type Availability = {
+export type Availability = {
   start: Date;
   end: Date;
 }
