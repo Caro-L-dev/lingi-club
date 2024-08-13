@@ -1,15 +1,22 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { useState } from "react";
+
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
+import { Calendar, Event, momentLocalizer, SlotInfo } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+import moment from "moment";
+
+import { Availability } from "@/types/User";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from "react";
 import {
   addOrUpdateDataToFirebase,
   uploadImageOnFirebase,
@@ -83,6 +90,8 @@ const RegistrationFamily = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log("data", data);
+
     if (authUserInfo) {
       try {
         await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
@@ -93,12 +102,50 @@ const RegistrationFamily = () => {
           familyLanguage: data.familyLanguage,
           familyDailyRate: data.familyDailyRate,
           familyAcceptedPersons: data.familyAcceptedPersons,
+          familyAvailabilities: availabilities,
+          // familyAvailabilities: data.familyAvailabilities,
           photoUrl: data.photoUrl,
         });
         toast.success("Votre famille a été enregistrée avec succès !");
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
+
+  console.log("availabilities", availabilities);
+
+  const [availabilityError, setAvailabilityError] = useState<string | null>(
+    null
+  );
+  const [isAvailabilitySelected, setIsAvailabilitySelected] = useState(false);
+
+  const [selectedEvent, setSelectedEvent] = useState<Availability | null>(null);
+
+  const localizer = momentLocalizer(moment);
+
+  /////////// A VOIR
+  // Pour injecter une valeur dans le REACT HOOK FORM...https://react-hook-form.com/docs/useformcontext (?)
+  // This custom hook allows you to access the form context. useFormContext is intended to be used in deeply nested structures, where it would become inconvenient to pass the context as a prop.
+  //const { setValue } = useFormContext();
+
+  const handleSelectSlot = ({ start, end }: SlotInfo) => {
+    setAvailabilities([...availabilities, { start, end }]);
+    //setValue("familyAcceptedPersons", [...availabilities, { start, end }]);
+  };
+
+  const handleSelectEvent = (event: Event) => {
+    setSelectedEvent(event as Availability);
+  };
+
+  const handleDeleteEvent = () => {
+    if (selectedEvent) {
+      setAvailabilities(
+        availabilities.filter((event) => event !== selectedEvent)
+      );
+      setSelectedEvent(null);
     }
   };
 
@@ -112,17 +159,95 @@ const RegistrationFamily = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="displayName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Login</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Login" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
+              name="familyAcceptedPersons"
+              render={({ field }) => {
+                console.log("field", field.value);
+                return (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Sélectionnez vos disponibilités
+                    </h3>
+                    <Calendar
+                      localizer={localizer}
+                      events={availabilities}
+                      startAccessor="start"
+                      endAccessor="end"
+                      selectable
+                      onSelectSlot={handleSelectSlot}
+                      onSelectEvent={handleSelectEvent}
+                      style={{ height: 500 }}
+                      {...field}
+                    />
+                    {/* {errors.availabilities && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.availabilities.message}
+                    </p>
+                  )} */}
+                  </div>
+                );
+              }}
+            />
+            {/* <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-2">
+                Sélectionnez vos disponibilités
+              </h3>
+              <Calendar
+                localizer={localizer}
+                events={availabilities}
+                startAccessor="start"
+                endAccessor="end"
+                selectable
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                style={{ height: 500 }}
+              />
+              {availabilityError && (
+                <p className="text-red-500 text-sm mt-2">{availabilityError}</p>
               )}
+            </div>
+            {selectedEvent && (
+              <div className="mt-4">
+                <Button
+                  type="button"
+                  className="w-full bg-red-500 hover:bg-red-700"
+                  onClick={handleDeleteEvent}
+                >
+                  Supprimer la disponibilité
+                </Button>
+              </div>
+            )} */}
+            {/*      <Button
+              type="submit"
+              className="w-full mt-5 uppercase"
+              // disabled={
+              //   !isValid || isSubmitting || loading || !isAvailabilitySelected
+              // }
+            >
+             {loading || isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Chargement...
+                </>
+              ) : (
+              "Valider mon inscription"
+              )} 
+            </Button>*/}
+            <FormField
+              control={form.control}
+              name="displayName"
+              render={({ field }) => {
+                console.log("field NAME", field.value);
+                return (
+                  <FormItem>
+                    <FormLabel>Login</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Login" {...field} />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               control={form.control}
