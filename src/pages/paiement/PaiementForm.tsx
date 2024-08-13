@@ -75,7 +75,7 @@ const PaiementForm = ({price}: Props) => {
             <CardHeader>
                 <CardTitle>Paiement par carte</CardTitle>
                 {/* Par défaut j'ai mis 5 jours de réservation */}
-                <p className="py-2 text-secondary">Montant de la transaction: <span className="text-lg">{price * 5}</span> euros</p>
+                <p className="py-2 text-secondary">Montant de la transaction pour 5 jours: <span className="text-lg">{price * 5}</span> euros</p>
                 <CardDescription>
                     Entrez vos informations de paiement.
                 </CardDescription>
