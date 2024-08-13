@@ -9,9 +9,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addOrUpdateDataToFirebase,
+  getDataFromFirebase,
   uploadImageOnFirebase,
 } from "@/firebase/firestore";
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -52,11 +53,12 @@ type FormValues = {
   studentAge?: number | null;
 };
 
-const RegistrationFamily = () => {
+const RegistrationDetails = () => {
   const { authUserInfo } = useAuthContext();
 
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [isFamily, setIsFamily] = useState(null);
 
   const uploadImage = async () => {
     setIsImageLoading(true);
@@ -74,15 +76,17 @@ const RegistrationFamily = () => {
       description: "",
       city: "",
       region: "",
-      familyLanguage: "",
+      familyLanguage: "Anglais",
       familyDailyRate: null,
       familyAvailabilities: [],
       familyAcceptedPersons: [],
       photoUrl: "",
+      studentAge: null,
     },
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log("data", data); ///////////////////////////////////////////////////////////////////////////
     if (authUserInfo) {
       try {
         await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
@@ -94,19 +98,35 @@ const RegistrationFamily = () => {
           familyDailyRate: data.familyDailyRate,
           familyAcceptedPersons: data.familyAcceptedPersons,
           photoUrl: data.photoUrl,
+          studentAge: data.studentAge,
         });
-        toast.success("Votre famille a été enregistrée avec succès !");
+        toast.success("Votre compte a été enregistrée avec succès !");
       } catch (error) {
         console.error(error);
       }
     }
   };
 
+  useEffect(() => {
+    if (authUserInfo) {
+      getDataFromFirebase("users", authUserInfo.uid)
+        .then((response) => response.data)
+        .then((userData) => {
+          setIsFamily(userData?.isFamily);
+        });
+    }
+  }, [authUserInfo]);
+
   return (
     <FormProvider {...form}>
       <Card>
         <CardHeader>
-          <TitleCard>Famille d'accueil</TitleCard>
+          <TitleCard>
+            Inscription{" "}
+            <span className="text-secondary">
+              {isFamily ? "Famille d'accueil" : "Apprenant"}
+            </span>
+          </TitleCard>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -159,7 +179,6 @@ const RegistrationFamily = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Région</FormLabel>
-
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -182,77 +201,106 @@ const RegistrationFamily = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="familyLanguage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Langue</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selectionnez votre langue" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem {...field} value="Anglais">
-                        Anglais
-                      </SelectItem>
-                      <SelectItem {...field} value="Espagnol">
-                        Espagnol
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="familyDailyRate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prix journalier</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Entrez votre prix journalier"
-                      {...field}
-                      value={field.value || 0}
-                      // HTML form field values are always strings: we convert them to numbers
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseFloat(e.target.value) : null
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="familyAcceptedPersons"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Personnes acceptées</FormLabel>
-                  <ReactSelect
-                    isMulti
-                    options={acceptedPersonList.map((acceptedPerson) => ({
-                      value: acceptedPerson,
-                      label: acceptedPerson,
-                    }))}
-                    onChange={(selectedOption) => {
-                      return field.onChange(
-                        selectedOption.map((option) => option.value)
-                      );
-                    }}
-                    closeMenuOnSelect={false}
-                  />
-                </FormItem>
-              )}
-            />
+            {isFamily ? (
+              <>
+                <FormField
+                  control={form.control}
+                  name="familyLanguage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Langue</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selectionnez votre langue" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem {...field} value="Anglais">
+                            Anglais
+                          </SelectItem>
+                          <SelectItem {...field} value="Espagnol">
+                            Espagnol
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="familyDailyRate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prix journalier</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Entrez votre prix journalier"
+                          {...field}
+                          value={field.value || 0}
+                          // HTML form field values are always strings: we convert them to numbers
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? parseFloat(e.target.value) : null
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="familyAcceptedPersons"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Personnes acceptées</FormLabel>
+                      <ReactSelect
+                        isMulti
+                        options={acceptedPersonList.map((acceptedPerson) => ({
+                          value: acceptedPerson,
+                          label: acceptedPerson,
+                        }))}
+                        onChange={(selectedOption) => {
+                          return field.onChange(
+                            selectedOption.map((option) => option.value)
+                          );
+                        }}
+                        closeMenuOnSelect={false}
+                      />
+                    </FormItem>
+                  )}
+                />
+              </>
+            ) : (
+              <FormField
+                control={form.control}
+                name="studentAge"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Age</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Entrez votre âge"
+                        {...field}
+                        value={field.value || 0}
+                        // HTML form field values are always strings: we convert them to numbers
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="photoUrl"
@@ -295,7 +343,7 @@ const RegistrationFamily = () => {
             )}
 
             <Button type="submit" className="w-full mt-5 uppercase">
-              Valider l'inscription de ma famille
+              Valider mon inscription
             </Button>
           </form>
         </CardContent>
@@ -304,4 +352,4 @@ const RegistrationFamily = () => {
   );
 };
 
-export default RegistrationFamily;
+export default RegistrationDetails;

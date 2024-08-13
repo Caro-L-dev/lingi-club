@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ReactSelect from "react-select";
 import { TitleCard } from "@/components/common/titleCard/TitleCard";
-import { Card, CardDescription, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -40,7 +40,7 @@ type Props = {
   loading: boolean;
 };
 
-const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
+const UserInfosForm = ({ onSubmit, userData, loading }: Props) => {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
 
@@ -64,7 +64,7 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
       familyDailyRate: userData?.familyDailyRate,
       familyAvailabilities: userData?.familyAvailabilities,
       photoUrl: `${userData?.photoUrl}`,
-      // studentAge: userData?.studentAge,
+      studentAge: userData?.studentAge,
       familyAcceptedPersons: userData?.familyAcceptedPersons,
     },
   });
@@ -73,10 +73,12 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
     <div className="mx-auto mt-8 max-w-[600px]">
       <Card>
         <CardHeader>
-          <TitleCard>Mon compte</TitleCard>
-          <CardDescription className="text-center">
-            Famille d'accueil
-          </CardDescription>
+          <TitleCard>
+            Mon compte{" "}
+            <span className="text-secondary">
+              {userData.isFamily ? "Famille d'accueil" : "Apprenant"}
+            </span>
+          </TitleCard>
         </CardHeader>
         {userData && (
           <Form {...form}>
@@ -169,85 +171,116 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="familyLanguage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Langue</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selectionnez votre langue" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem {...field} value="Anglais">
-                          Anglais
-                        </SelectItem>
-                        <SelectItem {...field} value="Espagnol">
-                          Espagnol
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="familyDailyRate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prix journalier</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Entrez votre prix journalier"
-                        {...field}
-                        value={field.value || 0}
-                        // HTML form field values are always strings: we convert them to numbers
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? parseFloat(e.target.value) : null
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="familyAcceptedPersons"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Personnes acceptées</FormLabel>
-                    <ReactSelect
-                      isMulti
-                      options={acceptedPersonList.map((acceptedPerson) => ({
-                        value: acceptedPerson,
-                        label: acceptedPerson,
-                      }))}
-                      onChange={(selectedOption) => {
-                        return field.onChange(
-                          selectedOption.map((option) => option.value)
-                        );
-                      }}
-                      defaultValue={
-                        field.value
-                          ? field.value.map((value) => ({
-                              value,
-                              label: value,
-                            }))
-                          : []
-                      }
-                      closeMenuOnSelect={false}
-                    />
-                  </FormItem>
-                )}
-              />
+              {userData.isFamily ? (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="familyLanguage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Langue</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selectionnez votre langue" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem {...field} value="Anglais">
+                              Anglais
+                            </SelectItem>
+                            <SelectItem {...field} value="Espagnol">
+                              Espagnol
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="familyDailyRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prix journalier</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Entrez votre prix journalier"
+                            {...field}
+                            value={field.value || 0}
+                            // HTML form field values are always strings: we convert them to numbers
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value
+                                  ? parseFloat(e.target.value)
+                                  : null
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="familyAcceptedPersons"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Personnes acceptées</FormLabel>
+                        <ReactSelect
+                          isMulti
+                          options={acceptedPersonList.map((acceptedPerson) => ({
+                            value: acceptedPerson,
+                            label: acceptedPerson,
+                          }))}
+                          onChange={(selectedOption) => {
+                            return field.onChange(
+                              selectedOption.map((option) => option.value)
+                            );
+                          }}
+                          defaultValue={
+                            field.value
+                              ? field.value.map((value) => ({
+                                  value,
+                                  label: value,
+                                }))
+                              : []
+                          }
+                          closeMenuOnSelect={false}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="studentAge"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Age</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Entrez votre âge"
+                          {...field}
+                          value={field.value || 0}
+                          // HTML form field values are always strings: we convert them to numbers
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? parseFloat(e.target.value) : null
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="photoUrl"
@@ -305,4 +338,4 @@ const FamillyInfosForm = ({ onSubmit, userData, loading }: Props) => {
   );
 };
 
-export default FamillyInfosForm;
+export default UserInfosForm;
