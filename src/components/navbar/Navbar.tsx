@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
           {isUserConnected ? (
             <>
               <Button onClick={handleDisconnect}>Déconnexion</Button>
-              <Button variant="destructive">
+              <Button variant="secondary">
                 <Link to="/user-infos">Mon compte</Link>
               </Button>
             </>

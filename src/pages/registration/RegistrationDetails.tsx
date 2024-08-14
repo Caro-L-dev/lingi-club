@@ -86,7 +86,6 @@ const RegistrationDetails = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log("data", data); ///////////////////////////////////////////////////////////////////////////
     if (authUserInfo) {
       try {
         await addOrUpdateDataToFirebase("users", authUserInfo.uid, {
@@ -102,7 +101,7 @@ const RegistrationDetails = () => {
         });
         toast.success("Votre compte a été enregistrée avec succès !");
       } catch (error) {
-        console.error(error);
+        toast.error("Erreur lors de l'enregistrement de votre compte");
       }
     }
   };
@@ -240,7 +239,6 @@ const RegistrationDetails = () => {
                           placeholder="Entrez votre prix journalier"
                           {...field}
                           value={field.value || 0}
-                          // HTML form field values are always strings: we convert them to numbers
                           onChange={(e) =>
                             field.onChange(
                               e.target.value ? parseFloat(e.target.value) : null
@@ -288,7 +286,6 @@ const RegistrationDetails = () => {
                         placeholder="Entrez votre âge"
                         {...field}
                         value={field.value || 0}
-                        // HTML form field values are always strings: we convert them to numbers
                         onChange={(e) =>
                           field.onChange(
                             e.target.value ? parseFloat(e.target.value) : null
@@ -338,7 +335,6 @@ const RegistrationDetails = () => {
               <img
                 src={form.watch("photoUrl") ?? ""}
                 alt="Image sélectionnée"
-                //style={{ width: "400px", height: "auto" }}
               />
             )}
 
