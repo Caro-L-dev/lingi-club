@@ -52,7 +52,11 @@ const Registration = () => {
         <TitleCard>Inscription</TitleCard>
       </CardHeader>
       <CardContent>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          role="form"
+          className="space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <fieldset>
             <legend className="text-center mb-2 text-sm text-muted-foreground">
               Je souhaite m'inscrire en tant que :

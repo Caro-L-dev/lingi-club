@@ -27,6 +27,6 @@
     },
     "types": ["@testing-library/jest-dom", "vite/client"]
   },
-  "include": ["src", "./jest.setup.ts"],
+  "include": ["src", "./jest.setup.ts", "src/__tests__/Navbar.test.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
