@@ -43,7 +43,7 @@ const Registration = () => {
       isFamily: role === "family",
     });
 
-    result.data && navigate(`/${role}`);
+    result.data && navigate("/registration-details");
   };
 
   return (
