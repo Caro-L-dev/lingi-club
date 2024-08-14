@@ -50,7 +50,7 @@ const SearchFamily = () => {
       )}
       {language && (
         <h2 className="py-4 text-center">
-          Vous regardez les familles parlent:{" "}
+          Vous regardez les familles qui parlent:{" "}
           <span className="text-secondary">{state.key.language}</span>
         </h2>
       )}
