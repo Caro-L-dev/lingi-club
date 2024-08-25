@@ -31,8 +31,6 @@ describe("SearchBarre Component", () => {
         expect(
             await screen.findByText("Veuillez choisir une langue")
         ).toBeInTheDocument();
-
-        screen.debug();
     });
 
     test("Afficher une erreur si le champ region n'est rempli", async () => {
