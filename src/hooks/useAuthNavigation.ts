@@ -12,8 +12,8 @@ const useAuthNavigation = () => {
 
   useEffect(() => {
     if (!authUserInfo) {
-      navigate("/");
       toast.error("Vous devez être connecté pour accéder aux informations");
+      navigate("/connexion");
     }
   }, [authUserInfo, navigate]);
 
