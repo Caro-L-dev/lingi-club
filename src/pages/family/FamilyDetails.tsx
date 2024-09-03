@@ -53,7 +53,7 @@ const FamilyDetails = () => {
                     description={state.description}
                     familyAcceptedPersons={state.familyAcceptedPersons}
                 />
-                <Opinion />
+                <Opinion familyName={state.displayName} />
                 <OtherFamilies
                     otherFamily={allFamilies}
                     region={state.region}
