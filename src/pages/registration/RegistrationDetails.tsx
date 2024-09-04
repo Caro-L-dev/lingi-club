@@ -38,6 +38,7 @@ import Spinner from "@/components/ui/Spinner";
 import ReactSelect from "react-select";
 
 import { regionsList, acceptedPersonList } from "@/lib/data/data";
+import { useNavigate } from "react-router";
 
 type FormValues = {
   displayName: string;
@@ -59,6 +60,8 @@ const RegistrationDetails = () => {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isFamily, setIsFamily] = useState(null);
+
+  const navigate = useNavigate();
 
   const uploadImage = async () => {
     setIsImageLoading(true);
@@ -100,6 +103,7 @@ const RegistrationDetails = () => {
           studentAge: data.studentAge,
         });
         toast.success("Votre compte a été enregistrée avec succès !");
+        navigate("/");
       } catch (error) {
         toast.error("Erreur lors de l'enregistrement de votre compte");
       }
